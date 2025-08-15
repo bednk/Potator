@@ -1,0 +1,9 @@
+{
+  "dependencies": [
+    "boost-signals2",
+    "boost-stacktrace",
+    "sfml",
+    "eigen3",
+    "assimp"
+  ]
+}
