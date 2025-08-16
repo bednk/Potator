@@ -94,13 +94,29 @@ void Potator::Dx11GraphicsDevice::Bind(const IVertexBuffer* buffer)
 
 void Potator::Dx11GraphicsDevice::Draw(const MeshComponent& mesh)
 {
-	//_context->DrawIndexed(mesh.IndexCount, mesh.StartIndexLocation, 0);
-	_context->Draw(3, 0);
+	_context->DrawIndexed(mesh.IndexCount, mesh.StartIndexLocation, mesh.VertexOffset);
 }
 
 void Potator::Dx11GraphicsDevice::Present()
 {
 	_swapChain->Present(1, 0);
+}
+
+void Potator::Dx11GraphicsDevice::Bind(const IndexBuffer* buffer)
+{
+	D3D11_BUFFER_DESC bufferDesc = {};
+	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufferDesc.CPUAccessFlags = 0;
+	bufferDesc.MiscFlags = 0;
+	bufferDesc.ByteWidth = buffer->GetSize();
+	bufferDesc.StructureByteStride = buffer->GetStride();
+	D3D11_SUBRESOURCE_DATA data = {};
+	data.pSysMem = buffer->GetData();
+	ComPtr<ID3D11Buffer> indexBuffer;
+	_device->CreateBuffer(&bufferDesc, &data, &indexBuffer) >> HrCheck::Instance();
+
+	_context->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, buffer->GetOffset());
 }
 
 void Potator::Dx11GraphicsDevice::Bind(const IShaderBinary* shader)

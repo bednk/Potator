@@ -7,6 +7,7 @@ namespace Potator
 	{
 		UINT IndexCount = 0;
 		UINT StartIndexLocation = 0;
+		UINT VertexOffset = 0;
 	};
 }
 

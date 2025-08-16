@@ -12,6 +12,7 @@ namespace Potator
 		Dx11GraphicsDevice(HWND windowHandle);
 		void Clear(float r, float g, float b, float a) override;
 		void Bind(const IVertexBuffer* buffer) override;
+		void Bind(const IndexBuffer* buffer) override;
 		void Bind(const IShaderBinary* shader) override;
 		void Draw(const MeshComponent& mesh) override;
 		void Present() override;

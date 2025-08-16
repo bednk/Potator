@@ -37,7 +37,6 @@ namespace Potator
 
 		void Run()
 		{
-			MeshComponent mesh = { 3, 0 };
 			while (MainWindow.isOpen())
 			{
 				while (const std::optional event = MainWindow.pollEvent())
@@ -53,8 +52,8 @@ namespace Potator
 					}
 				}
 				
-				Device->Clear(0, 0, 1, 1);
-				Device->Draw(mesh);
+				Device->Clear(0, 0, 0, 1);
+				Renderer.Render();
 				Device->Present();
 			}
 		}
