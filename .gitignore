@@ -97,6 +97,7 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+*.cso
 
 # Chutzpah Test files
 _Chutzpah*
@@ -364,3 +365,5 @@ FodyWeavers.xsd
 
 # vcpkg artifacts
 vcpkg*/
+/PixelShader.cso
+/VertexShader.cso
