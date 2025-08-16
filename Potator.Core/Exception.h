@@ -2,11 +2,10 @@
 #include <exception>
 #include <string>
 #include <memory>
-#include "Export.h"
 
 namespace Potator
 {
-	class EX Exception : public std::exception
+	class Exception : public std::exception
 	{
 	public:
 		Exception(int framesToSkip = 3);

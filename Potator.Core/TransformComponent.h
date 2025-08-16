@@ -1,10 +1,9 @@
 #pragma once
 #include <Eigen/Dense>
-#include "Export.h"
 
 namespace Potator
 {
-	struct EX TransformComponent
+	struct TransformComponent
 	{
 		Eigen::Matrix4f Local;
 		Eigen::Matrix4f World;

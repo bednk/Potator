@@ -1,10 +1,10 @@
 #pragma once
 #include "Entity.h"
-#include "Export.h"
+#include <vector>
 
 namespace Potator
 {
-	struct EX SceneNodeComponent
+	struct SceneNodeComponent
 	{
 		Entity This;
 		Entity Parent;

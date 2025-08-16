@@ -1,5 +1,4 @@
 #pragma once
-#include "Export.h"
 #include <memory>
 #include "ComponentStorage.h"
 #include "MeshComponent.h"
@@ -10,7 +9,7 @@
 
 namespace Potator
 {
-	class EX Engine
+	class Engine
 	{
 	public:
 		Engine();

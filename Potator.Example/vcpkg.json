@@ -2,6 +2,8 @@
   "dependencies": [
     "boost-signals2",
     "boost-stacktrace",
-    "eigen3"
+    "sfml",
+    "eigen3",
+    "assimp"
   ]
 }

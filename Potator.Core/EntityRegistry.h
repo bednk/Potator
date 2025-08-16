@@ -1,10 +1,9 @@
 #pragma once
 #include "Entity.h"
-#include "Export.h"
 
 namespace Potator
 {
-	class EX EntityRegistry
+	class EntityRegistry
 	{
 	public:
 		Entity GetNew()
