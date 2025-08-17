@@ -53,6 +53,7 @@ namespace Potator
 				}
 				
 				Device->Clear(0, 0, 0, 1);
+				Graph.UpdateTransforms();
 				Renderer.Render();
 				Device->Present();
 			}
@@ -70,24 +71,19 @@ namespace Potator
 		_impl->Run();
 	}
 
+	EntityRegistry& Engine::GetEntityRegistry() const
+	{
+		return _impl->Registry;
+	}
+
 	ComponentStorage<MeshComponent>& Engine::GetMeshes()
 	{
 		return _impl->Meshes;
 	}
 
-	ComponentStorage<TransformComponent>& Engine::GetTransforms()
+	SceneGraph& Engine::GetSceneGraph() const
 	{
-		return _impl->Transforms;
-	}
-
-	ComponentStorage<SceneNodeComponent>& Engine::GetSceneGraph()
-	{
-		return _impl->Tree;
-	}
-
-	EntityRegistry& Engine::GetEntityRegistry() const
-	{
-		return _impl->Registry;
+		return _impl->Graph;
 	}
 
 	IGraphicsDevice* Engine::GetGraphicsDevice() const

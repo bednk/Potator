@@ -6,6 +6,7 @@
 #include "SceneNodeComponent.h"
 #include "EntityRegistry.h"
 #include "IGraphicsDevice.h"
+#include "SceneGraph.h"
 
 namespace Potator
 {
@@ -14,10 +15,9 @@ namespace Potator
 	public:
 		Engine();
 		void Run();
-		ComponentStorage<MeshComponent>& GetMeshes();
-		ComponentStorage<TransformComponent>& GetTransforms();
-		ComponentStorage<SceneNodeComponent>& GetSceneGraph();
 		EntityRegistry& GetEntityRegistry() const;
+		ComponentStorage<MeshComponent>& GetMeshes();
+		SceneGraph& GetSceneGraph() const;
 		IGraphicsDevice* GetGraphicsDevice() const;
 		~Engine();
 	private:

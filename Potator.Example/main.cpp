@@ -29,28 +29,25 @@ int main()
 		{
 			0, 1, 2
 		});
-
-	Eigen::Matrix4f identity = Eigen::Matrix4f::Identity();
-
-	ConstantBuffer<Eigen::Matrix4f> cBuffSource(identity);
-
 	VertexBufferHandle gpuVertexBuffer = device->Create(&cpuVertexBuffer);
 	IndexBufferHandle gpuIndexBuffer = device->Create(&cpuIndexBuffer);
-	ConstantBufferHandle gpuCBuffer = device->Create(&cBuffSource);
+
+
+	
+	Entity entity = engine.GetEntityRegistry().GetNew();
 
 	MeshComponent mesh = { gpuVertexBuffer, gpuIndexBuffer, 3, 0, 0 };
-
-	engine.GetMeshes().Store(engine.GetEntityRegistry().GetNew(), mesh);
-
-	device->Bind(&vertexShader);
-	device->Bind(&pixelShader);
-	device->Bind(&gpuCBuffer, PipelineStage::VertexShader, 0);
 
 	Eigen::Transform<float, 3, Eigen::Affine> tb;
 	tb = Eigen::AngleAxisf(1.57, Eigen::Vector3f::UnitZ());
 	Eigen::Matrix4f rotation = tb.matrix();
-	cBuffSource.Update(rotation);
-	device->Update(&cBuffSource, &gpuCBuffer);
+	TransformComponent transform = { rotation, Eigen::Matrix4f::Identity() };
+
+	engine.GetSceneGraph().AddNode(entity, transform);
+	engine.GetMeshes().Store(entity, mesh);
+
+	device->Bind(&vertexShader);
+	device->Bind(&pixelShader);
 	
 	engine.Run();
 }

@@ -65,7 +65,7 @@ void Potator::Dx11GraphicsDevice::Clear(float r, float g, float b, float a)
 void Potator::Dx11GraphicsDevice::Draw(const MeshComponent* mesh)
 {
 	Bind(&mesh->VertexBuffer);
-	Bind(&mesh->IndexBuffer);
+	Bind(&mesh->IndexBuffer);  
 	_context->DrawIndexed(mesh->IndexCount, mesh->StartIndexLocation, mesh->VertexOffset);
 }
 

@@ -6,6 +6,7 @@
 #include "IndexBuffer.h"
 #include "BufferHandle.h"
 #include "PipelineStage.h"
+#include "TransformComponent.h"
 
 namespace Potator
 {

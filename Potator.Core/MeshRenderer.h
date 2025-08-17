@@ -4,6 +4,7 @@
 #include "ComponentStorage.h"
 #include "MeshComponent.h"
 #include "TransformComponent.h"
+#include "ConstantBuffer.h"
 
 
 
@@ -24,6 +25,8 @@ namespace Potator
 		ComponentStorage<MeshComponent>& _meshes;
 		ComponentStorage<TransformComponent> &_transforms;
 		std::vector<Entity> _drawableEntities;
+		ConstantBufferHandle _transformationHandle;
+		ConstantBuffer<Eigen::Matrix4f> _transformationBuffer;
 	};
 }
 

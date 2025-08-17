@@ -6,20 +6,25 @@
 Potator::MeshRenderer::MeshRenderer(IGraphicsDevice* graphicsDevice, ComponentStorage<MeshComponent>& meshes, ComponentStorage<TransformComponent>& transforms) :
 	_graphicsDevice{ graphicsDevice },
 	_meshes{ meshes },
-	_transforms{ transforms }
+	_transforms{ transforms },
+	_transformationBuffer { Eigen::Matrix4f::Identity()}
 {
 	_meshes.ComponentAdded.connect([this](Entity e, const MeshComponent& c) { OnMeshAdded(e, c); });
 	_meshes.ComponentRemoved.connect([this](Entity e) { OnMeshRemoved(e); });
 	_transforms.ComponentAdded.connect([this](Entity e, const TransformComponent& c) { OnTransformAdded(e, c); });
 	_transforms.ComponentRemoved.connect([this](Entity e) { OnTransformRemoved(e); });
+	_transformationHandle = _graphicsDevice->Create(&_transformationBuffer);
+	_graphicsDevice->Bind(&_transformationHandle, PipelineStage::VertexShader, 0);
 }
 
 void Potator::MeshRenderer::Render()
 {
-	auto& meshes = _meshes.GetComponents();
-	for (size_t i = 0; i < meshes.size(); i++)
+	for (size_t i = 0; i < _drawableEntities.size(); i++)
 	{
-		_graphicsDevice->Draw(&meshes[i]);
+		Entity entity = _drawableEntities[i];
+		_transformationBuffer.Update(_transforms[entity].World);
+		_graphicsDevice->Update(&_transformationBuffer, &_transformationHandle);
+		_graphicsDevice->Draw(&_meshes[i]);
 	}
 }
 
