@@ -156,7 +156,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="HlslShader.h" />
     <ClInclude Include="HrCheck.h" />
-    <ClInclude Include="ICpuBuffer.h" />
+    <ClInclude Include="ICpBuffer.h" />
     <ClInclude Include="IGraphicsDevice.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="IShaderBinary.h" />
@@ -164,6 +164,7 @@
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PipelineStage.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="SceneNodeComponent.h" />
     <ClInclude Include="TransformComponent.h" />

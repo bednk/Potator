@@ -4,6 +4,7 @@
 #include "IShaderBinary.h"
 #include "IndexBuffer.h"
 #include "BufferHandle.h"
+#include "PipelineStage.h"
 
 namespace Potator
 {
@@ -11,11 +12,14 @@ namespace Potator
 	{
 	public:
 		virtual void Clear(float r, float g, float b, float a) = 0;
-		virtual BufferHandle Create(const IVertexBuffer* buffer) = 0;
-		virtual BufferHandle Create(const IndexBuffer* buffer) = 0;
-		virtual void Bind(BufferHandle buffer) = 0;
+		virtual VertexBufferHandle Create(const IVertexBuffer* buffer) = 0;
+		virtual IndexBufferHandle Create(const IndexBuffer* buffer) = 0;
+		virtual ConstantBufferHandle Create(const IBuffer* buffer) = 0;
+		virtual void Bind(const VertexBufferHandle* buffer) = 0;
+		virtual void Bind(const IndexBufferHandle* buffer) = 0;
+		virtual void Bind(const ConstantBufferHandle* buffer, PipelineStage stage, UINT slot) = 0;
 		virtual void Bind(const IShaderBinary* shader) = 0;
-		virtual void Draw(const MeshComponent& mesh) = 0;
+		virtual void Draw(const MeshComponent* mesh) = 0;
 		virtual void Present() = 0;
 		~IGraphicsDevice() = default;
 	};

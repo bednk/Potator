@@ -3,12 +3,12 @@
 
 namespace Potator
 {
-	class ICpuBuffer
+	class IBuffer
 	{
 	public:
 		virtual const void* GetData() const = 0;
 		virtual UINT GetSize() const = 0;
 		virtual UINT GetStride() const = 0;
-		virtual ~ICpuBuffer() = default;
+		virtual ~IBuffer() = default;
 	};
 }

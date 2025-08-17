@@ -19,7 +19,7 @@ void Potator::MeshRenderer::Render()
 	auto& meshes = _meshes.GetComponents();
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
-		_graphicsDevice->Draw(meshes[i]);
+		_graphicsDevice->Draw(&meshes[i]);
 	}
 }
 

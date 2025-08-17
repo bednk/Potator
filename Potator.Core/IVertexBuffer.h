@@ -6,7 +6,7 @@
 
 namespace Potator
 {
-	class IVertexBuffer : public ICpuBuffer
+	class IVertexBuffer : public IBuffer
 	{
 	public:
 		virtual const std::vector<VertexMemberDescriptor> GetVertexLayout() const = 0;

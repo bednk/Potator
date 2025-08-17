@@ -62,11 +62,11 @@ void Potator::Dx11GraphicsDevice::Clear(float r, float g, float b, float a)
 	_context->ClearRenderTargetView(_targetView.Get(), color);
 }
 
-void Potator::Dx11GraphicsDevice::Draw(const MeshComponent& mesh)
+void Potator::Dx11GraphicsDevice::Draw(const MeshComponent* mesh)
 {
-	Bind(mesh.VertexBuffer);
-	Bind(mesh.IndexBuffer);
-	_context->DrawIndexed(mesh.IndexCount, mesh.StartIndexLocation, mesh.VertexOffset);
+	Bind(&mesh->VertexBuffer);
+	Bind(&mesh->IndexBuffer);
+	_context->DrawIndexed(mesh->IndexCount, mesh->StartIndexLocation, mesh->VertexOffset);
 }
 
 void Potator::Dx11GraphicsDevice::Present()
@@ -74,7 +74,8 @@ void Potator::Dx11GraphicsDevice::Present()
 	_swapChain->Present(1, 0);
 }
 
-Potator::BufferHandle Potator::Dx11GraphicsDevice::Create(const IVertexBuffer* buffer)
+
+Potator::VertexBufferHandle Potator::Dx11GraphicsDevice::Create(const IVertexBuffer* buffer)
 {
 	D3D11_SUBRESOURCE_DATA data = {};
 	data.pSysMem = buffer->GetData();
@@ -86,7 +87,7 @@ Potator::BufferHandle Potator::Dx11GraphicsDevice::Create(const IVertexBuffer* b
 	bufferDesc.MiscFlags = 0;
 	bufferDesc.ByteWidth = buffer->GetSize();
 	bufferDesc.StructureByteStride = buffer->GetStride();
-	
+
 	auto vertexMembers = buffer->GetVertexLayout();
 	auto vertexDesc = std::make_unique<D3D11_INPUT_ELEMENT_DESC[]>(vertexMembers.size());
 	for (size_t i = 0; i < vertexMembers.size(); i++)
@@ -100,11 +101,14 @@ Potator::BufferHandle Potator::Dx11GraphicsDevice::Create(const IVertexBuffer* b
 	_device->CreateBuffer(&bufferDesc, &data, bufferCache.Buffer.GetAddressOf()) >> HrCheck::Instance();
 	_device->CreateInputLayout(vertexDesc.get(), vertexMembers.size(), shaderBin->GetData(), shaderBin->GetSize(), bufferCache.InputLayout.GetAddressOf()) >> HrCheck::Instance();
 
-	return { _vertexBuffers.size() - 1, BufferType::Vertex };
+	return { _vertexBuffers.size() - 1 };
 }
 
-Potator::BufferHandle Potator::Dx11GraphicsDevice::Create(const IndexBuffer* buffer)
+Potator::IndexBufferHandle Potator::Dx11GraphicsDevice::Create(const IndexBuffer* buffer)
 {
+	D3D11_SUBRESOURCE_DATA data = {};
+	data.pSysMem = buffer->GetData();
+
 	D3D11_BUFFER_DESC bufferDesc = {};
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -112,35 +116,57 @@ Potator::BufferHandle Potator::Dx11GraphicsDevice::Create(const IndexBuffer* buf
 	bufferDesc.MiscFlags = 0;
 	bufferDesc.ByteWidth = buffer->GetSize();
 	bufferDesc.StructureByteStride = buffer->GetStride();
-	D3D11_SUBRESOURCE_DATA data = {};
-	data.pSysMem = buffer->GetData();
+
 	ComPtr<ID3D11Buffer>& indexBuffer = _indexBuffers.emplace_back();
 	_device->CreateBuffer(&bufferDesc, &data, &indexBuffer) >> HrCheck::Instance();
-	return { _indexBuffers.size() - 1, BufferType::Index };
+	return { _indexBuffers.size() - 1 };
 }
 
-void Potator::Dx11GraphicsDevice::Bind(BufferHandle buffer)
+Potator::ConstantBufferHandle Potator::Dx11GraphicsDevice::Create(const IBuffer* buffer)
 {
-	switch (buffer.Type)
+	D3D11_SUBRESOURCE_DATA data = {};
+	data.pSysMem = buffer->GetData();
+
+	D3D11_BUFFER_DESC bufferDesc = {};
+	bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	bufferDesc.MiscFlags = 0;
+	bufferDesc.ByteWidth = buffer->GetSize();
+	bufferDesc.StructureByteStride = buffer->GetStride();
+
+	ComPtr<ID3D11Buffer>& constantBuffer = _constantBuffers.emplace_back();
+	_device->CreateBuffer(&bufferDesc, &data, &constantBuffer) >> HrCheck::Instance();
+	return { _constantBuffers.size() - 1 };
+}
+
+void Potator::Dx11GraphicsDevice::Bind(const VertexBufferHandle* buffer)
+{
+	auto& vxBuffer = _vertexBuffers[buffer->Id];
+	UINT _ = 0;
+	_context->IASetVertexBuffers(0, 1, vxBuffer.Buffer.GetAddressOf(), &vxBuffer.Stride, &_);
+	_context->IASetInputLayout(vxBuffer.InputLayout.Get());
+}
+
+void Potator::Dx11GraphicsDevice::Bind(const IndexBufferHandle* buffer)
+{
+	auto& idxBuffer = _indexBuffers[buffer->Id];
+	_context->IASetIndexBuffer(idxBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+}
+
+void Potator::Dx11GraphicsDevice::Bind(const ConstantBufferHandle* buffer, PipelineStage stage, UINT slot)
+{
+	auto& cBuffer = _constantBuffers[buffer->Id];
+	switch (stage)
 	{
-		case BufferType::Vertex:
-		{
-			auto& vxBuffer = _vertexBuffers[buffer.Handle];
-			UINT _ = 0;
-			_context->IASetVertexBuffers(0, 1, vxBuffer.Buffer.GetAddressOf(), &vxBuffer.Stride, &_);
-			_context->IASetInputLayout(vxBuffer.InputLayout.Get());
-			return;
-		}
-
-		case BufferType::Index:
-		{
-			auto& idxBuffer = _indexBuffers[buffer.Handle];
-			_context->IASetIndexBuffer(idxBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
-			return;
-		}
-
-		default:
-			throw Exception("Unsupported buffer type");
+	case PipelineStage::VertexShader:
+		_context->VSSetConstantBuffers(slot, 1, cBuffer.GetAddressOf());
+		break;
+	case PipelineStage::PixelShader:
+		_context->PSSetConstantBuffers(slot, 1, cBuffer.GetAddressOf());
+		break;
+	default:
+		throw Exception("Unsupported pipeline stage");
 	}
 }
 

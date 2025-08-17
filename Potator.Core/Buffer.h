@@ -1,11 +1,11 @@
 #pragma once
-#include "ICpuBuffer.h"
+#include "IBuffer.h"
 #include <vector>
 
 namespace Potator
 {
 	template <class T>
-	class Buffer : public ICpuBuffer
+	class Buffer : public IBuffer
 	{
 	public:
 		Buffer(const std::vector<T>& data) : _data{ data } {};

@@ -49,6 +49,9 @@
     <Filter Include="Source Files\Exceptions">
       <UniqueIdentifier>{6acf9580-6212-405d-9d12-3f99dae7dc6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Rendering\Buffers">
+      <UniqueIdentifier>{2aec52a9-0a2b-48ca-98d6-cf13f20bdcc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -93,12 +96,6 @@
     <ClInclude Include="Exception.h">
       <Filter>Header Files\Exceptions</Filter>
     </ClInclude>
-    <ClInclude Include="IVertexBuffer.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexBuffer.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="IShaderBinary.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
@@ -120,20 +117,29 @@
     <ClInclude Include="ColoredVertex.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="IndexBuffer.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="ICpuBuffer.h">
+    <ClInclude Include="PipelineStage.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="DxVertexBuffer.h">
-      <Filter>Header Files\Rendering</Filter>
+      <Filter>Header Files\Rendering\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="BufferHandle.h">
-      <Filter>Header Files\Rendering</Filter>
+      <Filter>Header Files\Rendering\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="DxVertexBuffer.h">
+      <Filter>Header Files\Rendering\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="ICpBuffer.h">
+      <Filter>Header Files\Rendering\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>Header Files\Rendering\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="IVertexBuffer.h">
+      <Filter>Header Files\Rendering\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>Header Files\Rendering\Buffers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

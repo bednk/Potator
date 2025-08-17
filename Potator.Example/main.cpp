@@ -29,16 +29,26 @@ int main()
 			0, 1, 2
 		});
 
+	Eigen::Transform<float, 3, Eigen::Affine> t;
+	t = Eigen::AngleAxisf(1.57, Eigen::Vector3f::UnitZ());
+	Eigen::Matrix4f rot4x4 = t.matrix();
+
+	Buffer<Eigen::Matrix4f> cBuffSource({ rot4x4 });
+
 	BufferHandle gpuVertexBuffer = device->Create(&cpuVertexBuffer);
 	BufferHandle gpuIndexBuffer = device->Create(&cpuIndexBuffer);
-
+	BufferHandle gpuCBuffer = device->CreateConstant(&cBuffSource);
 
 	MeshComponent mesh = { gpuVertexBuffer, gpuIndexBuffer, 3, 0, 0 };
 
 	engine.GetMeshes().Store(engine.GetEntityRegistry().GetNew(), mesh);
 
+
+	
+
 	device->Bind(&vertexShader);
 	device->Bind(&pixelShader);
+	device->BindConstant(&gpuCBuffer, PipelineStage::VertexShader);
 	
 	engine.Run();
 }
