@@ -18,22 +18,25 @@ int main()
 	HlslShader pixelShader(L"D:\\repos\\Potator\\PixelShader_c.cso", ShaderType::Pixel);
 
 
-	VertexBuffer<ColoredVertex> vertexBuffer(
+	VertexBuffer<ColoredVertex> cpuVertexBuffer(
 		{
 			{{0.0f, 0.5f, 0.0f, 1.0f }, {1.0f, 0.0f, 0.0f, 1.0f }},
 			{{0.5f, -0.5f, 0.0f, 1.0f }, {0.0f, 1.0f, 0.0f, 1.0f }},
 			{{-0.5f, -0.5f, 0.0f, 1.0f }, {0.0f, 0.0f, 1.0f, 1.0f }}
 		}, &vertexShader);
-	IndexBuffer indexBuffer(
+	IndexBuffer cpuIndexBuffer(
 		{
 			0, 1, 2
 		});
-	MeshComponent mesh = { 3, 0, 0 };
+
+	BufferHandle gpuVertexBuffer = device->Create(&cpuVertexBuffer);
+	BufferHandle gpuIndexBuffer = device->Create(&cpuIndexBuffer);
+
+
+	MeshComponent mesh = { gpuVertexBuffer, gpuIndexBuffer, 3, 0, 0 };
 
 	engine.GetMeshes().Store(engine.GetEntityRegistry().GetNew(), mesh);
 
-	device->Bind(&vertexBuffer);
-	device->Bind(&indexBuffer);
 	device->Bind(&vertexShader);
 	device->Bind(&pixelShader);
 	
