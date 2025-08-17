@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "ICpuBuffer.h"
+#include "IBuffer.h"
 #include "VertexMemberDescriptor.h"
 #include "IShaderBinary.h"
 

@@ -142,7 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Buffer.h" />
+    <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="BufferHandle.h" />
     <ClInclude Include="ColoredVertex.h" />
     <ClInclude Include="ComponentStorage.h" />
@@ -156,7 +156,8 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="HlslShader.h" />
     <ClInclude Include="HrCheck.h" />
-    <ClInclude Include="ICpBuffer.h" />
+    <ClInclude Include="IBuffer.h" />
+    <ClInclude Include="IConstantBuffer.h" />
     <ClInclude Include="IGraphicsDevice.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="IShaderBinary.h" />

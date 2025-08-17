@@ -122,7 +122,7 @@ Potator::IndexBufferHandle Potator::Dx11GraphicsDevice::Create(const IndexBuffer
 	return { _indexBuffers.size() - 1 };
 }
 
-Potator::ConstantBufferHandle Potator::Dx11GraphicsDevice::Create(const IBuffer* buffer)
+Potator::ConstantBufferHandle Potator::Dx11GraphicsDevice::Create(const IConstantBuffer* buffer)
 {
 	D3D11_SUBRESOURCE_DATA data = {};
 	data.pSysMem = buffer->GetData();

@@ -120,16 +120,13 @@
     <ClInclude Include="PipelineStage.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Buffer.h">
+    <ClInclude Include="ConstantBuffer.h">
       <Filter>Header Files\Rendering\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="BufferHandle.h">
       <Filter>Header Files\Rendering\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="DxVertexBuffer.h">
-      <Filter>Header Files\Rendering\Buffers</Filter>
-    </ClInclude>
-    <ClInclude Include="ICpBuffer.h">
       <Filter>Header Files\Rendering\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="IndexBuffer.h">
@@ -139,6 +136,12 @@
       <Filter>Header Files\Rendering\Buffers</Filter>
     </ClInclude>
     <ClInclude Include="VertexBuffer.h">
+      <Filter>Header Files\Rendering\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="IBuffer.h">
+      <Filter>Header Files\Rendering\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="IConstantBuffer.h">
       <Filter>Header Files\Rendering\Buffers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -13,10 +13,10 @@ namespace Potator
 		void Clear(float r, float g, float b, float a) override;
 		VertexBufferHandle Create(const IVertexBuffer* buffer) override;
 		IndexBufferHandle Create(const IndexBuffer* buffer) override;
-		ConstantBufferHandle Create(const IBuffer* buffer) override;
+		ConstantBufferHandle Create(const IConstantBuffer* buffer) override;
 		void Bind(const VertexBufferHandle* buffer) override;
 		void Bind(const IndexBufferHandle* buffer) override;
-		void Bind(const ConstantBufferHandle* buffer, PipelineStage stage, UINT slot) override;
+		void Bind(const ConstantBufferHandle* buffer, PipelineStage stage, UINT slot = 0) override;
 		void Bind(const IShaderBinary* shader) override;
 		void Draw(const MeshComponent* mesh) override;
 		void Present() override;

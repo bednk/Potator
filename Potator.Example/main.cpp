@@ -7,6 +7,7 @@
 #include <string>
 #include "ColoredVertex.h"
 #include "IndexBuffer.h"
+#include "ConstantBuffer.h"
 
 using namespace Potator;
 
@@ -33,11 +34,11 @@ int main()
 	t = Eigen::AngleAxisf(1.57, Eigen::Vector3f::UnitZ());
 	Eigen::Matrix4f rot4x4 = t.matrix();
 
-	Buffer<Eigen::Matrix4f> cBuffSource({ rot4x4 });
+	ConstantBuffer<Eigen::Matrix4f> cBuffSource( rot4x4 );
 
-	BufferHandle gpuVertexBuffer = device->Create(&cpuVertexBuffer);
-	BufferHandle gpuIndexBuffer = device->Create(&cpuIndexBuffer);
-	BufferHandle gpuCBuffer = device->CreateConstant(&cBuffSource);
+	VertexBufferHandle gpuVertexBuffer = device->Create(&cpuVertexBuffer);
+	IndexBufferHandle gpuIndexBuffer = device->Create(&cpuIndexBuffer);
+	ConstantBufferHandle gpuCBuffer = device->Create(&cBuffSource);
 
 	MeshComponent mesh = { gpuVertexBuffer, gpuIndexBuffer, 3, 0, 0 };
 
@@ -48,7 +49,7 @@ int main()
 
 	device->Bind(&vertexShader);
 	device->Bind(&pixelShader);
-	device->BindConstant(&gpuCBuffer, PipelineStage::VertexShader);
+	device->Bind(&gpuCBuffer, PipelineStage::VertexShader, 0);
 	
 	engine.Run();
 }
