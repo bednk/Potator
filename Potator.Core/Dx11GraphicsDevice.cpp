@@ -74,6 +74,23 @@ void Potator::Dx11GraphicsDevice::Present()
 	_swapChain->Present(1, 0);
 }
 
+void Potator::Dx11GraphicsDevice::Update(const IConstantBuffer* data, const ConstantBufferHandle* gpuHandle)
+{
+	auto& buffer = _constantBuffers[gpuHandle->Id];
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+	_context->Map(
+		buffer.Get(),
+		0,
+		D3D11_MAP_WRITE_DISCARD,
+		0,
+		&mappedResource
+	) >> HrCheck::Instance();
+
+	memcpy(mappedResource.pData, data->GetData(), data->GetSize());
+	_context->Unmap(buffer.Get(), 0);
+}
+
 
 Potator::VertexBufferHandle Potator::Dx11GraphicsDevice::Create(const IVertexBuffer* buffer)
 {

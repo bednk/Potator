@@ -18,6 +18,7 @@ namespace Potator
 		void Bind(const IndexBufferHandle* buffer) override;
 		void Bind(const ConstantBufferHandle* buffer, PipelineStage stage, UINT slot = 0) override;
 		void Bind(const IShaderBinary* shader) override;
+		void Update(const IConstantBuffer* data, const ConstantBufferHandle* gpuHandle) override;
 		void Draw(const MeshComponent* mesh) override;
 		void Present() override;
 	private:

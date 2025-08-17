@@ -20,6 +20,7 @@ namespace Potator
 		virtual void Bind(const IndexBufferHandle* buffer) = 0;
 		virtual void Bind(const ConstantBufferHandle* buffer, PipelineStage stage, UINT slot) = 0;
 		virtual void Bind(const IShaderBinary* shader) = 0;
+		virtual void Update(const IConstantBuffer* data, const ConstantBufferHandle* gpuHandle) = 0;
 		virtual void Draw(const MeshComponent* mesh) = 0;
 		virtual void Present() = 0;
 		~IGraphicsDevice() = default;
