@@ -25,12 +25,14 @@ namespace Potator
 		EntityRegistry Registry;
 		MeshRenderer Renderer;
 		SceneGraph Graph;
+		ViewManager ViewManager;
 
 		Impl() :
 			MainWindow{ sf::VideoMode({ 800, 600 }), "Potator Engine" },
 			Device{ std::make_unique<Dx11GraphicsDevice>(MainWindow.getNativeHandle()) },
 			Graph{ Transforms, Tree },
-			Renderer{ Device.get(), Meshes, Transforms}
+			Renderer{ Device.get(), Meshes, Transforms},
+			ViewManager {Transforms, Graph, Device.get()}
 		{
 
 		}
@@ -54,6 +56,7 @@ namespace Potator
 				
 				Device->Clear(0, 0, 0, 1);
 				Graph.UpdateTransforms();
+				ViewManager.UpdateView();
 				Renderer.Render();
 				Device->Present();
 			}
@@ -81,9 +84,19 @@ namespace Potator
 		return _impl->Meshes;
 	}
 
+	ComponentStorage<TransformComponent>& Engine::GetTransforms()
+	{
+		return _impl->Transforms;
+	}
+
 	SceneGraph& Engine::GetSceneGraph() const
 	{
 		return _impl->Graph;
+	}
+
+	ViewManager& Engine::GetViewManager() const
+	{
+		return _impl->ViewManager;
 	}
 
 	IGraphicsDevice* Engine::GetGraphicsDevice() const
