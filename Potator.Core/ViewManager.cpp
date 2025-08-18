@@ -4,17 +4,18 @@
 
 Eigen::Matrix4f PerspectiveFovLH(float fovY, float aspect, float znear, float zfar)
 {
-	float yScale = 1.0f / tanf(fovY * 0.5f);
-	float xScale = yScale / aspect;
+	float h = 1.0f / std::tan(fovY * 0.5f);
+	float w = h / aspect;
 
-	Eigen::Matrix4f proj = Eigen::Matrix4f::Zero();
-	proj(0, 0) = xScale;
-	proj(1, 1) = yScale;
-	proj(2, 2) = zfar / (zfar - znear);
-	proj(2, 3) = 1.0f;
-	proj(3, 2) = (-znear * zfar) / (zfar - znear);
+	Eigen::Matrix4f m = Eigen::Matrix4f::Zero();
 
-	return proj;
+	m(0, 0) = w;
+	m(1, 1) = h;
+	m(2, 2) = zfar / (zfar - znear);
+	m(2, 3) = -znear * zfar / (zfar - znear);
+	m(3, 2) = 1.0f;
+
+	return m;
 }
 
 Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transforms, SceneGraph& scene, IGraphicsDevice* device) :
@@ -39,7 +40,7 @@ void Potator::ViewManager::UpdateView()
 	}
 
 	auto& cameraWorld = _transforms[_active].World;
-	Eigen::Matrix4f projView = _proj;// *GetViewTransform(cameraWorld);
+	Eigen::Matrix4f projView = _proj.transpose();// *GetViewTransform(cameraWorld);
 	
 	_transformationBuffer.Update(projView);
 	_device->Update(&_transformationBuffer, &_transformationHandle);

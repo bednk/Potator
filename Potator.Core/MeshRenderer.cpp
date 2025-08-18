@@ -22,7 +22,8 @@ void Potator::MeshRenderer::Render()
 	for (size_t i = 0; i < _drawableEntities.size(); i++)
 	{
 		Entity entity = _drawableEntities[i];
-		_transformationBuffer.Update(_transforms[entity].World);
+		Eigen::Matrix4f trans = _transforms[entity].World.transpose();
+		_transformationBuffer.Update(trans);
 		_graphicsDevice->Update(&_transformationBuffer, &_transformationHandle);
 		_graphicsDevice->Draw(&_meshes[i]);
 	}

@@ -47,7 +47,7 @@ int main()
 	engine.GetSceneGraph().AddNode(entity, transform);
 	engine.GetMeshes().Store(entity, mesh);
 
-	engine.GetTransforms()[entity].Local(3, 2) = 5;
+	engine.GetTransforms()[entity].Local(2, 3) = 5;
 
 	std::cout << engine.GetTransforms()[entity].Local.format(Eigen::IOFormat(Eigen::FullPrecision, 0, ", ", "\n", "[", "]")) << "\n";
 
