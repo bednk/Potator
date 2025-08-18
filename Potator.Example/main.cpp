@@ -57,7 +57,7 @@ int main()
 	Entity camera = engine.GetEntityRegistry().GetNew();
 	engine.GetViewManager().Add(camera);
 
-	//engine.GetTransforms()[camera].Local(2, 3) = 0;
+	engine.GetTransforms()[camera].Local(2, 3) = 4.5;
 	//engine.GetTransforms()[camera].Local(0, 3) = 0.5;
 
 	//Eigen::Transform<float, 3, Eigen::Affine> tb;

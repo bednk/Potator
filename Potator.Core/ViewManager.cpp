@@ -40,7 +40,8 @@ void Potator::ViewManager::UpdateView()
 	}
 
 	auto& cameraWorld = _transforms[_active].World;
-	Eigen::Matrix4f projView = _proj.transpose();// *GetViewTransform(cameraWorld);
+	Eigen::Matrix4f projView = _proj * GetViewTransform(cameraWorld);
+	projView.transposeInPlace();
 	
 	_transformationBuffer.Update(projView);
 	_device->Update(&_transformationBuffer, &_transformationHandle);
