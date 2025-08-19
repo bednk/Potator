@@ -146,6 +146,7 @@
     <ClInclude Include="BufferHandle.h" />
     <ClInclude Include="ColoredVertex.h" />
     <ClInclude Include="ComponentStorage.h" />
+    <ClInclude Include="DeviceFactory.h" />
     <ClInclude Include="Dx11GraphicsDevice.h" />
     <ClInclude Include="DxDescriptorsConverter.h" />
     <ClInclude Include="DxVertexBuffer.h" />

@@ -10,6 +10,12 @@
 
 namespace Potator
 {
+	enum class GpuApi
+	{
+		Dx11,
+		OpenGL
+	};
+
 	class IGraphicsDevice
 	{
 	public:

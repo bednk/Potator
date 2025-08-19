@@ -8,6 +8,8 @@
 #include "IGraphicsDevice.h"
 #include "SceneGraph.h"
 #include "ViewManager.h"
+#include <SFML/Window.hpp>
+#include "MeshRenderer.h"
 
 namespace Potator
 {
@@ -15,16 +17,25 @@ namespace Potator
 	{
 	public:
 		Engine();
-		void Run();
-		EntityRegistry& GetEntityRegistry() const;
+		Engine(GpuApi api);
+		EntityRegistry& GetEntityRegistry();
 		ComponentStorage<MeshComponent>& GetMeshes();
 		ComponentStorage<TransformComponent>& GetTransforms();
-		SceneGraph& GetSceneGraph() const;
-		ViewManager& GetViewManager() const;
-		IGraphicsDevice* GetGraphicsDevice() const;
+		SceneGraph& GetSceneGraph();
+		ViewManager& GetViewManager();
+		IGraphicsDevice* GetGraphicsDevice();
+
+		void Run();
 		~Engine();
 	private:
-		struct Impl;
-		std::unique_ptr<Impl> _impl;
+		sf::Window _mainWindow;
+		std::unique_ptr<IGraphicsDevice> _device;
+		ComponentStorage<MeshComponent> _meshes;
+		ComponentStorage<TransformComponent> _transforms;
+		ComponentStorage<SceneNodeComponent> _tree;
+		EntityRegistry _registry;
+		MeshRenderer _renderer;
+		SceneGraph _graph;
+		ViewManager _views;
 	};
 }
