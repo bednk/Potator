@@ -9,6 +9,7 @@
 #include "IndexBuffer.h"
 #include "ConstantBuffer.h"
 #include <iostream>
+#include "MovementComponent.h"
 
 using namespace Potator;
 
@@ -34,39 +35,34 @@ int main()
 	IndexBufferHandle gpuIndexBuffer = device->Create(&cpuIndexBuffer);
 
 
-	
-	Entity entity = engine.GetEntityRegistry().GetNew();
+
+	Entity meshEntity = engine.GetEntityRegistry().GetNew();
 
 	MeshComponent mesh = { gpuVertexBuffer, gpuIndexBuffer, 3, 0, 0 };
 
-	//Eigen::Transform<float, 3, Eigen::Affine> tb;
-	//tb = Eigen::AngleAxisf(1.57, Eigen::Vector3f::UnitZ());
-	//Eigen::Matrix4f rotation = tb.matrix();
-	TransformComponent transform;
+	TransformComponent meshTransform;
 
-	engine.GetSceneGraph().AddNode(entity, transform);
-	engine.GetMeshes().Store(entity, mesh);
+	engine.GetSceneGraph().AddNode(meshEntity, meshTransform);
+	engine.GetMeshes().Store(meshEntity, mesh);
 
-	engine.GetTransforms()[entity].Local(2, 3) = 5;
+	engine.GetTransforms()[meshEntity].Local(2, 3) = 5;
 
-	std::cout << engine.GetTransforms()[entity].Local.format(Eigen::IOFormat(Eigen::FullPrecision, 0, ", ", "\n", "[", "]")) << "\n";
+	//std::cout << engine.GetTransforms()[entity].Local.format(Eigen::IOFormat(Eigen::FullPrecision, 0, ", ", "\n", "[", "]")) << "\n";
 
 	device->Bind(&vertexShader);
 	device->Bind(&pixelShader);
 
 	Entity camera = engine.GetEntityRegistry().GetNew();
 	engine.GetViewManager().Add(camera);
-
 	engine.GetTransforms()[camera].Local(2, 3) = 4.5;
-	//engine.GetTransforms()[camera].Local(0, 3) = 0.5;
 
-	//Eigen::Transform<float, 3, Eigen::Affine> tb;
-	//tb = Eigen::AngleAxisf(0.1, Eigen::Vector3f::UnitY());
-	//Eigen::Matrix4f rotation = tb.matrix();
-	
-	std::cout << engine.GetTransforms()[entity].Local.format(Eigen::IOFormat(Eigen::FullPrecision, 0, ", ", "\n", "[", "]")) << "\n";
-	//engine.GetTransforms()[camera].Local = rotation;
 
-	
+	std::cout << engine.GetTransforms()[meshEntity].Local.format(Eigen::IOFormat(Eigen::FullPrecision, 0, ", ", "\n", "[", "]")) << "\n";
+
+	MovementComponent meshMovement;
+	meshMovement.LinearVelocity.z() = 0.05f;
+
+	engine.GetMovements().Store(meshEntity, meshMovement);
+
 	engine.Run();
 }

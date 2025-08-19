@@ -10,6 +10,9 @@
 #include "ViewManager.h"
 #include <SFML/Window.hpp>
 #include "MeshRenderer.h"
+#include "MovementComponent.h"
+#include "MovementSystem.h"
+#include "FixedStepTracker.h"
 
 namespace Potator
 {
@@ -21,6 +24,7 @@ namespace Potator
 		EntityRegistry& GetEntityRegistry();
 		ComponentStorage<MeshComponent>& GetMeshes();
 		ComponentStorage<TransformComponent>& GetTransforms();
+		ComponentStorage<MovementComponent>& GetMovements();
 		SceneGraph& GetSceneGraph();
 		ViewManager& GetViewManager();
 		IGraphicsDevice* GetGraphicsDevice();
@@ -33,9 +37,12 @@ namespace Potator
 		ComponentStorage<MeshComponent> _meshes;
 		ComponentStorage<TransformComponent> _transforms;
 		ComponentStorage<SceneNodeComponent> _tree;
+		ComponentStorage<MovementComponent> _movements;
 		EntityRegistry _registry;
 		MeshRenderer _renderer;
 		SceneGraph _graph;
 		ViewManager _views;
+		MovementSystem _movementSystem;
+		FixedStepTracker _stepTracker;
 	};
 }

@@ -1,4 +1,5 @@
 #include "MovementSystem.h"
+#include <iostream>
 
 Potator::MovementSystem::MovementSystem(ComponentStorage<TransformComponent>& transforms, ComponentStorage<MovementComponent>& movements) :
 	_movements { movements },
@@ -27,7 +28,6 @@ void Potator::MovementSystem::Update()
 		Eigen::Matrix3f rotation = transform.Local.block<3, 3>(0, 0);
 
 		position += movement.LinearVelocity;
-
 		Eigen::AngleAxisf rotX(movement.AngularVelocity.x() * _tickPeriod, Eigen::Vector3f::UnitX());
 		Eigen::AngleAxisf rotY(movement.AngularVelocity.y() * _tickPeriod, Eigen::Vector3f::UnitY());
 		Eigen::AngleAxisf rotZ(movement.AngularVelocity.z() * _tickPeriod, Eigen::Vector3f::UnitZ());

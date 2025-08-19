@@ -15,14 +15,18 @@ namespace Potator
 		_device{ DeviceFactory::GetDevice(api, _mainWindow.getNativeHandle()) },
 		_graph{ _transforms, _tree },
 		_renderer{ _device.get(), _meshes, _transforms},
-		_views{ _transforms, _graph, _device.get() }
+		_views{ _transforms, _graph, _device.get() },
+		_movementSystem { _transforms, _movements },
+		_stepTracker { 30 }
 	{
+		_stepTracker.Subscribe(&_movementSystem);
 	}
 
 	void Engine::Run()
 	{
 		while (_mainWindow.isOpen())
 		{
+			_stepTracker.OnFrameStart();
 			while (const std::optional event = _mainWindow.pollEvent())
 			{
 				if (!event)
@@ -37,6 +41,7 @@ namespace Potator
 			}
 
 			_device->Clear(0, 0, 0, 1);
+			_stepTracker.Update();
 			_graph.UpdateTransforms();
 			_views.UpdateView();
 			_renderer.Render();
@@ -57,6 +62,11 @@ namespace Potator
 	ComponentStorage<TransformComponent>& Engine::GetTransforms()
 	{
 		return _transforms;
+	}
+
+	ComponentStorage<MovementComponent>& Engine::GetMovements()
+	{
+		return _movements;
 	}
 
 	SceneGraph& Engine::GetSceneGraph()
