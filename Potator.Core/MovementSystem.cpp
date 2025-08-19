@@ -26,7 +26,7 @@ void Potator::MovementSystem::Update()
 		Eigen::Vector3f position = transform.Local.block<3, 1>(0, 3);
 		Eigen::Matrix3f rotation = transform.Local.block<3, 3>(0, 0);
 
-		position += movement.LinearVelocity * _tickPeriod;
+		position += movement.LinearVelocity;
 
 		Eigen::AngleAxisf rotX(movement.AngularVelocity.x() * _tickPeriod, Eigen::Vector3f::UnitX());
 		Eigen::AngleAxisf rotY(movement.AngularVelocity.y() * _tickPeriod, Eigen::Vector3f::UnitY());
