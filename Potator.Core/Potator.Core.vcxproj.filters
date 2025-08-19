@@ -153,6 +153,18 @@
     <ClInclude Include="ViewManager.h">
       <Filter>Header Files\ECS\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="FixedStepTracker.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="IFixedStep.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementSystem.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -186,6 +198,12 @@
       <Filter>Source Files\Exceptions</Filter>
     </ClCompile>
     <ClCompile Include="ViewManager.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="FixedStepTracker.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementSystem.cpp">
       <Filter>Source Files\ECS\Systems</Filter>
     </ClCompile>
   </ItemGroup>

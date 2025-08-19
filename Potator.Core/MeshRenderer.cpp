@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "MeshRenderer.h"
 #include "boost/bind/bind.hpp"
+#include "MovementSystem.h"
 
 
 Potator::MeshRenderer::MeshRenderer(IGraphicsDevice* graphicsDevice, ComponentStorage<MeshComponent>& meshes, ComponentStorage<TransformComponent>& transforms) :
@@ -10,9 +11,9 @@ Potator::MeshRenderer::MeshRenderer(IGraphicsDevice* graphicsDevice, ComponentSt
 	_transformationBuffer { Eigen::Matrix4f::Identity()}
 {
 	_meshes.ComponentAdded.connect([this](Entity e, const MeshComponent& c) { OnMeshAdded(e, c); });
-	_meshes.ComponentRemoved.connect([this](Entity e) { OnMeshRemoved(e); });
+	_meshes.ComponentRemoved.connect([this](Entity e) { RemoveDrawable(e); });
 	_transforms.ComponentAdded.connect([this](Entity e, const TransformComponent& c) { OnTransformAdded(e, c); });
-	_transforms.ComponentRemoved.connect([this](Entity e) { OnTransformRemoved(e); });
+	_transforms.ComponentRemoved.connect([this](Entity e) { RemoveDrawable(e); });
 	_transformationHandle = _graphicsDevice->Create(&_transformationBuffer);
 	_graphicsDevice->Bind(&_transformationHandle, PipelineStage::VertexShader, 0);
 }
@@ -39,11 +40,6 @@ void Potator::MeshRenderer::OnMeshAdded(Entity entity, const MeshComponent& comp
 	_drawableEntities.push_back(entity);
 }
 
-void Potator::MeshRenderer::OnMeshRemoved(Entity entity)
-{
-	RemoveDrawable(entity);
-}
-
 void Potator::MeshRenderer::OnTransformAdded(Entity entity, const TransformComponent& component)
 {
 	if (!_meshes.HasComponent(entity))
@@ -52,11 +48,6 @@ void Potator::MeshRenderer::OnTransformAdded(Entity entity, const TransformCompo
 	}
 
 	_drawableEntities.push_back(entity);
-}
-
-void Potator::MeshRenderer::OnTransformRemoved(Entity entity)
-{
-	RemoveDrawable(entity);
 }
 
 void Potator::MeshRenderer::RemoveDrawable(Entity entity)
