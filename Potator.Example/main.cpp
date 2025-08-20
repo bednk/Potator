@@ -10,6 +10,7 @@
 #include "ConstantBuffer.h"
 #include <iostream>
 #include "MovementComponent.h"
+#include <MoveCommand.h>
 
 using namespace Potator;
 
@@ -47,22 +48,9 @@ int main()
 
 	engine.GetTransforms()[meshEntity].Local(2, 3) = 5;
 
-	//std::cout << engine.GetTransforms()[entity].Local.format(Eigen::IOFormat(Eigen::FullPrecision, 0, ", ", "\n", "[", "]")) << "\n";
-
 	device->Bind(&vertexShader);
 	device->Bind(&pixelShader);
-
-	Entity camera = engine.GetEntityRegistry().GetNew();
-	engine.GetViewManager().Add(camera);
-	engine.GetTransforms()[camera].Local(2, 3) = 4.5;
-
-
 	std::cout << engine.GetTransforms()[meshEntity].Local.format(Eigen::IOFormat(Eigen::FullPrecision, 0, ", ", "\n", "[", "]")) << "\n";
-
-	MovementComponent meshMovement;
-	meshMovement.LinearVelocity.z() = 0.05f;
-
-	engine.GetMovements().Store(meshEntity, meshMovement);
 
 	engine.Run();
 }

@@ -4,6 +4,7 @@
 #include "IGraphicsDevice.h"
 #include "ConstantBuffer.h"
 #include "SceneGraph.h"
+#include <boost/signals2.hpp>
 
 namespace Potator
 {
@@ -14,6 +15,7 @@ namespace Potator
 		void UpdateView();
 		void Add(Entity camera);
 		void SetActive(Entity camera);
+		boost::signals2::signal<void(Entity)> ViewChanged;
 	private:
 		Eigen::Matrix4f GetViewTransform(const Eigen::Matrix4f& cameraWorld);
 		ComponentStorage<TransformComponent>& _transforms;

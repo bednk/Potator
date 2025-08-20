@@ -13,6 +13,8 @@
 #include "MovementComponent.h"
 #include "MovementSystem.h"
 #include "FixedStepTracker.h"
+#include "CommandDispatcher.h"
+#include "MovementInputHandler.h"
 
 namespace Potator
 {
@@ -27,6 +29,8 @@ namespace Potator
 		ComponentStorage<MovementComponent>& GetMovements();
 		SceneGraph& GetSceneGraph();
 		ViewManager& GetViewManager();
+		CommandDispatcher& GetCommandDispatcher();
+		MovementSystem& GetMovementSystem();
 		IGraphicsDevice* GetGraphicsDevice();
 
 		void Run();
@@ -38,11 +42,14 @@ namespace Potator
 		ComponentStorage<TransformComponent> _transforms;
 		ComponentStorage<SceneNodeComponent> _tree;
 		ComponentStorage<MovementComponent> _movements;
+		ComponentStorage<CommandQueueComponent> _commands;
 		EntityRegistry _registry;
 		MeshRenderer _renderer;
 		SceneGraph _graph;
 		ViewManager _views;
 		MovementSystem _movementSystem;
 		FixedStepTracker _stepTracker;
+		CommandDispatcher _commandDispatcher;
+		MovementInputHandler _cameraHandler;
 	};
 }

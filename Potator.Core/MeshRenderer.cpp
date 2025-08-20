@@ -26,7 +26,7 @@ void Potator::MeshRenderer::Render()
 		Eigen::Matrix4f trans = _transforms[entity].World.transpose();
 		_transformationBuffer.Update(trans);
 		_graphicsDevice->Update(&_transformationBuffer, &_transformationHandle);
-		_graphicsDevice->Draw(&_meshes[i]);
+		_graphicsDevice->Draw(&_meshes[entity]);
 	}
 }
 

@@ -17,9 +17,15 @@ namespace Potator
 		_renderer{ _device.get(), _meshes, _transforms},
 		_views{ _transforms, _graph, _device.get() },
 		_movementSystem { _transforms, _movements },
-		_stepTracker { 30 }
+		_stepTracker { 30 },
+		_commandDispatcher { _commands },
+		_cameraHandler { _commandDispatcher, _movementSystem }
 	{
 		_stepTracker.Subscribe(&_movementSystem);
+		Entity camera = _registry.GetNew();
+		_views.Add(camera);
+		_cameraHandler.SetEntity(camera);
+		_views.ViewChanged.connect([this](Entity e) { _cameraHandler.SetEntity(e); });
 	}
 
 	void Engine::Run()
@@ -41,6 +47,8 @@ namespace Potator
 			}
 
 			_device->Clear(0, 0, 0, 1);
+			_cameraHandler.Handle();
+			_commandDispatcher.Dispatch();
 			_stepTracker.Update();
 			_graph.UpdateTransforms();
 			_views.UpdateView();
@@ -77,6 +85,16 @@ namespace Potator
 	ViewManager& Engine::GetViewManager()
 	{
 		return _views;
+	}
+
+	CommandDispatcher& Engine::GetCommandDispatcher()
+	{
+		return _commandDispatcher;
+	}
+
+	MovementSystem& Engine::GetMovementSystem()
+	{
+		return _movementSystem;
 	}
 
 	IGraphicsDevice* Engine::GetGraphicsDevice()

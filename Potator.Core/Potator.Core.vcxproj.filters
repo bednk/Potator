@@ -58,6 +58,15 @@
     <Filter Include="Header Files\Rendering\Vertices">
       <UniqueIdentifier>{60be5f00-46a3-4393-8267-08ab619a8794}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\ECS\Components">
+      <UniqueIdentifier>{53c10df9-de84-449f-9ea5-8331c4702378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ECS\Commands">
+      <UniqueIdentifier>{fa8473e0-8dc2-4430-9f3d-2f476a695df7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS\Commands">
+      <UniqueIdentifier>{05f4e904-0295-4cc5-9c29-7fb448dd28f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -156,9 +165,6 @@
     <ClInclude Include="FixedStepTracker.h">
       <Filter>Header Files\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="IFixedStep.h">
-      <Filter>Header Files\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="MovementComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
@@ -167,6 +173,27 @@
     </ClInclude>
     <ClInclude Include="DeviceFactory.h">
       <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandQueueComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="IFixedStep.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandDispatcher.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ICommand.h">
+      <Filter>Header Files\ECS\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveCommand.h">
+      <Filter>Header Files\ECS\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementInputHandler.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="IInputHandler.h">
+      <Filter>Header Files\ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -207,6 +234,18 @@
       <Filter>Source Files\ECS\Systems</Filter>
     </ClCompile>
     <ClCompile Include="MovementSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandDispatcher.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandQueueComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveCommand.cpp">
+      <Filter>Source Files\ECS\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementInputHandler.cpp">
       <Filter>Source Files\ECS\Systems</Filter>
     </ClCompile>
   </ItemGroup>

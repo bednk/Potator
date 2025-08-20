@@ -62,6 +62,7 @@ void Potator::ViewManager::Add(Entity camera)
 void Potator::ViewManager::SetActive(Entity camera)
 {
 	_active = camera;
+	ViewChanged(camera);
 }
 
 Eigen::Matrix4f Potator::ViewManager::GetViewTransform(const Eigen::Matrix4f& cameraWorld)

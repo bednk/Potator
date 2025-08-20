@@ -15,7 +15,7 @@ namespace Potator
 		bool HasComponent(Entity entity) const;
 		void Store(Entity entity, T& component);
 		void Drop(Entity entity);
-		const std::vector<T>& GetComponents() const { return _components; }
+		std::vector<T>& GetComponents() { return _components; }
 		T& operator[](Entity entity);
 		boost::signals2::signal<void(Entity, const T&)> ComponentAdded;
 		boost::signals2::signal<void(Entity)> ComponentRemoved;

@@ -142,6 +142,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CommandDispatcher.h" />
+    <ClInclude Include="CommandQueueComponent.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="BufferHandle.h" />
     <ClInclude Include="ColoredVertex.h" />
@@ -159,15 +161,19 @@
     <ClInclude Include="HlslShader.h" />
     <ClInclude Include="HrCheck.h" />
     <ClInclude Include="IBuffer.h" />
+    <ClInclude Include="ICommand.h" />
     <ClInclude Include="IConstantBuffer.h" />
     <ClInclude Include="IFixedStep.h" />
     <ClInclude Include="IGraphicsDevice.h" />
+    <ClInclude Include="IInputHandler.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="IShaderBinary.h" />
     <ClInclude Include="IVertexBuffer.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="MeshRenderer.h" />
+    <ClInclude Include="MoveCommand.h" />
     <ClInclude Include="MovementComponent.h" />
+    <ClInclude Include="MovementInputHandler.h" />
     <ClInclude Include="MovementSystem.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PipelineStage.h" />
@@ -180,6 +186,8 @@
     <ClInclude Include="ViewManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CommandDispatcher.cpp" />
+    <ClCompile Include="CommandQueueComponent.cpp" />
     <ClCompile Include="ComponentStorage.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Dx11GraphicsDevice.cpp" />
@@ -189,6 +197,8 @@
     <ClCompile Include="HlslShader.cpp" />
     <ClCompile Include="HrCheck.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
+    <ClCompile Include="MoveCommand.cpp" />
+    <ClCompile Include="MovementInputHandler.cpp" />
     <ClCompile Include="MovementSystem.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
