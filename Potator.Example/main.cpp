@@ -45,7 +45,7 @@ int main()
 
 	VertexBufferHandle gpuVertexBuffer = device->Create(&cpuVertexBuffer);
 	IndexBufferHandle gpuIndexBuffer = device->Create(&cpuIndexBuffer);
-	Entity meshEntity = engine.GetEntityRegistry().GetNew();
+	Entity meshEntity = EntityRegistry::Instance().GetNew();
 	MeshComponent mesh = { gpuVertexBuffer, gpuIndexBuffer, 3, 0, 0 };
 	TransformComponent meshTransform;
 	engine.GetSceneGraph().AddNode(meshEntity, meshTransform);

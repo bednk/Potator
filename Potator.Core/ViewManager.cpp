@@ -1,25 +1,22 @@
 #include "pch.h"
 #include "ViewManager.h"
+#include "EntityRegistry.h"
 #include <iostream>
 
-Eigen::Matrix4f PerspectiveFovLH(float fovY, float aspect, float znear, float zfar)
+Potator::CameraComponent GetDefault()
 {
-	float h = 1.0f / std::tan(fovY * 0.5f);
-	float w = h / aspect;
-
-	Eigen::Matrix4f m = Eigen::Matrix4f::Zero();
-
-	m(0, 0) = w;
-	m(1, 1) = h;
-	m(2, 2) = zfar / (zfar - znear);
-	m(2, 3) = -znear * zfar / (zfar - znear);
-	m(3, 2) = 1.0f;
-
-	return m;
+	return
+	{
+		0.1f,
+		1000.0f,
+		1.5,
+		4 / 3.0f
+	};
 }
 
-Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transforms, SceneGraph& scene, IGraphicsDevice* device) :
+Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transforms, ComponentStorage<CameraComponent>& cameras, SceneGraph& scene, IGraphicsDevice* device) :
 	_transforms { transforms },
+	_cameras { cameras },
 	_scene { scene },
 	_device { device },
 	_active { NONE_ENTITY },
@@ -27,9 +24,16 @@ Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transfor
 	_proj{ Eigen::Matrix4f::Identity() }
 
 {
+	Entity defaultCam = EntityRegistry::Instance().GetNew();
+	CameraComponent camComponent = GetDefault();
+	TransformComponent transComponent;
+	
+	Add(defaultCam, camComponent, transComponent);
+	SetActive(defaultCam);
+
+	_transformationBuffer.Update(transComponent.World);
 	_transformationHandle = _device->Create(&_transformationBuffer);
 	_device->Bind(&_transformationHandle, PipelineStage::VertexShader, 1);
-	_proj = PerspectiveFovLH(1.5, 4 / 3.0f, 0.1f, 1000.0f);
 }
 
 void Potator::ViewManager::UpdateView()
@@ -47,22 +51,22 @@ void Potator::ViewManager::UpdateView()
 	_device->Update(&_transformationBuffer, &_transformationHandle);
 }
 
-void Potator::ViewManager::Add(Entity camera)
+void Potator::ViewManager::Add(Entity cameraEntity, CameraComponent camera, TransformComponent transform)
 {
-	TransformComponent initialTransform;
-	_scene.AddNode(camera, initialTransform);
-	_cameras.push_back(camera);
-
-	if (_cameras.size() == 1)
-	{
-		SetActive(camera);
-	}
+	_scene.AddNode(cameraEntity, transform);
+	_cameras.Store(cameraEntity, camera);
 }
 
 void Potator::ViewManager::SetActive(Entity camera)
 {
 	_active = camera;
+	_proj = GetProjTransform(_cameras[_active]);
 	ViewChanged(camera);
+}
+
+Potator::Entity Potator::ViewManager::GetActive()
+{
+	return _active;
 }
 
 Eigen::Matrix4f Potator::ViewManager::GetViewTransform(const Eigen::Matrix4f& cameraWorld)
@@ -70,4 +74,20 @@ Eigen::Matrix4f Potator::ViewManager::GetViewTransform(const Eigen::Matrix4f& ca
 	Eigen::Matrix4f view = cameraWorld.inverse();
 
 	return view;
+}
+
+Eigen::Matrix4f Potator::ViewManager::GetProjTransform(const CameraComponent& camera)
+{
+	float h = 1.0f / std::tan(camera.FovY * 0.5f);
+	float w = h / camera.AspectRatio;
+
+	Eigen::Matrix4f result = Eigen::Matrix4f::Zero();
+
+	result(0, 0) = w;
+	result(1, 1) = h;
+	result(2, 2) = camera.ZFar / (camera.ZFar - camera.ZNear);
+	result(2, 3) = -camera.ZNear * camera.ZFar / (camera.ZFar - camera.ZNear);
+	result(3, 2) = 1.0f;
+
+	return result;
 }

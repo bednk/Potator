@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CommandDispatcher.h" />
     <ClInclude Include="CommandQueueComponent.h" />
     <ClInclude Include="ConstantBuffer.h" />

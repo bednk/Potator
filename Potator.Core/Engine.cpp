@@ -15,15 +15,14 @@ namespace Potator
 		_device{ DeviceFactory::GetDevice(api, _mainWindow.getNativeHandle()) },
 		_graph{ _transforms, _tree },
 		_renderer{ _device.get(), _meshes, _transforms, _materials },
-		_views{ _transforms, _graph, _device.get() },
+		_views{ _transforms, _cameras, _graph, _device.get() },
 		_movementSystem { _transforms, _movements },
 		_stepTracker { 30 },
 		_commandDispatcher { _commands },
 		_cameraHandler { _commandDispatcher, _movementSystem }
 	{
 		_stepTracker.Subscribe(&_movementSystem);
-		Entity camera = _registry.GetNew();
-		_views.Add(camera);
+		Entity camera = _views.GetActive();
 		_cameraHandler.SetEntity(camera);
 		_views.ViewChanged.connect([this](Entity e) { _cameraHandler.SetEntity(e); });
 	}
@@ -57,10 +56,6 @@ namespace Potator
 		}
 	}
 
-	EntityRegistry& Engine::GetEntityRegistry()
-	{
-		return _registry;
-	}
 
 	ComponentStorage<MeshComponent>& Engine::GetMeshes()
 	{

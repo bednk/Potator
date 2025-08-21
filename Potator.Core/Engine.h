@@ -16,6 +16,7 @@
 #include "CommandDispatcher.h"
 #include "MovementInputHandler.h"
 #include "MaterialComponent.h"
+#include "CameraComponent.h"
 
 
 namespace Potator
@@ -25,7 +26,6 @@ namespace Potator
 	public:
 		Engine();
 		Engine(GpuApi api);
-		EntityRegistry& GetEntityRegistry();
 		ComponentStorage<MeshComponent>& GetMeshes();
 		ComponentStorage<TransformComponent>& GetTransforms();
 		ComponentStorage<MovementComponent>& GetMovements();
@@ -47,7 +47,7 @@ namespace Potator
 		ComponentStorage<MovementComponent> _movements;
 		ComponentStorage<SceneNodeComponent> _tree;
 		ComponentStorage<CommandQueueComponent> _commands;
-		EntityRegistry _registry;
+		ComponentStorage<CameraComponent> _cameras;
 		MeshRenderer _renderer;
 		SceneGraph _graph;
 		ViewManager _views;
