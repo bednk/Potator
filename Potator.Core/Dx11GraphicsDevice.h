@@ -2,6 +2,7 @@
 #include "framework.h"
 #include "IGraphicsDevice.h"
 #include "DxVertexBuffer.h"
+#include "DxVertexBuffer.h"
 
 
 namespace Potator
@@ -9,7 +10,7 @@ namespace Potator
 	class Dx11GraphicsDevice : public IGraphicsDevice
 	{
 	public:
-		Dx11GraphicsDevice(HWND windowHandle);
+		Dx11GraphicsDevice(HWND windowHandle, LaunchingParams params);
 		void Clear(float r, float g, float b, float a) override;
 		VertexBufferHandle Create(const IVertexBuffer* buffer) override;
 		IndexBufferHandle Create(const IndexBuffer* buffer) override;
@@ -26,7 +27,10 @@ namespace Potator
 		void Update(const IConstantBuffer* data, const ConstantBufferHandle* gpuHandle) override;
 		void Draw(const MeshComponent* mesh, const MaterialComponent* material) override;
 		void Present() override;
+		void OnWindowResized(unsigned int width, unsigned int height) override;
 	private:
+		void RecreateRenderTargeView();
+		void SetViewport(unsigned int w, unsigned int h);
 		Microsoft::WRL::ComPtr <ID3D11Device> _device;
 		Microsoft::WRL::ComPtr <IDXGISwapChain> _swapChain;
 		Microsoft::WRL::ComPtr <ID3D11DeviceContext> _context;
@@ -37,8 +41,6 @@ namespace Potator
 		std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> _constantBuffers;
 		std::vector<Microsoft::WRL::ComPtr<ID3D11VertexShader>> _vertexShaders;
 		std::vector<Microsoft::WRL::ComPtr<ID3D11PixelShader>> _pixelShaders;
-
-
 	};
 }
 

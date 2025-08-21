@@ -17,6 +17,8 @@
 #include "MovementInputHandler.h"
 #include "MaterialComponent.h"
 #include "CameraComponent.h"
+#include "LaunchingParams.h"
+#include <boost/signals2.hpp>
 
 
 namespace Potator
@@ -25,7 +27,7 @@ namespace Potator
 	{
 	public:
 		Engine();
-		Engine(GpuApi api);
+		Engine(LaunchingParams windowSettings);
 		ComponentStorage<MeshComponent>& GetMeshes();
 		ComponentStorage<TransformComponent>& GetTransforms();
 		ComponentStorage<MovementComponent>& GetMovements();
@@ -55,5 +57,6 @@ namespace Potator
 		FixedStepTracker _stepTracker;
 		CommandDispatcher _commandDispatcher;
 		MovementInputHandler _cameraHandler;
+		boost::signals2::signal<void(unsigned int, unsigned int)> WindowResized;
 	};
 }

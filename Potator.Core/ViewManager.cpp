@@ -10,18 +10,18 @@ Potator::CameraComponent GetDefault()
 		0.1f,
 		1000.0f,
 		1.5,
-		4 / 3.0f
 	};
 }
 
-Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transforms, ComponentStorage<CameraComponent>& cameras, SceneGraph& scene, IGraphicsDevice* device) :
+Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transforms, ComponentStorage<CameraComponent>& cameras, SceneGraph& scene, IGraphicsDevice* device, float aspectRatio) :
 	_transforms { transforms },
 	_cameras { cameras },
 	_scene { scene },
 	_device { device },
 	_active { NONE_ENTITY },
 	_transformationBuffer{ Eigen::Matrix4f::Identity() },
-	_proj{ Eigen::Matrix4f::Identity() }
+	_proj{ Eigen::Matrix4f::Identity() },
+	_aspectRatio { aspectRatio }
 
 {
 	Entity defaultCam = EntityRegistry::Instance().GetNew();
@@ -60,13 +60,19 @@ void Potator::ViewManager::Add(Entity cameraEntity, CameraComponent camera, Tran
 void Potator::ViewManager::SetActive(Entity camera)
 {
 	_active = camera;
-	_proj = GetProjTransform(_cameras[_active]);
+	_proj = GetProjTransform(_cameras[_active], _aspectRatio);
 	ViewChanged(camera);
 }
 
 Potator::Entity Potator::ViewManager::GetActive()
 {
 	return _active;
+}
+
+void Potator::ViewManager::OnWindowResized(unsigned int width, unsigned int height)
+{
+	_aspectRatio = width / (float)height;
+	_proj = GetProjTransform(_cameras[_active], _aspectRatio);
 }
 
 Eigen::Matrix4f Potator::ViewManager::GetViewTransform(const Eigen::Matrix4f& cameraWorld)
@@ -76,10 +82,10 @@ Eigen::Matrix4f Potator::ViewManager::GetViewTransform(const Eigen::Matrix4f& ca
 	return view;
 }
 
-Eigen::Matrix4f Potator::ViewManager::GetProjTransform(const CameraComponent& camera)
+Eigen::Matrix4f Potator::ViewManager::GetProjTransform(const CameraComponent& camera, float aspectRatio)
 {
 	float h = 1.0f / std::tan(camera.FovY * 0.5f);
-	float w = h / camera.AspectRatio;
+	float w = h / aspectRatio;
 
 	Eigen::Matrix4f result = Eigen::Matrix4f::Zero();
 

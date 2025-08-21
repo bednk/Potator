@@ -7,7 +7,7 @@
 
 using namespace Microsoft::WRL;
 
-Potator::Dx11GraphicsDevice::Dx11GraphicsDevice(HWND windowHandle)
+Potator::Dx11GraphicsDevice::Dx11GraphicsDevice(HWND windowHandle, LaunchingParams params)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	swapChainDesc.BufferDesc.Width = 0;
@@ -41,19 +41,10 @@ Potator::Dx11GraphicsDevice::Dx11GraphicsDevice(HWND windowHandle)
 		_context.GetAddressOf()
 	);
 
-	ComPtr<ID3D11Resource> backBuffer;
-	_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(backBuffer.GetAddressOf()));
-	_device->CreateRenderTargetView(backBuffer.Get(), nullptr, &_targetView) >> HrCheck::Instance();
-	_context->OMSetRenderTargets(1, _targetView.GetAddressOf(), nullptr);
-	D3D11_VIEWPORT viewPort = {};
-	viewPort.TopLeftX = 0;
-	viewPort.TopLeftY = 0;
-	viewPort.MaxDepth = 1;
-	viewPort.MinDepth = 0;
-	viewPort.Width = 800;
-	viewPort.Height = 600;
-	_context->RSSetViewports(1, &viewPort);
+	RecreateRenderTargeView();
+	SetViewport(params.Width, params.Height);
 	_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	_context->OMSetRenderTargets(1, _targetView.GetAddressOf(), nullptr);
 }
 
 void Potator::Dx11GraphicsDevice::Clear(float r, float g, float b, float a)
@@ -75,6 +66,34 @@ void Potator::Dx11GraphicsDevice::Draw(const MeshComponent* mesh, const Material
 void Potator::Dx11GraphicsDevice::Present()
 {
 	_swapChain->Present(1, 0);
+}
+
+void Potator::Dx11GraphicsDevice::OnWindowResized(unsigned int width, unsigned int height)
+{
+	_targetView->Release();
+	_swapChain->ResizeBuffers(1, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+	RecreateRenderTargeView();
+	SetViewport(width, height);
+	_context->OMSetRenderTargets(1, _targetView.GetAddressOf(), nullptr);
+}
+
+void Potator::Dx11GraphicsDevice::RecreateRenderTargeView()
+{
+	ComPtr<ID3D11Resource> backBuffer;
+	_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(backBuffer.GetAddressOf()));
+	_device->CreateRenderTargetView(backBuffer.Get(), nullptr, _targetView.ReleaseAndGetAddressOf()) >> HrCheck::Instance();
+}
+
+void Potator::Dx11GraphicsDevice::SetViewport(unsigned int w, unsigned int h)
+{
+	D3D11_VIEWPORT viewPort = {};
+	viewPort.TopLeftX = 0;
+	viewPort.TopLeftY = 0;
+	viewPort.MaxDepth = 1;
+	viewPort.MinDepth = 0;
+	viewPort.Width = w;
+	viewPort.Height = h;
+	_context->RSSetViewports(1, &viewPort);
 }
 
 void Potator::Dx11GraphicsDevice::Bind(const VertexShaderHandle* shader)

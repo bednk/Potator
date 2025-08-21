@@ -5,17 +5,17 @@
 
 namespace Potator
 {
-	Engine::Engine() : Engine(GpuApi::Dx11)
+	Engine::Engine() : Engine(LaunchingParams{})
 	{
 
 	}
 
-	Engine::Engine(GpuApi api) :
-		_mainWindow{ sf::VideoMode({ 800, 600 }), "Potator Engine" },
-		_device{ DeviceFactory::GetDevice(api, _mainWindow.getNativeHandle()) },
+	Engine::Engine(LaunchingParams settings) :
+		_mainWindow{ sf::VideoMode({ settings.Width, settings.Height }), settings.Title },
+		_device{ DeviceFactory::GetDevice(settings, _mainWindow.getNativeHandle()) },
 		_graph{ _transforms, _tree },
 		_renderer{ _device.get(), _meshes, _transforms, _materials },
-		_views{ _transforms, _cameras, _graph, _device.get() },
+		_views{ _transforms, _cameras, _graph, _device.get(), settings.Width / (float)settings.Height },
 		_movementSystem { _transforms, _movements },
 		_stepTracker { 30 },
 		_commandDispatcher { _commands },
@@ -25,6 +25,8 @@ namespace Potator
 		Entity camera = _views.GetActive();
 		_cameraHandler.SetEntity(camera);
 		_views.ViewChanged.connect([this](Entity e) { _cameraHandler.SetEntity(e); });
+		WindowResized.connect([this](unsigned int w, unsigned int h) { _views.OnWindowResized(w, h); });
+		WindowResized.connect([this](unsigned int w, unsigned int h) { _device->OnWindowResized(w, h); });
 	}
 
 	void Engine::Run()
@@ -42,6 +44,12 @@ namespace Potator
 				if (event->is<sf::Event::Closed>())
 				{
 					_mainWindow.close();
+				}
+
+				else if (event->is<sf::Event::Resized>())
+				{
+					const auto* resizeEvent = event->getIf<sf::Event::Resized>();
+					WindowResized(resizeEvent->size.x, resizeEvent->size.y);
 				}
 			}
 

@@ -8,15 +8,10 @@
 #include "PipelineStage.h"
 #include "TransformComponent.h"
 #include "MaterialComponent.h"
+#include "LaunchingParams.h"
 
 namespace Potator
 {
-	enum class GpuApi
-	{
-		Dx11,
-		OpenGL
-	};
-
 	class IGraphicsDevice
 	{
 	public:
@@ -36,6 +31,7 @@ namespace Potator
 		virtual void Update(const IConstantBuffer* data, const ConstantBufferHandle* gpuHandle) = 0;
 		virtual void Draw(const MeshComponent* mesh, const MaterialComponent* material) = 0;
 		virtual void Present() = 0;
+		virtual void OnWindowResized(unsigned int width, unsigned int height) = 0;
 		~IGraphicsDevice() = default;
 	};
 }

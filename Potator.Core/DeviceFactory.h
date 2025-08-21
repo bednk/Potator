@@ -3,6 +3,7 @@
 #include "IGraphicsDevice.h"
 #include "Dx11GraphicsDevice.h"
 #include "Exception.h"
+#include "LaunchingParams.h"
 #include <memory>
 
 namespace Potator
@@ -10,12 +11,12 @@ namespace Potator
 	class DeviceFactory
 	{
 	public:
-		static std::unique_ptr<IGraphicsDevice> GetDevice(GpuApi api, HWND windowHandle)
+		static std::unique_ptr<IGraphicsDevice> GetDevice(LaunchingParams settings, HWND windowHandle)
 		{
-			switch (api)
+			switch (settings.Api)
 			{
 			case GpuApi::Dx11:
-				return std::make_unique<Dx11GraphicsDevice>(windowHandle);
+				return std::make_unique<Dx11GraphicsDevice>(windowHandle, settings);
 			default:
 				throw Exception("Not implemented API");
 			}

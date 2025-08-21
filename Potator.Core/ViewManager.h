@@ -12,15 +12,16 @@ namespace Potator
 	class ViewManager
 	{
 	public:
-		ViewManager(ComponentStorage<TransformComponent>& transforms, ComponentStorage<CameraComponent>& cameras, SceneGraph& scene, IGraphicsDevice* device);
+		ViewManager(ComponentStorage<TransformComponent>& transforms, ComponentStorage<CameraComponent>& cameras, SceneGraph& scene, IGraphicsDevice* device, float aspectRatio);
 		void UpdateView();
 		void Add(Entity cameraEntity, CameraComponent camera, TransformComponent transform);
 		void SetActive(Entity camera);
 		Entity GetActive();
+		void OnWindowResized(unsigned int width, unsigned int height);
 		boost::signals2::signal<void(Entity)> ViewChanged;
 	private:
 		Eigen::Matrix4f GetViewTransform(const Eigen::Matrix4f& cameraWorld);
-		Eigen::Matrix4f GetProjTransform(const CameraComponent& camera);
+		Eigen::Matrix4f GetProjTransform(const CameraComponent& camera, float aspectRatio);
 		ComponentStorage<TransformComponent>& _transforms;
 		ComponentStorage<CameraComponent>& _cameras;
 		SceneGraph& _scene;
@@ -29,6 +30,7 @@ namespace Potator
 		ConstantBufferHandle _transformationHandle;
 		ConstantBuffer<Eigen::Matrix4f> _transformationBuffer;
 		Eigen::Matrix4f _proj;
+		float _aspectRatio;
 	};
 }
 

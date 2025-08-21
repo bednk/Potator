@@ -7,6 +7,5 @@ namespace Potator
 		float ZNear;
 		float ZFar;
 		float FovY;
-		float AspectRatio;
 	};
 }
