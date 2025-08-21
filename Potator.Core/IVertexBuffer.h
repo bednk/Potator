@@ -10,7 +10,6 @@ namespace Potator
 	{
 	public:
 		virtual const std::vector<VertexMemberDescriptor> GetVertexLayout() const = 0;
-		virtual const IShaderBinary* GetVsShaderBinary() const = 0;
 		virtual ~IVertexBuffer() = default;
 	};
 }

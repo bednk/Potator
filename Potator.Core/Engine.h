@@ -15,6 +15,8 @@
 #include "FixedStepTracker.h"
 #include "CommandDispatcher.h"
 #include "MovementInputHandler.h"
+#include "MaterialComponent.h"
+
 
 namespace Potator
 {
@@ -27,6 +29,7 @@ namespace Potator
 		ComponentStorage<MeshComponent>& GetMeshes();
 		ComponentStorage<TransformComponent>& GetTransforms();
 		ComponentStorage<MovementComponent>& GetMovements();
+		ComponentStorage<MaterialComponent>& GetMaterials();
 		SceneGraph& GetSceneGraph();
 		ViewManager& GetViewManager();
 		CommandDispatcher& GetCommandDispatcher();
@@ -39,9 +42,10 @@ namespace Potator
 		sf::Window _mainWindow;
 		std::unique_ptr<IGraphicsDevice> _device;
 		ComponentStorage<MeshComponent> _meshes;
+		ComponentStorage<MaterialComponent> _materials;
 		ComponentStorage<TransformComponent> _transforms;
-		ComponentStorage<SceneNodeComponent> _tree;
 		ComponentStorage<MovementComponent> _movements;
+		ComponentStorage<SceneNodeComponent> _tree;
 		ComponentStorage<CommandQueueComponent> _commands;
 		EntityRegistry _registry;
 		MeshRenderer _renderer;

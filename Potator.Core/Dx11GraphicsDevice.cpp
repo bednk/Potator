@@ -62,16 +62,48 @@ void Potator::Dx11GraphicsDevice::Clear(float r, float g, float b, float a)
 	_context->ClearRenderTargetView(_targetView.Get(), color);
 }
 
-void Potator::Dx11GraphicsDevice::Draw(const MeshComponent* mesh)
+void Potator::Dx11GraphicsDevice::Draw(const MeshComponent* mesh, const MaterialComponent* material)
 {
 	Bind(&mesh->VertexBuffer);
-	Bind(&mesh->IndexBuffer);  
+	Bind(&mesh->IndexBuffer);
+	Bind(&material->InputLayout);
+	Bind(&material->VertexShader);
+	Bind(&material->PixelShader);
 	_context->DrawIndexed(mesh->IndexCount, mesh->StartIndexLocation, mesh->VertexOffset);
 }
 
 void Potator::Dx11GraphicsDevice::Present()
 {
 	_swapChain->Present(1, 0);
+}
+
+void Potator::Dx11GraphicsDevice::Bind(const VertexShaderHandle* shader)
+{
+	_context->VSSetShader(_vertexShaders[shader->Id].Get(), nullptr, 0);
+}
+
+void Potator::Dx11GraphicsDevice::Bind(const PixelShaderHandle* shader)
+{
+	_context->PSSetShader(_pixelShaders[shader->Id].Get(), nullptr, 0);
+}
+
+void Potator::Dx11GraphicsDevice::Bind(const InputLayoutHandle* inputLayout)
+{
+	_context->IASetInputLayout(_inputLayouts[inputLayout->Id].Get());
+}
+
+Potator::VertexShaderHandle Potator::Dx11GraphicsDevice::CreateVertexShader(const IShaderBinary* shaderBinary)
+{
+	auto& vertexShader = _vertexShaders.emplace_back();
+	_device->CreateVertexShader(shaderBinary->GetData(), shaderBinary->GetSize(), nullptr, &vertexShader) >> HrCheck::Instance();
+	return { _vertexShaders.size() - 1 };
+}
+
+Potator::PixelShaderHandle Potator::Dx11GraphicsDevice::CreatePixelShader(const IShaderBinary* shaderBinary)
+{
+	auto& pixelShader = _pixelShaders.emplace_back();
+	_device->CreatePixelShader(shaderBinary->GetData(), shaderBinary->GetSize(), nullptr, &pixelShader) >> HrCheck::Instance();
+	return { _pixelShaders.size() - 1 };
 }
 
 void Potator::Dx11GraphicsDevice::Update(const IConstantBuffer* data, const ConstantBufferHandle* gpuHandle)
@@ -104,21 +136,23 @@ Potator::VertexBufferHandle Potator::Dx11GraphicsDevice::Create(const IVertexBuf
 	bufferDesc.MiscFlags = 0;
 	bufferDesc.ByteWidth = buffer->GetSize();
 	bufferDesc.StructureByteStride = buffer->GetStride();
+	auto& vertexBuffer = _vertexBuffers.emplace_back();
+	vertexBuffer.Stride = bufferDesc.StructureByteStride;
+	_device->CreateBuffer(&bufferDesc, &data, vertexBuffer.Buffer.GetAddressOf()) >> HrCheck::Instance();
 
-	auto vertexMembers = buffer->GetVertexLayout();
+	return { _vertexBuffers.size() - 1 };
+}
+
+Potator::InputLayoutHandle Potator::Dx11GraphicsDevice::CreateInputLayout(const std::vector<VertexMemberDescriptor>& vertexMembers, const IShaderBinary* shaderBin)
+{
 	auto vertexDesc = std::make_unique<D3D11_INPUT_ELEMENT_DESC[]>(vertexMembers.size());
 	for (size_t i = 0; i < vertexMembers.size(); i++)
 	{
 		vertexDesc[i] = DxDescriptorsConverter::GetInputElementDesc(vertexMembers[i]);
 	}
-	auto shaderBin = buffer->GetVsShaderBinary();
-
-	auto& bufferCache = _vertexBuffers.emplace_back();
-	bufferCache.Stride = bufferDesc.StructureByteStride;
-	_device->CreateBuffer(&bufferDesc, &data, bufferCache.Buffer.GetAddressOf()) >> HrCheck::Instance();
-	_device->CreateInputLayout(vertexDesc.get(), vertexMembers.size(), shaderBin->GetData(), shaderBin->GetSize(), bufferCache.InputLayout.GetAddressOf()) >> HrCheck::Instance();
-
-	return { _vertexBuffers.size() - 1 };
+	auto& inputLayout = _inputLayouts.emplace_back();
+	_device->CreateInputLayout(vertexDesc.get(), vertexMembers.size(), shaderBin->GetData(), shaderBin->GetSize(), inputLayout.GetAddressOf()) >> HrCheck::Instance();
+	return { _inputLayouts.size() - 1};
 }
 
 Potator::IndexBufferHandle Potator::Dx11GraphicsDevice::Create(const IndexBuffer* buffer)
@@ -162,7 +196,6 @@ void Potator::Dx11GraphicsDevice::Bind(const VertexBufferHandle* buffer)
 	auto& vxBuffer = _vertexBuffers[buffer->Id];
 	UINT _ = 0;
 	_context->IASetVertexBuffers(0, 1, vxBuffer.Buffer.GetAddressOf(), &vxBuffer.Stride, &_);
-	_context->IASetInputLayout(vxBuffer.InputLayout.Get());
 }
 
 void Potator::Dx11GraphicsDevice::Bind(const IndexBufferHandle* buffer)
@@ -184,28 +217,5 @@ void Potator::Dx11GraphicsDevice::Bind(const ConstantBufferHandle* buffer, Pipel
 		break;
 	default:
 		throw Exception("Unsupported pipeline stage");
-	}
-}
-
-void Potator::Dx11GraphicsDevice::Bind(const IShaderBinary* shader)
-{
-	switch (shader->GetType())
-	{
-		case ShaderType::Vertex:
-		{
-			ComPtr<ID3D11VertexShader> vertexShader;
-			_device->CreateVertexShader(shader->GetData(), shader->GetSize(), nullptr, &vertexShader) >> HrCheck::Instance();
-			_context->VSSetShader(vertexShader.Get(), nullptr, 0);
-			break;
-		}
-		case ShaderType::Pixel:
-		{
-			ComPtr<ID3D11PixelShader> pixelShader;
-			_device->CreatePixelShader(shader->GetData(), shader->GetSize(), nullptr, &pixelShader) >> HrCheck::Instance();
-			_context->PSSetShader(pixelShader.Get(), nullptr, 0);
-			break;
-		}
-		default:
-			throw Exception("Unsupported shader type");
 	}
 }

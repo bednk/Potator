@@ -169,6 +169,7 @@
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="IShaderBinary.h" />
     <ClInclude Include="IVertexBuffer.h" />
+    <ClInclude Include="MaterialComponent.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="MoveCommand.h" />

@@ -14,7 +14,7 @@ namespace Potator
 		_mainWindow{ sf::VideoMode({ 800, 600 }), "Potator Engine" },
 		_device{ DeviceFactory::GetDevice(api, _mainWindow.getNativeHandle()) },
 		_graph{ _transforms, _tree },
-		_renderer{ _device.get(), _meshes, _transforms},
+		_renderer{ _device.get(), _meshes, _transforms, _materials },
 		_views{ _transforms, _graph, _device.get() },
 		_movementSystem { _transforms, _movements },
 		_stepTracker { 30 },
@@ -75,6 +75,11 @@ namespace Potator
 	ComponentStorage<MovementComponent>& Engine::GetMovements()
 	{
 		return _movements;
+	}
+
+	ComponentStorage<MaterialComponent>& Engine::GetMaterials()
+	{
+		return _materials;
 	}
 
 	SceneGraph& Engine::GetSceneGraph()

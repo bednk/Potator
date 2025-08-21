@@ -3,7 +3,7 @@
 #include "D3dcompiler.h"
 #include "HrCheck.h"
 
-Potator::HlslShader::HlslShader(std::wstring name, ShaderType type) : _type { type }
+Potator::HlslShader::HlslShader(std::wstring name)
 {
 	D3DReadFileToBlob(name.c_str(), &_blob) >> HrCheck::Instance();
 }
@@ -16,9 +16,4 @@ const void* Potator::HlslShader::GetData() const
 UINT Potator::HlslShader::GetSize() const
 {
 	return _blob->GetBufferSize();
-}
-
-Potator::ShaderType Potator::HlslShader::GetType() const
-{
-	return _type;
 }

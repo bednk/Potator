@@ -11,6 +11,7 @@
 #include <iostream>
 #include "MovementComponent.h"
 #include <MoveCommand.h>
+#include <MaterialComponent.h>
 
 using namespace Potator;
 
@@ -18,39 +19,39 @@ int main()
 {
 	Engine engine;
 	auto device = engine.GetGraphicsDevice();
-	HlslShader vertexShader(L"D:\\repos\\Potator\\VertexShader_c.cso", ShaderType::Vertex);
-	HlslShader pixelShader(L"D:\\repos\\Potator\\PixelShader_c.cso", ShaderType::Pixel);
 
+
+	HlslShader vsBinary(L"D:\\repos\\Potator\\VertexShader_c.cso");
+	HlslShader psBinary(L"D:\\repos\\Potator\\PixelShader_c.cso");
 
 	VertexBuffer<ColoredVertex> cpuVertexBuffer(
 		{
 			{{0.0f, 0.5f, 0.0f, 1.0f }, {1.0f, 0.0f, 0.0f, 1.0f }},
 			{{0.5f, -0.5f, 0.0f, 1.0f }, {0.0f, 1.0f, 0.0f, 1.0f }},
 			{{-0.5f, -0.5f, 0.0f, 1.0f }, {0.0f, 0.0f, 1.0f, 1.0f }}
-		}, &vertexShader);
+		});
 	IndexBuffer cpuIndexBuffer(
 		{
 			0, 1, 2
 		});
+
+	MaterialComponent material =
+	{
+		device->CreateVertexShader(&vsBinary),
+		&vsBinary,
+		device->CreatePixelShader(&psBinary),
+		device->CreateInputLayout(cpuVertexBuffer.GetVertexLayout(), &vsBinary)
+	};
+
 	VertexBufferHandle gpuVertexBuffer = device->Create(&cpuVertexBuffer);
 	IndexBufferHandle gpuIndexBuffer = device->Create(&cpuIndexBuffer);
-
-
-
 	Entity meshEntity = engine.GetEntityRegistry().GetNew();
-
 	MeshComponent mesh = { gpuVertexBuffer, gpuIndexBuffer, 3, 0, 0 };
-
 	TransformComponent meshTransform;
-
 	engine.GetSceneGraph().AddNode(meshEntity, meshTransform);
 	engine.GetMeshes().Store(meshEntity, mesh);
-
+	engine.GetMaterials().Store(meshEntity, material);
 	engine.GetTransforms()[meshEntity].Local(2, 3) = 5;
-
-	device->Bind(&vertexShader);
-	device->Bind(&pixelShader);
-	std::cout << engine.GetTransforms()[meshEntity].Local.format(Eigen::IOFormat(Eigen::FullPrecision, 0, ", ", "\n", "[", "]")) << "\n";
 
 	engine.Run();
 }

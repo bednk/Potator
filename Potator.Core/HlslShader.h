@@ -10,13 +10,11 @@ namespace Potator
 	class HlslShader : public IShaderBinary
 	{
 	public:
-		HlslShader(std::wstring name, ShaderType type);
+		HlslShader(std::wstring name);
 		const void* GetData() const override;
 		UINT GetSize() const override;
-		ShaderType GetType() const override;
 	private:
 		Microsoft::WRL::ComPtr<ID3DBlob> _blob;
-		ShaderType _type;
 	};
 }
 

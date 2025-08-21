@@ -14,12 +14,17 @@ namespace Potator
 		VertexBufferHandle Create(const IVertexBuffer* buffer) override;
 		IndexBufferHandle Create(const IndexBuffer* buffer) override;
 		ConstantBufferHandle Create(const IConstantBuffer* buffer) override;
+		VertexShaderHandle CreateVertexShader(const IShaderBinary* shaderBinary) override;
+		PixelShaderHandle CreatePixelShader(const IShaderBinary* shaderBinary) override;
+		InputLayoutHandle CreateInputLayout(const std::vector<VertexMemberDescriptor>& vertexMembers, const IShaderBinary* shaderBin) override;
 		void Bind(const VertexBufferHandle* buffer) override;
 		void Bind(const IndexBufferHandle* buffer) override;
 		void Bind(const ConstantBufferHandle* buffer, PipelineStage stage, UINT slot = 0) override;
-		void Bind(const IShaderBinary* shader) override;
+		void Bind(const VertexShaderHandle* shader) override;
+		void Bind(const PixelShaderHandle* shader) override;
+		void Bind(const InputLayoutHandle* inputLayout) override;
 		void Update(const IConstantBuffer* data, const ConstantBufferHandle* gpuHandle) override;
-		void Draw(const MeshComponent* mesh) override;
+		void Draw(const MeshComponent* mesh, const MaterialComponent* material) override;
 		void Present() override;
 	private:
 		Microsoft::WRL::ComPtr <ID3D11Device> _device;
@@ -27,8 +32,13 @@ namespace Potator
 		Microsoft::WRL::ComPtr <ID3D11DeviceContext> _context;
 		Microsoft::WRL::ComPtr <ID3D11RenderTargetView> _targetView;
 		std::vector<DxVertexBuffer> _vertexBuffers;
+		std::vector<Microsoft::WRL::ComPtr<ID3D11InputLayout>> _inputLayouts;
 		std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> _indexBuffers;
 		std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> _constantBuffers;
+		std::vector<Microsoft::WRL::ComPtr<ID3D11VertexShader>> _vertexShaders;
+		std::vector<Microsoft::WRL::ComPtr<ID3D11PixelShader>> _pixelShaders;
+
+
 	};
 }
 
