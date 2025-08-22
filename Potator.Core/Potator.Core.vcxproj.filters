@@ -67,6 +67,9 @@
     <Filter Include="Source Files\ECS\Commands">
       <UniqueIdentifier>{05f4e904-0295-4cc5-9c29-7fb448dd28f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ResourceManagment">
+      <UniqueIdentifier>{5d7464c7-e199-4969-be77-fd879f7f034a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -204,6 +207,9 @@
     <ClInclude Include="LaunchingParams.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="SceneLoader.h">
+      <Filter>Header Files\ResourceManagment</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -256,6 +262,9 @@
     </ClCompile>
     <ClCompile Include="MovementInputHandler.cpp">
       <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneLoader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

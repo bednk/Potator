@@ -1,6 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
-#include <VertexMemberDescriptor.h>
+#include "VertexMemberDescriptor.h"
 
 namespace Potator
 {
@@ -8,8 +8,10 @@ namespace Potator
 	{
 		ColoredVertex() = default;
 		ColoredVertex(const Eigen::Vector4f& position, const Eigen::Vector4f& color) :
-			Position { position },
-			Color { color } {}
+			Position{ position },
+			Color{ color }
+		{
+		}
 		Eigen::Vector4f Position;
 		Eigen::Vector4f Color;
 

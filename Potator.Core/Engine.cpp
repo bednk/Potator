@@ -19,7 +19,8 @@ namespace Potator
 		_movementSystem { _transforms, _movements },
 		_stepTracker { 30 },
 		_commandDispatcher { _commands },
-		_cameraHandler { _commandDispatcher, _movementSystem }
+		_cameraHandler { _commandDispatcher, _movementSystem },
+		_loader { _device.get(), _graph, _views, _meshes, _transforms, _materials}
 	{
 		_stepTracker.Subscribe(&_movementSystem);
 		Entity camera = _views.GetActive();
@@ -108,6 +109,11 @@ namespace Potator
 	IGraphicsDevice* Engine::GetGraphicsDevice()
 	{
 		return _device.get();
+	}
+
+	SceneLoader& Engine::GetLoader()
+	{
+		return _loader;
 	}
 
 	Engine::~Engine() = default;

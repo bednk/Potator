@@ -11,6 +11,7 @@ namespace Potator
 	public:
 		SceneGraph(ComponentStorage<TransformComponent>& transforms, ComponentStorage<SceneNodeComponent>& tree);
 		void AddNode(Entity entity, TransformComponent& transform, Entity parent = NONE_ENTITY);
+		SceneNodeComponent& GetNode(Entity entity);
 		void UpdateTransforms();
 	private:
 		void TopoSort();

@@ -27,7 +27,11 @@ Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transfor
 	Entity defaultCam = EntityRegistry::Instance().GetNew();
 	CameraComponent camComponent = GetDefault();
 	TransformComponent transComponent;
-	
+	transComponent.Local <<
+		0.707107f,	-0.408248f, -0.577350f, 5.0f,
+		0.0f,		0.816497f,	-0.577350f, 5.0f,
+		0.707107f,	0.408248f,	0.577350f,	-5.0f,
+		0.0f,		0.0f,		0.0f,		1.0f;
 	Add(defaultCam, camComponent, transComponent);
 	SetActive(defaultCam);
 

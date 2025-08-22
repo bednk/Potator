@@ -26,6 +26,11 @@ void Potator::SceneGraph::AddNode(Entity entity, TransformComponent& transform, 
 	parentNode.Children.push_back(entity);
 }
 
+Potator::SceneNodeComponent& Potator::SceneGraph::GetNode(Entity entity)
+{
+	return _tree[entity];
+}
+
 void Potator::SceneGraph::UpdateTransforms()
 {
 	for (size_t i = 0; i < _topologicalOrder.size(); i++)

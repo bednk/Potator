@@ -1,12 +1,13 @@
 #pragma once
 #include "IShaderBinary.h"
+#include <memory>
 
 namespace Potator
 {
 	struct MaterialComponent
 	{
 		VertexShaderHandle VertexShader;
-		IShaderBinary* VsBinary;
+		std::shared_ptr<IShaderBinary> VsBinary;
 		PixelShaderHandle PixelShader;
 		InputLayoutHandle InputLayout;
 	};

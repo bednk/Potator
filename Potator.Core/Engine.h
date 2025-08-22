@@ -18,6 +18,7 @@
 #include "MaterialComponent.h"
 #include "CameraComponent.h"
 #include "LaunchingParams.h"
+#include "SceneLoader.h"
 #include <boost/signals2.hpp>
 
 
@@ -37,6 +38,7 @@ namespace Potator
 		CommandDispatcher& GetCommandDispatcher();
 		MovementSystem& GetMovementSystem();
 		IGraphicsDevice* GetGraphicsDevice();
+		SceneLoader& GetLoader();
 
 		void Run();
 		~Engine();
@@ -57,6 +59,7 @@ namespace Potator
 		FixedStepTracker _stepTracker;
 		CommandDispatcher _commandDispatcher;
 		MovementInputHandler _cameraHandler;
+		SceneLoader _loader;
 		boost::signals2::signal<void(unsigned int, unsigned int)> WindowResized;
 	};
 }
