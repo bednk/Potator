@@ -11,7 +11,7 @@
 namespace fs = std::filesystem;
 using namespace Potator;
 
-Eigen::Matrix4f GetEigenMatrix(const aiMatrix4x4t<float>& matrix)
+static Eigen::Matrix4f GetEigenMatrix(const aiMatrix4x4t<float>& matrix)
 {
 	Eigen::Matrix4f result;
 
@@ -23,13 +23,56 @@ Eigen::Matrix4f GetEigenMatrix(const aiMatrix4x4t<float>& matrix)
 	return result;
 }
 
+static std::vector<MeshComponent> LoadMeshes(aiMesh** meshes, unsigned int count, IGraphicsDevice* device)
+{
+	std::vector<MeshComponent> result;
+	for (size_t i = 0; i < count; i++)
+	{
+		aiMesh* mesh = meshes[i];
+		MeshComponent& meshComponent = result.emplace_back();
+		meshComponent.StartIndexLocation = 0;
+		std::vector<ColoredVertex> vertices;
+		std::vector<unsigned short> indices;
+
+		for (size_t f = 0; f < mesh->mNumFaces; f++)
+		{
+			aiFace face = mesh->mFaces[f];
+
+			for (size_t i = 0; i < face.mNumIndices; i++)
+			{
+				auto indice = face.mIndices[i];
+				indices.push_back(indice);
+			}
+		}
+
+		for (size_t v = 0; v < mesh->mNumVertices; v++)
+		{
+			aiVector3t<float> vec = mesh->mVertices[v];
+			ColoredVertex& vertex = vertices.emplace_back();
+			vertex.Position = { vec.x, vec.y, vec.z, 1.0f };
+			vertex.Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		}
+
+		VertexBuffer<ColoredVertex> cpuVBuf(vertices);
+		IndexBuffer cpuIBuf(indices);
+
+		meshComponent.IndexCount = indices.size();
+		meshComponent.VertexBuffer = device->Create(&cpuVBuf);
+		meshComponent.IndexBuffer = device->Create(&cpuIBuf);
+	}
+
+	return result;
+}
+
 Potator::SceneLoader::SceneLoader(IGraphicsDevice* device,
-	SceneGraph& graph,
+		IShaderCache* shaderCache,
+		SceneGraph& graph,
 		ViewManager& views,
 		ComponentStorage<MeshComponent>& meshes,
 		ComponentStorage<TransformComponent>& transforms,
 		ComponentStorage<MaterialComponent>& materials) :
 	_device { device },
+	_shaderCache { shaderCache },
 	_graph { graph },
 	_views { views },
 	_meshes { meshes },
@@ -40,14 +83,12 @@ Potator::SceneLoader::SceneLoader(IGraphicsDevice* device,
 
 void Potator::SceneLoader::Load(fs::path path)
 {
-	std::shared_ptr<IShaderBinary> vsBinary = std::make_shared<HlslShader>(L"D:\\repos\\Potator\\VertexShader_c.cso");
-	HlslShader psBinary(L"D:\\repos\\Potator\\PixelShader_c.cso");
-
+	auto vsBinary = _shaderCache->GetShaderBinary("vs_colored");
 	MaterialComponent material =
 	{
-		_device->CreateVertexShader(vsBinary.get()),
+		_shaderCache->GetVertexShaderHandle("vs_colored"),
 		vsBinary,
-		_device->CreatePixelShader(&psBinary),
+		_shaderCache->GetPixelShaderHandle("ps_colored"),
 		_device->CreateInputLayout(ColoredVertex::GetLayout(), vsBinary.get())
 	};
 
@@ -63,6 +104,8 @@ void Potator::SceneLoader::Load(fs::path path)
 		return;
 	}
 
+	std::vector<MeshComponent> meshComponents = LoadMeshes(scene->mMeshes, scene->mNumMeshes, _device);
+
 	std::queue<aiNode*> queue;
 	queue.push(scene->mRootNode);
 	while (!queue.empty())
@@ -74,60 +117,16 @@ void Potator::SceneLoader::Load(fs::path path)
 		nodeTransform.Local = GetEigenMatrix(node->mTransformation);
 		_graph.AddNode(nodeEntity, nodeTransform);
 
-		std::vector<ColoredVertex> vertices;
-		std::vector<unsigned short> indices;
-
 		for (size_t m = 0; m < node->mNumMeshes; m++)
 		{
 			unsigned int meshIdx = node->mMeshes[m];
-			aiMesh* mesh = scene->mMeshes[meshIdx];
+			MeshComponent meshComponent = meshComponents[meshIdx]; //inentional copy
+
 			Entity meshEntity = EntityRegistry::Instance().GetNew();
 			TransformComponent meshTransform;
 			_graph.AddNode(meshEntity, meshTransform, nodeEntity);
-			MeshComponent meshComponent;
-			meshComponent.VertexOffset = vertices.size();
-			meshComponent.StartIndexLocation = indices.size();
-			meshComponent.IndexCount = mesh->mNumFaces * 3;
 			_meshes.Store(meshEntity, meshComponent);
 			_materials.Store(meshEntity, material);
-
-			for (size_t f = 0; f < mesh->mNumFaces; f++)
-			{
-				aiFace face = mesh->mFaces[f];
-
-				for (size_t i = 0; i < face.mNumIndices; i++)
-				{
-					auto indice = face.mIndices[i];
-					indices.push_back(indice);
-				}
-			}
-
-			for (size_t v = 0; v < mesh->mNumVertices; v++)
-			{
-				aiVector3t<float> vec = mesh->mVertices[v];
-				ColoredVertex& vertex = vertices.emplace_back();
-				vertex.Position = {vec.x, vec.y, vec.z, 1.0f};
-				vertex.Color = { 1.0f, 1.0f, 1.0f, 1.0f };
-			}
-		}
-
-		VertexBuffer<ColoredVertex> cpuVBuf(vertices);
-		IndexBuffer cpuIBuf(indices);
-		VertexBufferHandle gpuVBuf = _device->Create(&cpuVBuf);
-		IndexBufferHandle gpuIBuf = _device->Create(&cpuIBuf);
-
-		SceneNodeComponent& nodeComponent = _graph.GetNode(nodeEntity);
-		for (size_t i = 0; i < nodeComponent.Children.size(); i++)
-		{
-			Entity child = nodeComponent.Children[i];
-			if (!_meshes.HasComponent(child))
-			{
-				continue;
-			}
-
-			MeshComponent& childMesh = _meshes[child];
-			childMesh.VertexBuffer = gpuVBuf;
-			childMesh.IndexBuffer = gpuIBuf;
 		}
 	}
 }

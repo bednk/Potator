@@ -2,6 +2,7 @@
   "dependencies": [
     "boost-signals2",
     "boost-stacktrace",
+    "boost-dll",
     "sfml",
     "eigen3",
     "assimp"

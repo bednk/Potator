@@ -13,6 +13,7 @@ namespace Potator
 	Engine::Engine(LaunchingParams settings) :
 		_mainWindow{ sf::VideoMode({ settings.Width, settings.Height }), settings.Title },
 		_device{ DeviceFactory::GetDevice(settings, _mainWindow.getNativeHandle()) },
+		_shaderCache { DeviceFactory::GetShaderCache(settings.Api, _device.get() )},
 		_graph{ _transforms, _tree },
 		_renderer{ _device.get(), _meshes, _transforms, _materials },
 		_views{ _transforms, _cameras, _graph, _device.get(), settings.Width / (float)settings.Height },
@@ -20,7 +21,7 @@ namespace Potator
 		_stepTracker { 30 },
 		_commandDispatcher { _commands },
 		_cameraHandler { _commandDispatcher, _movementSystem },
-		_loader { _device.get(), _graph, _views, _meshes, _transforms, _materials}
+		_loader { _device.get(), _shaderCache.get(), _graph, _views, _meshes, _transforms, _materials}
 	{
 		_stepTracker.Subscribe(&_movementSystem);
 		Entity camera = _views.GetActive();

@@ -45,6 +45,7 @@ namespace Potator
 	private:
 		sf::Window _mainWindow;
 		std::unique_ptr<IGraphicsDevice> _device;
+		std::unique_ptr<IShaderCache> _shaderCache;
 		ComponentStorage<MeshComponent> _meshes;
 		ComponentStorage<MaterialComponent> _materials;
 		ComponentStorage<TransformComponent> _transforms;

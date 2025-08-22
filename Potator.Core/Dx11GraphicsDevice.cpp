@@ -60,7 +60,7 @@ void Potator::Dx11GraphicsDevice::Draw(const MeshComponent* mesh, const Material
 	Bind(&material->InputLayout);
 	Bind(&material->VertexShader);
 	Bind(&material->PixelShader);
-	_context->DrawIndexed(mesh->IndexCount, mesh->StartIndexLocation, mesh->VertexOffset);
+	_context->DrawIndexed(mesh->IndexCount, mesh->StartIndexLocation, 0);
 }
 
 void Potator::Dx11GraphicsDevice::Present()
