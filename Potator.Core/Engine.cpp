@@ -20,7 +20,7 @@ namespace Potator
 		_movementSystem { _transforms, _movements },
 		_stepTracker { 30 },
 		_commandDispatcher { _commands },
-		_cameraHandler { _commandDispatcher, _movementSystem },
+		_cameraHandler { _commandDispatcher, _movements, _transforms },
 		_loader { _device.get(), _shaderCache.get(), _graph, _views, _meshes, _transforms, _materials}
 	{
 		_stepTracker.Subscribe(&_movementSystem);

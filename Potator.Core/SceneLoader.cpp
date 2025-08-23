@@ -107,7 +107,11 @@ void Potator::SceneLoader::Load(fs::path path)
 	std::vector<MeshComponent> meshComponents = LoadMeshes(scene->mMeshes, scene->mNumMeshes, _device);
 
 	std::queue<aiNode*> queue;
+	std::map<aiNode*, Entity> parents;
+
 	queue.push(scene->mRootNode);
+	parents[scene->mRootNode] = NONE_ENTITY;
+
 	while (!queue.empty())
 	{
 		aiNode* node = queue.front();
@@ -115,18 +119,24 @@ void Potator::SceneLoader::Load(fs::path path)
 		Entity nodeEntity = EntityRegistry::Instance().GetNew();
 		TransformComponent nodeTransform;
 		nodeTransform.Local = GetEigenMatrix(node->mTransformation);
-		_graph.AddNode(nodeEntity, nodeTransform);
+		_graph.AddNode(nodeEntity, nodeTransform, parents[node]);
 
-		for (size_t m = 0; m < node->mNumMeshes; m++)
+		for (size_t i = 0; i < node->mNumMeshes; i++)
 		{
-			unsigned int meshIdx = node->mMeshes[m];
-			MeshComponent meshComponent = meshComponents[meshIdx]; //inentional copy
+			unsigned int meshIdx = node->mMeshes[i];
+			MeshComponent meshComponent = meshComponents[meshIdx]; //intentional copy
 
 			Entity meshEntity = EntityRegistry::Instance().GetNew();
 			TransformComponent meshTransform;
 			_graph.AddNode(meshEntity, meshTransform, nodeEntity);
 			_meshes.Store(meshEntity, meshComponent);
 			_materials.Store(meshEntity, material);
+		}
+
+		for (size_t i = 0; i < node->mNumChildren; i++)
+		{
+			queue.push(node->mChildren[i]);
+			parents[node->mChildren[i]] = nodeEntity;
 		}
 	}
 }

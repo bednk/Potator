@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AttitudeMovementCommand.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CommandDispatcher.h" />
     <ClInclude Include="CommandQueueComponent.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="ViewManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AttitudeMovementCommand.cpp" />
     <ClCompile Include="CommandDispatcher.cpp" />
     <ClCompile Include="CommandQueueComponent.cpp" />
     <ClCompile Include="ComponentStorage.cpp" />

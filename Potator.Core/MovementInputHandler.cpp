@@ -1,16 +1,22 @@
 #include "MovementInputHandler.h"
 #include <SFML/Window/Keyboard.hpp>
 
-Potator::MovementInputHandler::MovementInputHandler(CommandDispatcher& commandDispatcher, MovementSystem& movementSystem) :
+Potator::MovementInputHandler::MovementInputHandler(CommandDispatcher& commandDispatcher, ComponentStorage<MovementComponent>& movements, ComponentStorage<TransformComponent>& transforms) :
 	_entity { NONE_ENTITY },
 	_commandDispatcher { commandDispatcher },
-	_command { movementSystem }
+	_command { movements, transforms },
+	_movements { movements }
 {
 }
 
 void Potator::MovementInputHandler::SetEntity(Entity entity)
 {
 	_entity = entity;
+	if (!_movements.HasComponent(entity))
+	{
+		MovementComponent mov;
+		_movements.Store(entity, mov);
+	}
 }
 
 void Potator::MovementInputHandler::Handle()

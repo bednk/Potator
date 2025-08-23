@@ -216,6 +216,9 @@
     <ClInclude Include="IShaderCache.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="AttitudeMovementCommand.h">
+      <Filter>Header Files\ECS\Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -274,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="DxShaderCache.cpp">
       <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="AttitudeMovementCommand.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
