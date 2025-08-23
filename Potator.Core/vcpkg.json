@@ -5,6 +5,7 @@
     "boost-dll",
     "sfml",
     "eigen3",
-    "assimp"
+    "assimp",
+    "stb"
   ]
 }

@@ -108,9 +108,6 @@
     <ClInclude Include="SceneGraph.h">
       <Filter>Header Files\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Exception.h">
-      <Filter>Header Files\Exceptions</Filter>
-    </ClInclude>
     <ClInclude Include="IShaderBinary.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
@@ -219,6 +216,12 @@
     <ClInclude Include="AttitudeMovementCommand.h">
       <Filter>Header Files\ECS\Commands</Filter>
     </ClInclude>
+    <ClInclude Include="RgbaTextureContainer.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturedVertex.h">
+      <Filter>Header Files\Rendering\Vertices</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -244,9 +247,6 @@
     </ClCompile>
     <ClCompile Include="HlslShader.cpp">
       <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="Exception.cpp">
-      <Filter>Source Files\Exceptions</Filter>
     </ClCompile>
     <ClCompile Include="HrCheck.cpp">
       <Filter>Source Files\Exceptions</Filter>
@@ -296,6 +296,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="vs_colored.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="vs_textured.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ps_textured.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

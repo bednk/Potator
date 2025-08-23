@@ -7,6 +7,6 @@ namespace Potator
 	struct DxVertexBuffer
 	{
 		Microsoft::WRL::ComPtr<ID3D11Buffer> Buffer;
-		UINT Stride;
+		UINT Stride{ ~0u };
 	};
 }

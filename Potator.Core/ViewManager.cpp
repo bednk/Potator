@@ -32,6 +32,7 @@ Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transfor
 		0.0f,		0.816497f,	-0.577350f, 5.0f,
 		0.707107f,	0.408248f,	0.577350f,	-5.0f,
 		0.0f,		0.0f,		0.0f,		1.0f;
+	//transComponent.Local(2, 3) = -2.5;
 	Add(defaultCam, camComponent, transComponent);
 	SetActive(defaultCam);
 

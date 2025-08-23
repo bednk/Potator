@@ -6,8 +6,8 @@ namespace Potator
 {
 	struct MeshComponent
 	{
-		VertexBufferHandle VertexBuffer;
-		IndexBufferHandle IndexBuffer;
+		VertexBufferHandle VertexBuffer = { ~0u };
+		IndexBufferHandle IndexBuffer = { ~0u };
 		UINT IndexCount = 0;
 		UINT StartIndexLocation = 0;
 	};

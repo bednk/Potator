@@ -2,7 +2,7 @@
 #include "HrCheck.h"
 #include <stdexcept>
 #include <string>
-#include "Exception.h"
+#include <exception>
 
 
 Potator::HrCheck& Potator::HrCheck::Instance()
@@ -34,7 +34,7 @@ void Potator::HrCheck::Check(HRESULT hr)
 {
     if (FAILED(hr))
     {
-        throw Exception(GetErrorMessage(hr));
+        throw std::runtime_error(GetErrorMessage(hr));
     }
 }
 

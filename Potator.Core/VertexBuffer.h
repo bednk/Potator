@@ -27,7 +27,7 @@ namespace Potator
 	template<class T>
 	inline UINT VertexBuffer<T>::GetSize() const
 	{
-		return GetStride() * _data.size();
+		return GetStride() * (UINT)_data.size();
 	}
 
 	template<class T>

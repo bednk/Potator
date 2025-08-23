@@ -6,6 +6,7 @@ namespace Potator
     struct VertexShaderHandle { size_t Id; };
     struct PixelShaderHandle { size_t Id; };
     struct InputLayoutHandle { size_t Id; };
+    struct ShaderResourceHandle { size_t Id; };
 
     class IShaderBinary
     {

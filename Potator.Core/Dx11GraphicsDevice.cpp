@@ -1,14 +1,20 @@
 #include "pch.h"
 #include "Dx11GraphicsDevice.h"
 #include "HRCheck.h"
-#include "Exception.h"
 #include "DxDescriptorsConverter.h"
 
 
 using namespace Microsoft::WRL;
+using namespace Potator;
 
 Potator::Dx11GraphicsDevice::Dx11GraphicsDevice(HWND windowHandle, LaunchingParams params)
 {
+#ifdef _DEBUG
+	UINT devFlags = D3D11_CREATE_DEVICE_DEBUG;
+#else
+	UINT devFlags = 0;
+#endif
+
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	swapChainDesc.BufferDesc.Width = 0;
 	swapChainDesc.BufferDesc.Height = 0;
@@ -30,7 +36,7 @@ Potator::Dx11GraphicsDevice::Dx11GraphicsDevice(HWND windowHandle, LaunchingPara
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		0,
+		devFlags,
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
@@ -41,10 +47,28 @@ Potator::Dx11GraphicsDevice::Dx11GraphicsDevice(HWND windowHandle, LaunchingPara
 		_context.GetAddressOf()
 	);
 
+#ifdef _DEBUG
+	Microsoft::WRL::ComPtr<ID3D11InfoQueue> infoQueue;
+	_device->QueryInterface(__uuidof(ID3D11InfoQueue), (void**)infoQueue.GetAddressOf()) >> HrCheck::Instance();
+	infoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_WARNING, true);
+	infoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+	infoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
+#endif
+
 	RecreateRenderTargeView();
 	SetViewport(params.Width, params.Height);
 	_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	_context->OMSetRenderTargets(1, _targetView.GetAddressOf(), nullptr);
+
+	ComPtr<ID3D11SamplerState> sampler;
+	D3D11_SAMPLER_DESC samplerDesc = {};
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+
+	_device->CreateSamplerState(&samplerDesc, sampler.GetAddressOf()) >> HrCheck::Instance();
+	_context->PSSetSamplers(0, 1, sampler.GetAddressOf());
 }
 
 void Potator::Dx11GraphicsDevice::Clear(float r, float g, float b, float a)
@@ -60,6 +84,7 @@ void Potator::Dx11GraphicsDevice::Draw(const MeshComponent* mesh, const Material
 	Bind(&material->InputLayout);
 	Bind(&material->VertexShader);
 	Bind(&material->PixelShader);
+	Bind(&material->Texture, PipelineStage::PixelShader);
 	_context->DrawIndexed(mesh->IndexCount, mesh->StartIndexLocation, 0);
 }
 
@@ -81,7 +106,7 @@ void Potator::Dx11GraphicsDevice::RecreateRenderTargeView()
 {
 	ComPtr<ID3D11Resource> backBuffer;
 	_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(backBuffer.GetAddressOf()));
-	_device->CreateRenderTargetView(backBuffer.Get(), nullptr, _targetView.ReleaseAndGetAddressOf()) >> HrCheck::Instance();
+	_device->CreateRenderTargetView(backBuffer.Get(), nullptr, _targetView.GetAddressOf()) >> HrCheck::Instance();
 }
 
 void Potator::Dx11GraphicsDevice::SetViewport(unsigned int w, unsigned int h)
@@ -91,9 +116,54 @@ void Potator::Dx11GraphicsDevice::SetViewport(unsigned int w, unsigned int h)
 	viewPort.TopLeftY = 0;
 	viewPort.MaxDepth = 1;
 	viewPort.MinDepth = 0;
-	viewPort.Width = w;
-	viewPort.Height = h;
+	viewPort.Width = (float)w;
+	viewPort.Height = (float)h;
 	_context->RSSetViewports(1, &viewPort);
+}
+
+ShaderResourceHandle Potator::Dx11GraphicsDevice::Create2dTexture(const RgbaTextureContainer* source)
+{
+	D3D11_SUBRESOURCE_DATA data = {};
+	data.pSysMem = source->Pixels.data();
+	data.SysMemPitch = source->Width * 4;
+
+	D3D11_TEXTURE2D_DESC desc = {};
+	desc.Width = source->Width;
+	desc.Height = source->Height;
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.SampleDesc.Count = 1;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+	ComPtr<ID3D11Texture2D> tex;
+	_device->CreateTexture2D(&desc, &data, tex.GetAddressOf()) >> HrCheck::Instance();
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = desc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = 1;
+	ComPtr<ID3D11ShaderResourceView>& srv = _shaderResources.emplace_back();
+	_device->CreateShaderResourceView(tex.Get(), &srvDesc, srv.GetAddressOf()) >> HrCheck::Instance();
+
+	return { _shaderResources.size() - 1 };
+}
+
+void Potator::Dx11GraphicsDevice::Bind(const ShaderResourceHandle* resource, PipelineStage stage)
+{
+	ComPtr<ID3D11ShaderResourceView>& srv = _shaderResources[resource->Id];
+	switch (stage)
+	{
+	case PipelineStage::VertexShader:
+		_context->VSSetShaderResources(0, 1, srv.GetAddressOf());
+		return;
+	case PipelineStage::PixelShader:
+		_context->PSSetShaderResources(0, 1, srv.GetAddressOf());
+		return;
+	default:
+		throw std::invalid_argument("Unsupported stage");
+	}
 }
 
 void Potator::Dx11GraphicsDevice::Bind(const VertexShaderHandle* shader)
@@ -170,7 +240,7 @@ Potator::InputLayoutHandle Potator::Dx11GraphicsDevice::CreateInputLayout(const 
 		vertexDesc[i] = DxDescriptorsConverter::GetInputElementDesc(vertexMembers[i]);
 	}
 	auto& inputLayout = _inputLayouts.emplace_back();
-	_device->CreateInputLayout(vertexDesc.get(), vertexMembers.size(), shaderBin->GetData(), shaderBin->GetSize(), inputLayout.GetAddressOf()) >> HrCheck::Instance();
+	_device->CreateInputLayout(vertexDesc.get(), (UINT)vertexMembers.size(), shaderBin->GetData(), shaderBin->GetSize(), inputLayout.GetAddressOf()) >> HrCheck::Instance();
 	return { _inputLayouts.size() - 1};
 }
 
@@ -181,7 +251,7 @@ Potator::IndexBufferHandle Potator::Dx11GraphicsDevice::Create(const IndexBuffer
 
 	D3D11_BUFFER_DESC bufferDesc = {};
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
 	bufferDesc.MiscFlags = 0;
 	bufferDesc.ByteWidth = buffer->GetSize();
@@ -235,6 +305,6 @@ void Potator::Dx11GraphicsDevice::Bind(const ConstantBufferHandle* buffer, Pipel
 		_context->PSSetConstantBuffers(slot, 1, cBuffer.GetAddressOf());
 		break;
 	default:
-		throw Exception("Unsupported pipeline stage");
+		throw std::invalid_argument("Unsupported pipeline stage");
 	}
 }

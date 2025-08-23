@@ -1,7 +1,7 @@
 #pragma once
 #include "ComponentStorage.h"
 #include "MovementComponent.h"
-#include "TransformComponent.h";
+#include "TransformComponent.h"
 #include "IFixedStep.h"
 
 namespace Potator

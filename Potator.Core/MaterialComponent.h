@@ -6,9 +6,10 @@ namespace Potator
 {
 	struct MaterialComponent
 	{
-		VertexShaderHandle VertexShader;
+		VertexShaderHandle VertexShader = { ~0u };
 		std::shared_ptr<IShaderBinary> VsBinary;
-		PixelShaderHandle PixelShader;
-		InputLayoutHandle InputLayout;
+		PixelShaderHandle PixelShader = { ~0u };
+		InputLayoutHandle InputLayout = { ~0u };
+		ShaderResourceHandle Texture = { ~0u };
 	};
 }

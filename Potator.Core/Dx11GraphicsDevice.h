@@ -2,7 +2,6 @@
 #include "framework.h"
 #include "IGraphicsDevice.h"
 #include "DxVertexBuffer.h"
-#include "DxVertexBuffer.h"
 
 
 namespace Potator
@@ -18,9 +17,11 @@ namespace Potator
 		VertexShaderHandle CreateVertexShader(const IShaderBinary* shaderBinary) override;
 		PixelShaderHandle CreatePixelShader(const IShaderBinary* shaderBinary) override;
 		InputLayoutHandle CreateInputLayout(const std::vector<VertexMemberDescriptor>& vertexMembers, const IShaderBinary* shaderBin) override;
+		ShaderResourceHandle Create2dTexture(const RgbaTextureContainer* source) override;
 		void Bind(const VertexBufferHandle* buffer) override;
 		void Bind(const IndexBufferHandle* buffer) override;
 		void Bind(const ConstantBufferHandle* buffer, PipelineStage stage, UINT slot = 0) override;
+		void Bind(const ShaderResourceHandle* resource, PipelineStage stage) override;
 		void Bind(const VertexShaderHandle* shader) override;
 		void Bind(const PixelShaderHandle* shader) override;
 		void Bind(const InputLayoutHandle* inputLayout) override;
@@ -41,6 +42,7 @@ namespace Potator
 		std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> _constantBuffers;
 		std::vector<Microsoft::WRL::ComPtr<ID3D11VertexShader>> _vertexShaders;
 		std::vector<Microsoft::WRL::ComPtr<ID3D11PixelShader>> _pixelShaders;
+		std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> _shaderResources;
 	};
 }
 

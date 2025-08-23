@@ -3,7 +3,6 @@
 #include "IGraphicsDevice.h"
 #include "Dx11GraphicsDevice.h"
 #include "DxShaderCache.h"
-#include "Exception.h"
 #include "LaunchingParams.h"
 #include "IShaderCache.h"
 #include <memory>
@@ -20,7 +19,7 @@ namespace Potator
 			case GpuApi::Dx11:
 				return std::make_unique<Dx11GraphicsDevice>(windowHandle, settings);
 			default:
-				throw Exception("Not implemented API");
+				throw std::invalid_argument("Not implemented API");
 			}
 		}
 
@@ -31,7 +30,7 @@ namespace Potator
 			case GpuApi::Dx11:
 				return std::make_unique<DxShaderCache>(device);
 			default:
-				throw Exception("Not implemented API");
+				throw std::invalid_argument("Not implemented API");
 			}
 		}
 	};

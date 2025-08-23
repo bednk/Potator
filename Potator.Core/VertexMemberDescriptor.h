@@ -9,7 +9,8 @@ namespace Potator
 {
 	enum DataFormat
 	{
-		float4
+		float4,
+		float2
 	};
 
 	struct VertexMemberDescriptor

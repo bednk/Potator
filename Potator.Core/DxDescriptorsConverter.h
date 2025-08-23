@@ -1,7 +1,6 @@
 #pragma once
 #include <d3d11.h>
 #include "VertexMemberDescriptor.h"
-#include "Exception.h"
 
 namespace Potator
 {
@@ -28,8 +27,10 @@ namespace Potator
 			{
 			case DataFormat::float4:
 				return DXGI_FORMAT_R32G32B32A32_FLOAT;
+			case DataFormat::float2:
+				return DXGI_FORMAT_R32G32_FLOAT;
 			default:
-				throw Exception("Unsupported DXGI_FORMAT");
+				throw std::invalid_argument("Unsupported DXGI_FORMAT");
 			}
 		}
 	};
