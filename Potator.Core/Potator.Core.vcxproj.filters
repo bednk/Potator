@@ -70,6 +70,9 @@
     <Filter Include="Header Files\ResourceManagment">
       <UniqueIdentifier>{5d7464c7-e199-4969-be77-fd879f7f034a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Scenes">
+      <UniqueIdentifier>{7169040b-f8c4-4637-ad18-7a657e9a7333}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -207,9 +210,6 @@
     <ClInclude Include="SceneLoader.h">
       <Filter>Header Files\ResourceManagment</Filter>
     </ClInclude>
-    <ClInclude Include="DxShaderCache.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="IShaderCache.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
@@ -221,6 +221,9 @@
     </ClInclude>
     <ClInclude Include="TexturedVertex.h">
       <Filter>Header Files\Rendering\Vertices</Filter>
+    </ClInclude>
+    <ClInclude Include="DxShaderCache.h">
+      <Filter>Header Files\Rendering\Dx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,6 +287,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
+    <None Include="resources\scenes\cube.glb">
+      <Filter>Resource Files\Scenes</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="vs_.hlsl">

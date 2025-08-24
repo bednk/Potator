@@ -11,6 +11,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <iostream>
+#include <boost/dll/runtime_symbol_info.hpp>
 
 namespace fs = std::filesystem;
 using namespace Potator;
@@ -180,6 +181,11 @@ Potator::SceneLoader::SceneLoader(IGraphicsDevice* device,
 
 void Potator::SceneLoader::Load(fs::path path)
 {
+	if (!path.has_parent_path() || path.parent_path().empty())
+	{
+		path = boost::dll::program_location().parent_path().string() / fs::path("resources\\scenes") / path.string();
+	}
+
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path.string(),
 		aiProcess_Triangulate |

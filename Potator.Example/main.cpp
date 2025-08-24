@@ -20,44 +20,7 @@ int main()
 	Engine engine;
 
 	SceneLoader& loadear = engine.GetLoader();
-	loadear.Load("D:\\repos\\Potator\\dickbutt.glb");
+	loadear.Load("cube.glb");
 
 	engine.Run();
 }
-
-//auto device = engine.GetGraphicsDevice();
-//
-//
-//
-//
-//VertexBuffer<ColoredVertex> cpuVertexBuffer(
-//	{
-//		{{0.0f, 0.5f, 0.0f, 1.0f }, {1.0f, 0.0f, 0.0f, 1.0f }},
-//		{{0.5f, -0.5f, 0.0f, 1.0f }, {0.0f, 1.0f, 0.0f, 1.0f }},
-//		{{-0.5f, -0.5f, 0.0f, 1.0f }, {0.0f, 0.0f, 1.0f, 1.0f }}
-//	});
-//IndexBuffer cpuIndexBuffer(
-//	{
-//		0, 1, 2
-//	});
-//
-//HlslShader vsBinary(L"D:\\repos\\Potator\\VertexShader_c.cso");
-//HlslShader psBinary(L"D:\\repos\\Potator\\PixelShader_c.cso");
-//
-//MaterialComponent material =
-//{
-//	device->CreateVertexShader(&vsBinary),
-//	&vsBinary,
-//	device->CreatePixelShader(&psBinary),
-//	device->CreateInputLayout(cpuVertexBuffer.GetVertexLayout(), &vsBinary)
-//};
-//
-//VertexBufferHandle gpuVertexBuffer = device->Create(&cpuVertexBuffer);
-//IndexBufferHandle gpuIndexBuffer = device->Create(&cpuIndexBuffer);
-//Entity meshEntity = EntityRegistry::Instance().GetNew();
-//MeshComponent mesh = { gpuVertexBuffer, gpuIndexBuffer, 3, 0, 0 };
-//TransformComponent meshTransform;
-//engine.GetSceneGraph().AddNode(meshEntity, meshTransform);
-//engine.GetMeshes().Store(meshEntity, mesh);
-//engine.GetMaterials().Store(meshEntity, material);
-//engine.GetTransforms()[meshEntity].Local(2, 3) = 3;

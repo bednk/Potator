@@ -63,9 +63,9 @@ Potator::Dx11GraphicsDevice::Dx11GraphicsDevice(HWND windowHandle, LaunchingPara
 	ComPtr<ID3D11SamplerState> sampler;
 	D3D11_SAMPLER_DESC samplerDesc = {};
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 
 	_device->CreateSamplerState(&samplerDesc, sampler.GetAddressOf()) >> HrCheck::Instance();
 	_context->PSSetSamplers(0, 1, sampler.GetAddressOf());
