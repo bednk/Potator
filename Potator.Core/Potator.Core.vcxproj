@@ -150,6 +150,7 @@
     <ClInclude Include="BufferHandle.h" />
     <ClInclude Include="ColoredVertex.h" />
     <ClInclude Include="ComponentStorage.h" />
+    <ClInclude Include="ControllerMovementInputHandler.h" />
     <ClInclude Include="DeviceFactory.h" />
     <ClInclude Include="Dx11GraphicsDevice.h" />
     <ClInclude Include="DxDescriptorsConverter.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="CommandDispatcher.cpp" />
     <ClCompile Include="CommandQueueComponent.cpp" />
     <ClCompile Include="ComponentStorage.cpp" />
+    <ClCompile Include="ControllerMovementInputHandler.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Dx11GraphicsDevice.cpp" />
     <ClCompile Include="Engine.cpp" />

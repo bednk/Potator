@@ -43,8 +43,8 @@ void Potator::MovementInputHandler::Handle()
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Y) ? -_angilarRadiansPerS : 0) +
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::I) ? _angilarRadiansPerS : 0);
 	_command.AngularVelocity.z() =
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H) ? -_angilarRadiansPerS : 0) +
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K) ? _angilarRadiansPerS : 0);
+		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K) ? -_angilarRadiansPerS : 0) +
+		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H) ? _angilarRadiansPerS : 0);
 
 	_commandDispatcher.Enqueue(_entity, &_command);
 }

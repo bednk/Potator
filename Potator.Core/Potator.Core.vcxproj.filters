@@ -225,6 +225,9 @@
     <ClInclude Include="DxShaderCache.h">
       <Filter>Header Files\Rendering\Dx</Filter>
     </ClInclude>
+    <ClInclude Include="ControllerMovementInputHandler.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -283,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="AttitudeMovementCommand.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerMovementInputHandler.cpp">
+      <Filter>Source Files\ECS\Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
