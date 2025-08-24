@@ -12,7 +12,6 @@ namespace Potator
 		MovementSystem(ComponentStorage<TransformComponent>& transforms, ComponentStorage<MovementComponent>& movements);
 		void SetTickRate(int tickRate) override;
 		void Update() override;
-		void SetVelocity(Entity entity, const Eigen::Vector3f& linear, const Eigen::Vector3f& angular);
 	private:
 		void OnTransformAdded(Entity entity, const TransformComponent& component);
 		void OnMovementAdded(Entity entity, const MovementComponent& component);

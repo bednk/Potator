@@ -15,7 +15,7 @@ namespace Potator
 			ComponentStorage<TransformComponent>& transforms,
 			unsigned int joystickId = 0);
 
-		void SetEntity(Entity entity);
+		void SetEntity(Entity entity) override;
 		void Handle() override;
 
 	private:

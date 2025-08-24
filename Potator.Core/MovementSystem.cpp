@@ -40,20 +40,6 @@ void Potator::MovementSystem::Update()
 	}
 }
 
-void Potator::MovementSystem::SetVelocity(Entity entity, const Eigen::Vector3f& linear, const Eigen::Vector3f& angular)
-{
-	if (!_movements.HasComponent(entity))
-	{
-		MovementComponent movement{ linear, angular };
-		_movements.Store(entity, movement);
-		return;
-	}
-
-	auto& velo = _movements[entity];
-	velo.LinearVelocity = linear;
-	velo.AngularVelocity = angular;
-}
-
 void Potator::MovementSystem::OnMovementAdded(Entity entity, const MovementComponent& component)
 {
 	if (!_transforms.HasComponent(entity))

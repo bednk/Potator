@@ -20,13 +20,15 @@ namespace Potator
 		_movementSystem { _transforms, _movements },
 		_stepTracker { 30 },
 		_commandDispatcher { _commands },
-		_cameraHandler { _commandDispatcher, _movements, _transforms },
 		_loader { _device.get(), _shaderCache.get(), _graph, _views, _meshes, _transforms, _materials}
 	{
 		_stepTracker.Subscribe(&_movementSystem);
+
 		Entity camera = _views.GetActive();
-		_cameraHandler.SetEntity(camera);
-		_views.ViewChanged.connect([this](Entity e) { _cameraHandler.SetEntity(e); });
+		std::shared_ptr<IInputHandler> controllerHandler = _inputHandlers.emplace_back(std::make_shared<ControllerMovementInputHandler>(_commandDispatcher, _movements, _transforms));
+		controllerHandler->SetEntity(camera);
+		_views.ViewChanged.connect([this, controllerHandler](Entity e) { controllerHandler->SetEntity(e); });
+
 		WindowResized.connect([this](unsigned int w, unsigned int h) { _views.OnWindowResized(w, h); });
 		WindowResized.connect([this](unsigned int w, unsigned int h) { _device->OnWindowResized(w, h); });
 	}
@@ -56,7 +58,10 @@ namespace Potator
 			}
 
 			_device->Clear(0, 0, 0, 1);
-			_cameraHandler.Handle();
+			for (size_t i = 0; i < _inputHandlers.size(); i++)
+			{
+				_inputHandlers[i]->Handle();
+			}
 			_commandDispatcher.Dispatch();
 			_stepTracker.Update();
 			_graph.UpdateTransforms();

@@ -60,7 +60,7 @@ namespace Potator
 		MovementSystem _movementSystem;
 		FixedStepTracker _stepTracker;
 		CommandDispatcher _commandDispatcher;
-		ControllerMovementInputHandler _cameraHandler;
+		std::vector<std::shared_ptr<IInputHandler>> _inputHandlers;
 		SceneLoader _loader;
 		boost::signals2::signal<void(unsigned int, unsigned int)> WindowResized;
 	};

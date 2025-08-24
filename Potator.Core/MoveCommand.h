@@ -1,6 +1,7 @@
 #pragma once
 #include "ICommand.h"
-#include "MovementSystem.h"
+#include "ComponentStorage.h"
+#include "MovementComponent.h"
 
 namespace Potator
 {
@@ -8,12 +9,12 @@ namespace Potator
 	{
 		
 	public:
-		MoveCommand(MovementSystem& movementSystem);
+		MoveCommand(ComponentStorage<MovementComponent>& movements);
 		void Execute(Entity entity) override;
 		Eigen::Vector3f LinearVelocity = Eigen::Vector3f::Zero();
 		Eigen::Vector3f AngularVelocity = Eigen::Vector3f::Zero();
 	private:
-		MovementSystem& _movementSystem;
+		ComponentStorage<MovementComponent>& _movements;
 
 	};
 }

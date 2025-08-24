@@ -73,6 +73,15 @@
     <Filter Include="Resource Files\Scenes">
       <UniqueIdentifier>{7169040b-f8c4-4637-ad18-7a657e9a7333}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Input">
+      <UniqueIdentifier>{a2d7b013-a61f-4095-bccf-43f8ea9be56e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{1d8fa33d-acbf-4628-90ff-1c92897edacb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS\ResourceManagment">
+      <UniqueIdentifier>{c7046b2c-0746-4d72-908a-955777f4d320}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -180,9 +189,6 @@
     <ClInclude Include="CommandQueueComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="IFixedStep.h">
-      <Filter>Header Files\ECS\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="CommandDispatcher.h">
       <Filter>Header Files\ECS\Systems</Filter>
     </ClInclude>
@@ -191,12 +197,6 @@
     </ClInclude>
     <ClInclude Include="MoveCommand.h">
       <Filter>Header Files\ECS\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="MovementInputHandler.h">
-      <Filter>Header Files\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="IInputHandler.h">
-      <Filter>Header Files\ECS\Systems</Filter>
     </ClInclude>
     <ClInclude Include="MaterialComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
@@ -226,7 +226,16 @@
       <Filter>Header Files\Rendering\Dx</Filter>
     </ClInclude>
     <ClInclude Include="ControllerMovementInputHandler.h">
-      <Filter>Header Files\ECS\Systems</Filter>
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementInputHandler.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="IInputHandler.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="IFixedStep.h">
+      <Filter>Header Files\ECS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -275,20 +284,20 @@
     <ClCompile Include="MoveCommand.cpp">
       <Filter>Source Files\ECS\Commands</Filter>
     </ClCompile>
-    <ClCompile Include="MovementInputHandler.cpp">
-      <Filter>Source Files\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DxShaderCache.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="AttitudeMovementCommand.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="MovementInputHandler.cpp">
+      <Filter>Source Files\Input</Filter>
     </ClCompile>
     <ClCompile Include="ControllerMovementInputHandler.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="AttitudeMovementCommand.cpp">
       <Filter>Source Files\ECS\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneLoader.cpp">
+      <Filter>Source Files\ECS\ResourceManagment</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
