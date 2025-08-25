@@ -9,13 +9,73 @@ using namespace Potator;
 
 Potator::Dx11GraphicsDevice::Dx11GraphicsDevice(HWND windowHandle, LaunchingParams params)
 {
+	InitializeDevice(windowHandle);
+	RecreateRenderTargeView();
+	RecreateZBuffer(params.Width, params.Height);
+	SetViewport(params.Width, params.Height);
+	SetDefaultSampler();
+	_context->OMSetRenderTargets(1, _targetView.GetAddressOf(), _depthStencilView.Get());
+	_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // possibility to move this to mesh/material component
+}
+
+void Potator::Dx11GraphicsDevice::RecreateZBuffer(unsigned int w, unsigned int h)
+{
+	D3D11_DEPTH_STENCIL_DESC zBufferStateDesc = {};
+	zBufferStateDesc.DepthEnable = true;
+	zBufferStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	zBufferStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+	ComPtr<ID3D11DepthStencilState> zBufferState;
+	_device->CreateDepthStencilState(&zBufferStateDesc, zBufferState.GetAddressOf()) >> HrCheck::Instance();
+	_context->OMSetDepthStencilState(zBufferState.Get(), 1);
+
+	D3D11_TEXTURE2D_DESC zBufferTexDesc = {};
+	zBufferTexDesc.Width = w;
+	zBufferTexDesc.Height = h;
+	zBufferTexDesc.MipLevels = 1;
+	zBufferTexDesc.ArraySize = 1;
+	zBufferTexDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	zBufferTexDesc.SampleDesc.Count = 1;
+	zBufferTexDesc.SampleDesc.Quality = 0;
+	zBufferTexDesc.Usage = D3D11_USAGE_DEFAULT;
+	zBufferTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+	ComPtr<ID3D11Texture2D> zBufferTex;
+	_device->CreateTexture2D(&zBufferTexDesc, nullptr, zBufferTex.GetAddressOf()) >> HrCheck::Instance();
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC zBufferViewDesc = {};
+	zBufferViewDesc.Format = zBufferTexDesc.Format;
+	zBufferViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	zBufferViewDesc.Texture2D.MipSlice = 0;
+
+	_device->CreateDepthStencilView(zBufferTex.Get(), &zBufferViewDesc, _depthStencilView.GetAddressOf()) >> HrCheck::Instance();
+}
+
+void Potator::Dx11GraphicsDevice::SetDefaultSampler()
+{
+	// maybe in the future it will become a part of MaterialComponent
+	ComPtr<ID3D11SamplerState> sampler;
+	D3D11_SAMPLER_DESC samplerDesc = {};
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+
+	_device->CreateSamplerState(&samplerDesc, sampler.GetAddressOf()) >> HrCheck::Instance();
+	_context->PSSetSamplers(0, 1, sampler.GetAddressOf());
+}
+
+void Potator::Dx11GraphicsDevice::InitializeDevice(HWND windowHandle)
+{
 #ifdef _DEBUG
 	UINT devFlags = D3D11_CREATE_DEVICE_DEBUG;
 #else
 	UINT devFlags = 0;
 #endif
 
+	// init device, context and swapchain
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
+#pragma region swapChainDesc
 	swapChainDesc.BufferDesc.Width = 0;
 	swapChainDesc.BufferDesc.Height = 0;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -31,6 +91,7 @@ Potator::Dx11GraphicsDevice::Dx11GraphicsDevice(HWND windowHandle, LaunchingPara
 	swapChainDesc.Windowed = true;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = 0;
+#pragma endregion
 
 	D3D11CreateDeviceAndSwapChain(
 		nullptr,
@@ -54,37 +115,29 @@ Potator::Dx11GraphicsDevice::Dx11GraphicsDevice(HWND windowHandle, LaunchingPara
 	infoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
 	infoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
 #endif
-
-	RecreateRenderTargeView();
-	SetViewport(params.Width, params.Height);
-	_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	_context->OMSetRenderTargets(1, _targetView.GetAddressOf(), nullptr);
-
-	ComPtr<ID3D11SamplerState> sampler;
-	D3D11_SAMPLER_DESC samplerDesc = {};
-	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-
-	_device->CreateSamplerState(&samplerDesc, sampler.GetAddressOf()) >> HrCheck::Instance();
-	_context->PSSetSamplers(0, 1, sampler.GetAddressOf());
 }
 
 void Potator::Dx11GraphicsDevice::Clear(float r, float g, float b, float a)
 {
 	const float color[]{ r, g, b, a };
 	_context->ClearRenderTargetView(_targetView.Get(), color);
+	_context->ClearDepthStencilView(_depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1, 0);
 }
 
 void Potator::Dx11GraphicsDevice::Draw(const MeshComponent* mesh, const MaterialComponent* material)
 {
+	if (material->Texture.has_value())
+	{
+		Bind(&material->Texture.value(), PipelineStage::PixelShader);
+	}
+
 	Bind(&mesh->VertexBuffer);
 	Bind(&mesh->IndexBuffer);
 	Bind(&material->InputLayout);
 	Bind(&material->VertexShader);
 	Bind(&material->PixelShader);
-	Bind(&material->Texture, PipelineStage::PixelShader);
+	Bind(&material->DescriptorHandle, PipelineStage::PixelShader, 0);
+	
 	_context->DrawIndexed(mesh->IndexCount, mesh->StartIndexLocation, 0);
 }
 
@@ -96,10 +149,12 @@ void Potator::Dx11GraphicsDevice::Present()
 void Potator::Dx11GraphicsDevice::OnWindowResized(unsigned int width, unsigned int height)
 {
 	_targetView->Release();
+	_depthStencilView->Release();
 	_swapChain->ResizeBuffers(1, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 	RecreateRenderTargeView();
+	RecreateZBuffer(width, height);
 	SetViewport(width, height);
-	_context->OMSetRenderTargets(1, _targetView.GetAddressOf(), nullptr);
+	_context->OMSetRenderTargets(1, _targetView.GetAddressOf(), _depthStencilView.Get());
 }
 
 void Potator::Dx11GraphicsDevice::RecreateRenderTargeView()

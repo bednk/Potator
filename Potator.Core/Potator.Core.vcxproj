@@ -146,6 +146,7 @@
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CommandDispatcher.h" />
     <ClInclude Include="CommandQueueComponent.h" />
+    <ClInclude Include="CompositeVertex.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="BufferHandle.h" />
     <ClInclude Include="ColoredVertex.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="IVertexBuffer.h" />
     <ClInclude Include="LaunchingParams.h" />
     <ClInclude Include="MaterialComponent.h" />
+    <ClInclude Include="MaterialDescriptor.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="MoveCommand.h" />
@@ -198,7 +200,6 @@
     <ClCompile Include="AttitudeMovementCommand.cpp" />
     <ClCompile Include="CommandDispatcher.cpp" />
     <ClCompile Include="CommandQueueComponent.cpp" />
-    <ClCompile Include="ComponentStorage.cpp" />
     <ClCompile Include="ControllerMovementInputHandler.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Dx11GraphicsDevice.cpp" />
@@ -222,7 +223,10 @@
     <ClCompile Include="ViewManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\scenes\chicken.glb" />
     <None Include="resources\scenes\cube.glb" />
+    <None Include="resources\scenes\potatoes.glb" />
+    <None Include="resources\scenes\teapot.glb" />
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
@@ -243,6 +247,14 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)resources\shaders\%(Filename).cso</ObjectFileOutput>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_3</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0_level_9_3</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="ps_composite.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)resources\shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)resources\shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="ps_textured.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -267,6 +279,14 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)resources\shaders\%(Filename).cso</ObjectFileOutput>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_3</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0_level_9_3</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="vs_composite.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)resources\shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)resources\shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="vs_textured.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

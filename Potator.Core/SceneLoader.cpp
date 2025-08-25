@@ -4,7 +4,7 @@
 #include <assimp/postprocess.h>
 #include <queue>
 #include "EntityRegistry.h"
-#include "TexturedVertex.h"
+#include "CompositeVertex.h"
 #include "VertexBuffer.h"
 #include "HlslShader.h"
 #include "RgbaTextureContainer.h"
@@ -83,25 +83,40 @@ static std::vector<ShaderResourceHandle> LoadTextures(const aiScene* scene, IGra
 
 static std::vector<MaterialComponent> LoadMaterials(const aiScene* scene, IGraphicsDevice* device, IShaderCache* shaderCache)
 {
-	auto vsBinary = shaderCache->GetShaderBinary("vs_textured");
+	auto vsBinary = shaderCache->GetShaderBinary("vs_composite");
 	static std::vector<MaterialComponent> result;
 	std::vector<ShaderResourceHandle> textures = LoadTextures(scene, device);
 	for (size_t i = 0; i < scene->mNumMaterials; i++)
 	{
-		aiMaterial* material = scene->mMaterials[i];
-		aiString texPath;
-		if (material->GetTexture(aiTextureType_BASE_COLOR, 0, &texPath) != AI_SUCCESS)
-		{
-			material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath);
-		}
-		int texIndex = std::atoi(texPath.C_Str() + 1);
-
 		MaterialComponent& materialComponent = result.emplace_back();
-		materialComponent.VertexShader = shaderCache->GetVertexShaderHandle("vs_textured");
+		MaterialDescriptor descriptor = {};
+		aiMaterial* material = scene->mMaterials[i];
+
+		aiColor4D diffuse;
+		if (aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse) == AI_SUCCESS
+			|| aiGetMaterialColor(material, AI_MATKEY_BASE_COLOR, &diffuse) == AI_SUCCESS)
+		{
+			descriptor.HasColor = true;
+			descriptor.Color = { diffuse.r, diffuse.g, diffuse.b, diffuse.a };
+		}
+
+		aiString texPath;
+		if (material->GetTexture(aiTextureType_BASE_COLOR, 0, &texPath) == AI_SUCCESS
+			|| material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS)
+		{
+			descriptor.HasTexture = true;
+			int texIndex = std::atoi(texPath.C_Str() + 1);
+			materialComponent.Texture = textures[texIndex];
+		}
+		
+		ConstantBuffer<MaterialDescriptor> descriptorBuffer(descriptor);
+
+		materialComponent.DescriptorHandle = device->Create(&descriptorBuffer);
+		materialComponent.VertexShader = shaderCache->GetVertexShaderHandle("vs_composite");
 		materialComponent.VsBinary = vsBinary;
-		materialComponent.PixelShader = shaderCache->GetPixelShaderHandle("ps_textured");
-		materialComponent.InputLayout = device->CreateInputLayout(TexturedVertex::GetLayout(), vsBinary.get());
-		materialComponent.Texture = textures[texIndex];
+		materialComponent.PixelShader = shaderCache->GetPixelShaderHandle("ps_composite");
+		materialComponent.InputLayout = device->CreateInputLayout(CompositeVertex::GetLayout(), vsBinary.get());
+		
 	}
 	return result;
 }
@@ -124,9 +139,10 @@ static std::vector<MeshComponent> LoadMeshes(const aiScene* scene, IGraphicsDevi
 	for (size_t i = 0; i < scene->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[i];
+		bool isColored = mesh->HasVertexColors(0);
 		MeshComponent& meshComponent = result.emplace_back();
 		meshComponent.StartIndexLocation = 0;
-		std::vector<TexturedVertex> vertices;
+		std::vector<CompositeVertex> vertices;
 		std::vector<unsigned short> indices;
 
 		for (size_t f = 0; f < mesh->mNumFaces; f++)
@@ -143,15 +159,27 @@ static std::vector<MeshComponent> LoadMeshes(const aiScene* scene, IGraphicsDevi
 		unsigned int uvChannel = GetUvChannelIndex(scene, mesh);
 		for (size_t v = 0; v < mesh->mNumVertices; v++)
 		{
+			CompositeVertex& vertex = vertices.emplace_back();
+
 			aiVector3D pos = mesh->mVertices[v];
-			aiVector3D uv = mesh->mTextureCoords[uvChannel][v];
-	
-			TexturedVertex& vertex = vertices.emplace_back();
 			vertex.Position = { pos.x, pos.y, pos.z, 1.0f };
+
+			aiVector3D uv = mesh->mTextureCoords[uvChannel][v];	
 			vertex.Uv = { uv.x, uv.y };
+
+			if (isColored)
+			{
+				aiColor4D vertexColor = mesh->mColors[0][v];
+				vertex.Color = { vertexColor.r, vertexColor.g, vertexColor.b, vertexColor.a };
+			}
+
+			else
+			{
+				vertex.Color = MISSING_COLOR;
+			}
 		}
 
-		VertexBuffer<TexturedVertex> cpuVBuf(vertices);
+		VertexBuffer<CompositeVertex> cpuVBuf(vertices);
 		IndexBuffer cpuIBuf(indices);
 
 		meshComponent.IndexCount = (UINT)indices.size();

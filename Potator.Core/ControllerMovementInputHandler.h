@@ -25,7 +25,7 @@ namespace Potator
 		ComponentStorage<MovementComponent>& _movements;
 		unsigned int _joystickId;
 
-		float _linearUnitsPerS = 0.05f;
+		float _linearUnitsPerS = 0.5f;
 		float _angularRadiansPerS = 1.0f;
 
 		float ApplyDeadzone(float value, float deadzone = 0.1f);

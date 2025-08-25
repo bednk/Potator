@@ -6,12 +6,6 @@ namespace Potator
 {
 	struct TexturedVertex
 	{
-		TexturedVertex() = default;
-		TexturedVertex(const Eigen::Vector4f& position, const Eigen::Vector2f& uv) :
-			Position{ position },
-			Uv{ uv }
-		{
-		}
 		Eigen::Vector4f Position;
 		Eigen::Vector2f Uv;
 

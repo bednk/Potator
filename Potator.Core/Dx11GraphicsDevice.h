@@ -30,12 +30,16 @@ namespace Potator
 		void Present() override;
 		void OnWindowResized(unsigned int width, unsigned int height) override;
 	private:
+		void SetDefaultSampler();
+		void InitializeDevice(HWND windowHandle);
 		void RecreateRenderTargeView();
 		void SetViewport(unsigned int w, unsigned int h);
-		Microsoft::WRL::ComPtr <ID3D11Device> _device;
-		Microsoft::WRL::ComPtr <IDXGISwapChain> _swapChain;
-		Microsoft::WRL::ComPtr <ID3D11DeviceContext> _context;
-		Microsoft::WRL::ComPtr <ID3D11RenderTargetView> _targetView;
+		void RecreateZBuffer(unsigned int w, unsigned int h);
+		Microsoft::WRL::ComPtr<ID3D11Device> _device;
+		Microsoft::WRL::ComPtr<IDXGISwapChain> _swapChain;
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext> _context;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> _targetView;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> _depthStencilView;
 		std::vector<DxVertexBuffer> _vertexBuffers;
 		std::vector<Microsoft::WRL::ComPtr<ID3D11InputLayout>> _inputLayouts;
 		std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> _indexBuffers;

@@ -1,4 +1,4 @@
-Texture2D tex; //or directly : register(t0)
+Texture2D tex;
 SamplerState samp;
 
 float4 main(float2 uv : Uv) : SV_TARGET

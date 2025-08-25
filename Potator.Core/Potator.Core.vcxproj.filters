@@ -237,6 +237,12 @@
     <ClInclude Include="IFixedStep.h">
       <Filter>Header Files\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="CompositeVertex.h">
+      <Filter>Header Files\Rendering\Vertices</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialDescriptor.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -250,9 +256,6 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentStorage.cpp">
-      <Filter>Source Files\ECS</Filter>
     </ClCompile>
     <ClCompile Include="MeshRenderer.cpp">
       <Filter>Source Files\ECS\Systems</Filter>
@@ -305,6 +308,15 @@
     <None Include="resources\scenes\cube.glb">
       <Filter>Resource Files\Scenes</Filter>
     </None>
+    <None Include="resources\scenes\potatoes.glb">
+      <Filter>Resource Files\Scenes</Filter>
+    </None>
+    <None Include="resources\scenes\teapot.glb">
+      <Filter>Resource Files\Scenes</Filter>
+    </None>
+    <None Include="resources\scenes\chicken.glb">
+      <Filter>Resource Files\Scenes</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="vs_.hlsl">
@@ -323,6 +335,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ps_textured.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="vs_composite.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ps_composite.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
