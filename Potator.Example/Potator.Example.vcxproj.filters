@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Scenes">
+      <UniqueIdentifier>{8ac37439-9be4-4d19-ae16-3fd6540bde83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -21,5 +24,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
+    <None Include="resources\scenes\beagle.glb">
+      <Filter>Resource Files\Scenes</Filter>
+    </None>
+    <None Include="resources\scenes\chicken.glb">
+      <Filter>Resource Files\Scenes</Filter>
+    </None>
+    <None Include="resources\scenes\cube.glb">
+      <Filter>Resource Files\Scenes</Filter>
+    </None>
+    <None Include="resources\scenes\teapot.glb">
+      <Filter>Resource Files\Scenes</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="attributions.txt" />
   </ItemGroup>
 </Project>

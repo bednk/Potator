@@ -70,9 +70,6 @@
     <Filter Include="Header Files\ResourceManagment">
       <UniqueIdentifier>{5d7464c7-e199-4969-be77-fd879f7f034a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Scenes">
-      <UniqueIdentifier>{7169040b-f8c4-4637-ad18-7a657e9a7333}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Input">
       <UniqueIdentifier>{a2d7b013-a61f-4095-bccf-43f8ea9be56e}</UniqueIdentifier>
     </Filter>
@@ -323,44 +320,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
-    <None Include="resources\scenes\cube.glb">
-      <Filter>Resource Files\Scenes</Filter>
-    </None>
-    <None Include="resources\scenes\potatoes.glb">
-      <Filter>Resource Files\Scenes</Filter>
-    </None>
-    <None Include="resources\scenes\teapot.glb">
-      <Filter>Resource Files\Scenes</Filter>
-    </None>
-    <None Include="resources\scenes\chicken.glb">
-      <Filter>Resource Files\Scenes</Filter>
-    </None>
-    <None Include="resources\scenes\beagle.glb">
-      <Filter>Resource Files\Scenes</Filter>
-    </None>
-    <None Include="resources\scenes\chicken2.glb">
-      <Filter>Resource Files\Scenes</Filter>
+    <None Include="structs.hlsli">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="vs_.hlsl">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="ps_.hlsl">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="ps_colored.hlsl">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="vs_colored.hlsl">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="vs_textured.hlsl">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="ps_textured.hlsl">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="vs_composite.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>

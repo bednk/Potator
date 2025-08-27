@@ -1,21 +1,4 @@
-struct PointLight
-{
-    float4 Color;
-    float3 Position;
-    float QuadraticAtt;
-    float LinearAtt;
-    float ConstAtt;
-    float2 _pad;
-};
-
-struct VSOut
-{
-    float4 PositionOut : SV_Position;
-    float4 ColorOut : Color;
-    float3 WorldPos : WorldPos;
-    float3 Normal : Normal;
-    float2 UvOut : Uv;
-};
+#include "structs.hlsli"
 
 cbuffer Material : register(b0)
 {
@@ -37,7 +20,7 @@ Texture2D Tex : register(t0);
 StructuredBuffer<PointLight> Lights : register(t1);
 SamplerState Samp;
 
-float4 main(VSOut input) : SV_TARGET
+float4 main(VsCompositeOut input) : SV_TARGET
 {
     float4 result = input.ColorOut;
     if (HasTexture != 0)

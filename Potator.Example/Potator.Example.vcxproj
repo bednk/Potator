@@ -141,9 +141,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\scenes\beagle.glb" />
+    <None Include="resources\scenes\chicken.glb" />
+    <None Include="resources\scenes\cube.glb" />
+    <None Include="resources\scenes\teapot.glb" />
     <None Include="vcpkg.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="attributions.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <Target Name="CopyScenes" AfterTargets="Build">
+    <ItemGroup>
+      <SceneFiles Include="resources\scenes\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SceneFiles)" DestinationFolder="$(OutDir)resources\scenes\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

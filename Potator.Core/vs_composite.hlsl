@@ -1,19 +1,4 @@
-struct VSIn
-{
-    float4 PositionIn : Position;
-    float4 ColorIn : Color;
-    float3 Normal : Normal;
-    float2 UvIn : Uv;
-};
-
-struct VSOut
-{
-    float4 PositionOut : SV_Position;
-    float4 ColorOut : Color;
-    float3 WorldPos : WorldPos;
-    float3 Normal : Normal;
-    float2 UvOut : Uv;
-};
+#include "structs.hlsli"
 
 cbuffer MeshTransform : register(b0)
 {
@@ -25,9 +10,9 @@ cbuffer ViewTransform : register(b1)
     matrix ViewProj;
 };
 
-VSOut main(VSIn input)
+VsCompositeOut main(VsCompositeIn input)
 {
-    VSOut res;
+    VsCompositeOut res;
     
     res.PositionOut = mul(input.PositionIn, mul(World, ViewProj));
     res.UvOut = input.UvIn;
