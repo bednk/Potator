@@ -188,12 +188,12 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PipelineStage.h" />
     <ClInclude Include="PointLightComponent.h" />
-    <ClInclude Include="PointLightsBuffer.h" />
     <ClInclude Include="RgbaTextureContainer.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="SceneLoader.h" />
     <ClInclude Include="SceneNodeComponent.h" />
     <ClInclude Include="DxShaderCache.h" />
+    <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="TexturedVertex.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="Vertex.h" />
@@ -263,6 +263,8 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)resources\shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)resources\shaders\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="ps_textured.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

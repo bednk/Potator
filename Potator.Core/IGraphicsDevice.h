@@ -24,10 +24,11 @@ namespace Potator
 		virtual PixelShaderHandle CreatePixelShader(const IShaderBinary* shaderBinary) = 0;
 		virtual InputLayoutHandle CreateInputLayout(const std::vector<VertexMemberDescriptor>& vertexMembers, const IShaderBinary* shaderBin) = 0;
 		virtual ShaderResourceHandle Create2dTexture(const RgbaTextureContainer* source) = 0;
+		virtual StructuredBufferHandle CreateStructuredBuffer(const IConstantBuffer* buffer) = 0;
 		virtual void Bind(const VertexBufferHandle* buffer) = 0;
 		virtual void Bind(const IndexBufferHandle* buffer) = 0;
 		virtual void Bind(const ConstantBufferHandle* buffer, PipelineStage stage, UINT slot) = 0;
-		virtual void Bind(const ShaderResourceHandle* resource, PipelineStage stage) = 0;
+		virtual void Bind(const ShaderResourceHandle* resource, PipelineStage stage, UINT slot) = 0;
 		virtual void Bind(const VertexShaderHandle* shader) = 0;
 		virtual void Bind(const PixelShaderHandle* shader) = 0;
 		virtual void Bind(const InputLayoutHandle* inputLayout) = 0;

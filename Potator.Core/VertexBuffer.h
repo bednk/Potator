@@ -13,7 +13,6 @@ namespace Potator
 		const void* GetData() const override;
 		UINT GetSize() const override;
 		UINT GetStride() const override;
-		const std::vector<VertexMemberDescriptor> GetVertexLayout() const override;
 	private:
 		std::vector<T> _data;
 	};
@@ -34,10 +33,5 @@ namespace Potator
 	inline UINT VertexBuffer<T>::GetStride() const
 	{
 		return sizeof(T);
-	}
-	template<class T>
-	inline const std::vector<VertexMemberDescriptor> VertexBuffer<T>::GetVertexLayout() const
-	{
-		return T::GetLayout();
 	}
 }

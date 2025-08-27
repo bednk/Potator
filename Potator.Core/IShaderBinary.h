@@ -8,6 +8,16 @@ namespace Potator
     struct InputLayoutHandle { size_t Id; };
     struct ShaderResourceHandle { size_t Id; };
 
+    struct ConstantBufferHandle { size_t Id; };
+    struct VertexBufferHandle { size_t Id; };
+    struct IndexBufferHandle { size_t Id; };
+
+    struct StructuredBufferHandle
+    {
+        ConstantBufferHandle Buffer;
+        ShaderResourceHandle View;
+    };
+
     class IShaderBinary
     {
     public:

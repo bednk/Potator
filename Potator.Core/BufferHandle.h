@@ -8,8 +8,4 @@ namespace Potator
 		Index,
 		Constant
 	};
-
-	struct ConstantBufferHandle { size_t Id; };
-	struct VertexBufferHandle { size_t Id; };
-	struct IndexBufferHandle { size_t Id; };
 }

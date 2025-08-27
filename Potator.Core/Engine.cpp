@@ -36,6 +36,10 @@ namespace Potator
 
 	void Engine::Run()
 	{
+		Entity view = _views.GetActive();
+		PointLightComponent cameraLiht;
+		_lights.Store(view, cameraLiht);
+
 		while (_mainWindow.isOpen())
 		{
 			_stepTracker.OnFrameStart();
@@ -57,10 +61,6 @@ namespace Potator
 					WindowResized(resizeEvent->size.x, resizeEvent->size.y);
 				}
 			}
-
-			Entity view = _views.GetActive();
-			PointLightComponent cameraLiht;
-			_lights.Store(view, cameraLiht);
 
 			_device->Clear(0, 0, 0, 1);
 			for (size_t i = 0; i < _inputHandlers.size(); i++)

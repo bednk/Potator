@@ -1,6 +1,7 @@
 #pragma once
 #include  "framework.h"
 #include "BufferHandle.h"
+#include "IShaderBinary.h"
 
 namespace Potator
 {

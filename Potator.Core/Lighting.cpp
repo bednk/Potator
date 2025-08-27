@@ -1,47 +1,48 @@
 #include "Lighting.h"
 #include "ConstantBuffer.h"
 #include "EntityRegistry.h"
+#include <array>
 
-struct EnviromentLights
-{
-	Potator::AmbientLightComponent Ambient;
-	Potator::DirectlionalLightComponent Directional;
-};
 
 Potator::Lighting::Lighting(ComponentStorage<PointLightComponent>& lights, ComponentStorage<TransformComponent>& transforms, IGraphicsDevice* device) :
 	_lights { lights },
 	_transforms { transforms },
-	_device { device }
+	_device { device },
+	_lcBuffer { _lightsConfig },
+	_cpuPointLightsBuffer { _pointLights }
 {
 	_lights.ComponentAdded.connect([this](Entity e, const PointLightComponent& c) { OnLightAdded(e, c); });
 	_lights.ComponentRemoved.connect([this](Entity e) { RemoveLight(e); });
 	_transforms.ComponentAdded.connect([this](Entity e, const TransformComponent& c) { OnTransformAdded(e, c); });
 	_transforms.ComponentRemoved.connect([this](Entity e) { RemoveLight(e); });
 
-	EnviromentLights envLights;
-	envLights.Directional.Dicection.normalize();
 
-	ConstantBuffer<EnviromentLights> cpuEnv(envLights);
-	ConstantBuffer<PointLightsBuffer> cpuPoint(_pointLightsBuffer);
-	_enviromentLightsHandle = _device->Create(&cpuEnv);
-	_pointLightsHandle = _device->Create(&cpuPoint);
-	_device->Bind(&_enviromentLightsHandle, PipelineStage::PixelShader, (UINT)PsConstantBufferSlots::EnviromentLight);
-	_device->Bind(&_pointLightsHandle, PipelineStage::PixelShader, (UINT)PsConstantBufferSlots::PointLights);
+	_lightsConfigHandle = _device->Create(&_lcBuffer);
+	_device->Bind(&_lightsConfigHandle, PipelineStage::PixelShader, (UINT)PsConstantBufferSlots::LightsConfig);
+
+	_pointLightsHandle = _device->CreateStructuredBuffer(&_cpuPointLightsBuffer);
+	_device->Bind(&_pointLightsHandle.View, PipelineStage::PixelShader, (UINT)PSStructuredBufferSlots::PointLights);
+	LightsConfig lc;
+	Potator::ConstantBuffer<LightsConfig> lcBuffer(lc);
 }
 
 void Potator::Lighting::Update()
 {
-	_pointLightsBuffer.Count = min(_lightEntities.size(), 16);
-	for (size_t i = 0; i < _pointLightsBuffer.Count; i++)
+	_lightsConfig.PointLightsCount = min(_lightEntities.size(), _maxPointLights);
+	_lcBuffer.Update(_lightsConfig);
+	_device->Update(&_lcBuffer, &_lightsConfigHandle);
+
+	for (size_t i = 0; i < _lightsConfig.PointLightsCount; i++)
 	{
 		Entity entity = _lightEntities[i];
-		_pointLightsBuffer.Lights[i] = _lights[entity];
+		_pointLights[i] = _lights[entity];
 		TransformComponent& transform = _transforms[entity];
-		_pointLightsBuffer.Lights[i].Position = transform.World.block<3, 1>(0, 3);
+		_pointLights[i].Position = transform.World.block<3, 1>(0, 3);
 		// ToDo: pick 16 closest based on current view transform
 	}
-	ConstantBuffer<PointLightsBuffer> cpuPoint(_pointLightsBuffer);
-	_device->Update(&cpuPoint, &_pointLightsHandle);
+
+	_cpuPointLightsBuffer.Update(_pointLights);
+	_device->Update(&_cpuPointLightsBuffer, &_pointLightsHandle.Buffer);
 }
 
 void Potator::Lighting::OnLightAdded(Entity entity, const PointLightComponent& component)
