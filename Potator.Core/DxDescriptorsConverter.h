@@ -27,6 +27,8 @@ namespace Potator
 			{
 			case DataFormat::float4:
 				return DXGI_FORMAT_R32G32B32A32_FLOAT;
+			case DataFormat::float3:
+				return DXGI_FORMAT_R32G32B32_FLOAT;
 			case DataFormat::float2:
 				return DXGI_FORMAT_R32G32_FLOAT;
 			default:

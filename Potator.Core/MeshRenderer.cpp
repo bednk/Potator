@@ -18,7 +18,7 @@ Potator::MeshRenderer::MeshRenderer(IGraphicsDevice* graphicsDevice, ComponentSt
 	_materials.ComponentAdded.connect([this](Entity e, const MaterialComponent& c) { OnMaterialAdded(e, c); });
 	_materials.ComponentRemoved.connect([this](Entity e) { RemoveDrawable(e); });
 	_transformationHandle = _graphicsDevice->Create(&_transformationBuffer);
-	_graphicsDevice->Bind(&_transformationHandle, PipelineStage::VertexShader, 0);
+	_graphicsDevice->Bind(&_transformationHandle, PipelineStage::VertexShader, (UINT)VsConstantBufferSlots::ModelTransform);
 }
 
 void Potator::MeshRenderer::Render()

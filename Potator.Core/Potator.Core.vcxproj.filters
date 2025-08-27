@@ -243,6 +243,21 @@
     <ClInclude Include="MaterialDescriptor.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="DirectlionalLightComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Lighting.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="AmbientLightComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightsBuffer.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -302,6 +317,9 @@
     <ClCompile Include="SceneLoader.cpp">
       <Filter>Source Files\ECS\ResourceManagment</Filter>
     </ClCompile>
+    <ClCompile Include="Lighting.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
@@ -315,6 +333,12 @@
       <Filter>Resource Files\Scenes</Filter>
     </None>
     <None Include="resources\scenes\chicken.glb">
+      <Filter>Resource Files\Scenes</Filter>
+    </None>
+    <None Include="resources\scenes\beagle.glb">
+      <Filter>Resource Files\Scenes</Filter>
+    </None>
+    <None Include="resources\scenes\chicken2.glb">
       <Filter>Resource Files\Scenes</Filter>
     </None>
   </ItemGroup>

@@ -20,7 +20,8 @@ namespace Potator
 		_movementSystem { _transforms, _movements },
 		_stepTracker { 30 },
 		_commandDispatcher { _commands },
-		_loader { _device.get(), _shaderCache.get(), _graph, _views, _meshes, _transforms, _materials}
+		_loader { _device.get(), _shaderCache.get(), _graph, _views, _meshes, _transforms, _materials},
+		_lighting { _lights, _transforms, _device.get() }
 	{
 		_stepTracker.Subscribe(&_movementSystem);
 
@@ -57,6 +58,10 @@ namespace Potator
 				}
 			}
 
+			Entity view = _views.GetActive();
+			PointLightComponent cameraLiht;
+			_lights.Store(view, cameraLiht);
+
 			_device->Clear(0, 0, 0, 1);
 			for (size_t i = 0; i < _inputHandlers.size(); i++)
 			{
@@ -65,6 +70,7 @@ namespace Potator
 			_commandDispatcher.Dispatch();
 			_stepTracker.Update();
 			_graph.UpdateTransforms();
+			_lighting.Update();
 			_views.UpdateView();
 			_renderer.Render();
 			_device->Present();

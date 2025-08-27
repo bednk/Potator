@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AmbientLightComponent.h" />
     <ClInclude Include="AttitudeMovementCommand.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CommandDispatcher.h" />
@@ -174,6 +175,8 @@
     <ClInclude Include="IShaderCache.h" />
     <ClInclude Include="IVertexBuffer.h" />
     <ClInclude Include="LaunchingParams.h" />
+    <ClInclude Include="DirectlionalLightComponent.h" />
+    <ClInclude Include="Lighting.h" />
     <ClInclude Include="MaterialComponent.h" />
     <ClInclude Include="MaterialDescriptor.h" />
     <ClInclude Include="MeshComponent.h" />
@@ -184,6 +187,8 @@
     <ClInclude Include="MovementSystem.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PipelineStage.h" />
+    <ClInclude Include="PointLightComponent.h" />
+    <ClInclude Include="PointLightsBuffer.h" />
     <ClInclude Include="RgbaTextureContainer.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="SceneLoader.h" />
@@ -207,6 +212,7 @@
     <ClCompile Include="FixedStepTracker.cpp" />
     <ClCompile Include="HlslShader.cpp" />
     <ClCompile Include="HrCheck.cpp" />
+    <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="MoveCommand.cpp" />
     <ClCompile Include="MovementInputHandler.cpp" />
@@ -223,7 +229,9 @@
     <ClCompile Include="ViewManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\scenes\beagle.glb" />
     <None Include="resources\scenes\chicken.glb" />
+    <None Include="resources\scenes\chicken2.glb" />
     <None Include="resources\scenes\cube.glb" />
     <None Include="resources\scenes\potatoes.glb" />
     <None Include="resources\scenes\teapot.glb" />

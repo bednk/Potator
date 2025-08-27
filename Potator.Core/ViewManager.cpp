@@ -27,18 +27,18 @@ Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transfor
 	Entity defaultCam = EntityRegistry::Instance().GetNew();
 	CameraComponent camComponent = GetDefault();
 	TransformComponent transComponent;
-	//transComponent.Local <<
-	//	0.707107f,	-0.408248f, -0.577350f, 5.0f,
-	//	0.0f,		0.816497f,	-0.577350f, 5.0f,
-	//	0.707107f,	0.408248f,	0.577350f,	-5.0f,
-	//	0.0f,		0.0f,		0.0f,		1.0f;
-	transComponent.Local(2, 3) = -200;
+	transComponent.Local <<
+		0.707107f,	-0.408248f, -0.577350f, 100.0f,
+		0.0f,		0.816497f,	-0.577350f, 100.0f,
+		0.707107f,	0.408248f,	0.577350f,	-100.0f,
+		0.0f,		0.0f,		0.0f,		1.0f;
+	//transComponent.Local(2, 3) = -200;
 	Add(defaultCam, camComponent, transComponent);
 	SetActive(defaultCam);
 
 	_transformationBuffer.Update(transComponent.World);
 	_transformationHandle = _device->Create(&_transformationBuffer);
-	_device->Bind(&_transformationHandle, PipelineStage::VertexShader, 1);
+	_device->Bind(&_transformationHandle, PipelineStage::VertexShader, (UINT)VsConstantBufferSlots::ViewProjTransform);
 }
 
 void Potator::ViewManager::UpdateView()

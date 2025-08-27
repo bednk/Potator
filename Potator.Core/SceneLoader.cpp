@@ -140,6 +140,7 @@ static std::vector<MeshComponent> LoadMeshes(const aiScene* scene, IGraphicsDevi
 	{
 		aiMesh* mesh = scene->mMeshes[i];
 		bool isColored = mesh->HasVertexColors(0);
+		bool hasNormals = mesh->HasNormals();
 		MeshComponent& meshComponent = result.emplace_back();
 		meshComponent.StartIndexLocation = 0;
 		std::vector<CompositeVertex> vertices;
@@ -173,9 +174,10 @@ static std::vector<MeshComponent> LoadMeshes(const aiScene* scene, IGraphicsDevi
 				vertex.Color = { vertexColor.r, vertexColor.g, vertexColor.b, vertexColor.a };
 			}
 
-			else
+			if (hasNormals)
 			{
-				vertex.Color = MISSING_COLOR;
+				aiVector3D normal = mesh->mNormals[v];
+				vertex.Normal = { normal.x, normal.y, normal.z };
 			}
 		}
 

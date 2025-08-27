@@ -21,6 +21,7 @@
 #include "SceneLoader.h"
 #include "ControllerMovementInputHandler.h"
 #include <boost/signals2.hpp>
+#include "Lighting.h"
 
 
 namespace Potator
@@ -54,12 +55,14 @@ namespace Potator
 		ComponentStorage<SceneNodeComponent> _tree;
 		ComponentStorage<CommandQueueComponent> _commands;
 		ComponentStorage<CameraComponent> _cameras;
+		ComponentStorage<PointLightComponent> _lights;
 		MeshRenderer _renderer;
 		SceneGraph _graph;
 		ViewManager _views;
 		MovementSystem _movementSystem;
 		FixedStepTracker _stepTracker;
 		CommandDispatcher _commandDispatcher;
+		Lighting _lighting;
 		std::vector<std::shared_ptr<IInputHandler>> _inputHandlers;
 		SceneLoader _loader;
 		boost::signals2::signal<void(unsigned int, unsigned int)> WindowResized;

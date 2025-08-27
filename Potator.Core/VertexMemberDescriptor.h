@@ -10,6 +10,7 @@ namespace Potator
 	enum DataFormat
 	{
 		float4,
+		float3,
 		float2
 	};
 

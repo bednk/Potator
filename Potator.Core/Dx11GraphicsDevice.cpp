@@ -136,7 +136,7 @@ void Potator::Dx11GraphicsDevice::Draw(const MeshComponent* mesh, const Material
 	Bind(&material->InputLayout);
 	Bind(&material->VertexShader);
 	Bind(&material->PixelShader);
-	Bind(&material->DescriptorHandle, PipelineStage::PixelShader, 0);
+	Bind(&material->DescriptorHandle, PipelineStage::PixelShader, (UINT)PsConstantBufferSlots::MaterialDescriptor);
 	
 	_context->DrawIndexed(mesh->IndexCount, mesh->StartIndexLocation, 0);
 }
