@@ -76,7 +76,7 @@
     <Filter Include="Source Files\Input">
       <UniqueIdentifier>{1d8fa33d-acbf-4628-90ff-1c92897edacb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\ECS\ResourceManagment">
+    <Filter Include="Source Files\ResourceManagment">
       <UniqueIdentifier>{c7046b2c-0746-4d72-908a-955777f4d320}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -312,7 +312,7 @@
       <Filter>Source Files\ECS\Commands</Filter>
     </ClCompile>
     <ClCompile Include="SceneLoader.cpp">
-      <Filter>Source Files\ECS\ResourceManagment</Filter>
+      <Filter>Source Files\ResourceManagment</Filter>
     </ClCompile>
     <ClCompile Include="Lighting.cpp">
       <Filter>Source Files\ECS\Systems</Filter>

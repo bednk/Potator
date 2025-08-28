@@ -11,7 +11,8 @@ namespace Potator
 	enum class PsConstantBufferSlots
 	{
 		MaterialDescriptor = 0,
-		LightsConfig = 1
+		LightsConfig = 1,
+		CameraWorld = 2
 	};
 
 	enum class VsConstantBufferSlots

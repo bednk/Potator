@@ -19,9 +19,10 @@ Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transfor
 	_scene { scene },
 	_device { device },
 	_active { NONE_ENTITY },
-	_transformationBuffer{ Eigen::Matrix4f::Identity() },
+	_projViewBuffer{ Eigen::Matrix4f::Identity() },
 	_proj{ Eigen::Matrix4f::Identity() },
-	_aspectRatio { aspectRatio }
+	_aspectRatio { aspectRatio },
+	_worldPosBuffer { Eigen::Vector4f::Zero() }
 
 {
 	Entity defaultCam = EntityRegistry::Instance().GetNew();
@@ -36,9 +37,15 @@ Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transfor
 	Add(defaultCam, camComponent, transComponent);
 	SetActive(defaultCam);
 
-	_transformationBuffer.Update(transComponent.World);
-	_transformationHandle = _device->Create(&_transformationBuffer);
+	Eigen::Matrix4f projView = _proj * GetViewTransform(transComponent.World);
+	_projViewBuffer.Update(transComponent.World);
+	_transformationHandle = _device->Create(&_projViewBuffer);
 	_device->Bind(&_transformationHandle, PipelineStage::VertexShader, (UINT)VsConstantBufferSlots::ViewProjTransform);
+
+	Eigen::Vector4f cameraWorldPosition = transComponent.World.col(3);
+	_worldPosBuffer.Update(cameraWorldPosition);
+	_worldPosHandle = _device->Create(&_worldPosBuffer);
+	_device->Bind(&_worldPosHandle, PipelineStage::PixelShader, (UINT)PsConstantBufferSlots::CameraWorld);
 }
 
 void Potator::ViewManager::UpdateView()
@@ -48,12 +55,16 @@ void Potator::ViewManager::UpdateView()
 		return;
 	}
 
-	auto& cameraWorld = _transforms[_active].World;
-	Eigen::Matrix4f projView = _proj * GetViewTransform(cameraWorld);
+	Eigen::Matrix4f& cameraWorldTransform = _transforms[_active].World;
+	Eigen::Matrix4f projView = _proj * GetViewTransform(cameraWorldTransform);
 	projView.transposeInPlace();
 	
-	_transformationBuffer.Update(projView);
-	_device->Update(&_transformationBuffer, &_transformationHandle);
+	_projViewBuffer.Update(projView);
+	_device->Update(&_projViewBuffer, &_transformationHandle);
+
+	Eigen::Vector4f cameraWorldPosition = cameraWorldTransform.col(3);
+	_worldPosBuffer.Update(cameraWorldPosition);
+	_device->Update(&_worldPosBuffer, &_worldPosHandle);
 }
 
 void Potator::ViewManager::Add(Entity cameraEntity, CameraComponent camera, TransformComponent transform)

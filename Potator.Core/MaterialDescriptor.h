@@ -8,6 +8,8 @@ namespace Potator
 	struct MaterialDescriptor
 	{
 		Eigen::Vector4f Color = MISSING_COLOR;
+		float SpecularExponent = 20;
+		float SpecularIntensity = 1;
 		int HasTexture = 0;
 		int HasColor = 0;
 	};

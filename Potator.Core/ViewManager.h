@@ -28,7 +28,9 @@ namespace Potator
 		IGraphicsDevice* _device;
 		Entity _active;
 		ConstantBufferHandle _transformationHandle;
-		ConstantBuffer<Eigen::Matrix4f> _transformationBuffer;
+		ConstantBuffer<Eigen::Matrix4f> _projViewBuffer;
+		ConstantBufferHandle _worldPosHandle;
+		ConstantBuffer<Eigen::Vector4f> _worldPosBuffer;
 		Eigen::Matrix4f _proj;
 		float _aspectRatio;
 	};
