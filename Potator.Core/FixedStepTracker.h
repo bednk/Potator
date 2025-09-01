@@ -13,7 +13,7 @@ namespace Potator
 		using TimePoint = Clock::time_point;
 		FixedStepTracker();
 		FixedStepTracker(int tickRate);
-		void OnFrameStart();
+		void MarkFrameStart();
 		void Subscribe(IFixedStep* subscriber);
 		void Update();
 	private:

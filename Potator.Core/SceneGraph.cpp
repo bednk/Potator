@@ -4,7 +4,7 @@
 
 Potator::SceneGraph::SceneGraph(ComponentStorage<TransformComponent>& transforms, ComponentStorage<SceneNodeComponent>& tree) :
 	_transforms { transforms },
-	_tree { tree }
+	_nodes { tree }
 {
 	TopoSort();
 }
@@ -15,23 +15,23 @@ void Potator::SceneGraph::AddNode(Entity entity, TransformComponent& transform, 
 	_topologicalOrder.push_back(entity);
 
 	SceneNodeComponent node{ entity, parent };
-	_tree.Store(entity, node);
+	_nodes.Store(entity, node);
 
-	if (!_tree.HasComponent(parent))
+	if (!_nodes.HasComponent(parent))
 	{
 		return;
 	}
 
-	SceneNodeComponent& parentNode = _tree[parent];
+	SceneNodeComponent& parentNode = _nodes[parent];
 	parentNode.Children.push_back(entity);
 }
 
 Potator::SceneNodeComponent& Potator::SceneGraph::GetNode(Entity entity)
 {
-	return _tree[entity];
+	return _nodes[entity];
 }
 
-void Potator::SceneGraph::UpdateTransforms()
+void Potator::SceneGraph::Update()
 {
 	for (size_t i = 0; i < _topologicalOrder.size(); i++)
 	{
@@ -43,7 +43,7 @@ void Potator::SceneGraph::UpdateTransforms()
 
 		auto& transform = _transforms[entity];
 
-		Entity parent = _tree[entity].Parent;
+		Entity parent = _nodes[entity].Parent;
 		if (!_transforms.HasComponent(parent))
 		{
 			transform.World = transform.Local;
@@ -58,7 +58,7 @@ void Potator::SceneGraph::UpdateTransforms()
 void Potator::SceneGraph::TopoSort()
 {
 	std::queue<SceneNodeComponent> queue;
-	auto& nodes = _tree.GetComponents();
+	auto& nodes = _nodes.GetComponents();
 	for (size_t i = 0; i < nodes.size(); i++)
 	{
 		auto& node = nodes[i];
@@ -79,12 +79,12 @@ void Potator::SceneGraph::TopoSort()
 		for (size_t i = 0; i < next.Children.size(); i++)
 		{
 			Entity child = next.Children[i];
-			if (!_tree.HasComponent(child))
+			if (!_nodes.HasComponent(child))
 			{
 				continue;
 			}
 
-			queue.push(_tree[child]);
+			queue.push(_nodes[child]);
 		}
 	}
 }

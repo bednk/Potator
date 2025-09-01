@@ -15,7 +15,7 @@ namespace Potator
 	private:
 		Entity _entity;
 		CommandDispatcher& _commandDispatcher;
-		AttitudeMovementCommnand _command;
+		std::shared_ptr<AttitudeMovementCommnand> _command;
 		ComponentStorage<MovementComponent>& _movements;
 		float _linerUnitsPerS = 0.05f;
 		float _angilarRadiansPerS = 1;

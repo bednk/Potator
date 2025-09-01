@@ -21,7 +21,7 @@ namespace Potator
 	private:
 		Entity _entity;
 		CommandDispatcher& _commandDispatcher;
-		AttitudeMovementCommnand _command;
+		std::shared_ptr<AttitudeMovementCommnand> _command;
 		ComponentStorage<MovementComponent>& _movements;
 		unsigned int _joystickId;
 

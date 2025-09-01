@@ -14,64 +14,45 @@ namespace Potator
 		_mainWindow{ sf::VideoMode({ settings.Width, settings.Height }), settings.Title },
 		_device{ DeviceFactory::GetDevice(settings, _mainWindow.getNativeHandle()) },
 		_shaderCache { DeviceFactory::GetShaderCache(settings.Api, _device.get() )},
-		_graph{ _transforms, _tree },
+		_sceneGraph{ _transforms, _nodes },
 		_renderer{ _device.get(), _meshes, _transforms, _materials },
-		_views{ _transforms, _cameras, _graph, _device.get(), settings.Width / (float)settings.Height },
+		_views{ _transforms, _cameras, _sceneGraph, _device.get(), settings.Width / (float)settings.Height },
 		_movementSystem { _transforms, _movements },
-		_stepTracker { 30 },
+		_fixedStepTracker { 30 },
 		_commandDispatcher { _commands },
-		_loader { _device.get(), _shaderCache.get(), _graph, _views, _meshes, _transforms, _materials},
-		_lighting { _lights, _transforms, _device.get() }
+		_loader { _device.get(), _shaderCache.get(), _sceneGraph, _views, _meshes, _transforms, _materials, _movements, _scripts, _lights },
+		_lighting { _lights, _transforms, _device.get() },
+		_windowHandler { &_mainWindow },
+		_scripting { _commandDispatcher, _scripts, _movements, _transforms }
 	{
-		_stepTracker.Subscribe(&_movementSystem);
+		_fixedStepTracker.Subscribe(&_movementSystem);
 
 		Entity camera = _views.GetActive();
-		std::shared_ptr<IInputHandler> controllerHandler = _inputHandlers.emplace_back(std::make_shared<ControllerMovementInputHandler>(_commandDispatcher, _movements, _transforms));
+		std::shared_ptr<IInputHandler> controllerHandler = std::make_shared<ControllerMovementInputHandler>(_commandDispatcher, _movements, _transforms);
 		controllerHandler->SetEntity(camera);
 		_views.ViewChanged.connect([this, controllerHandler](Entity e) { controllerHandler->SetEntity(e); });
 
-		WindowResized.connect([this](unsigned int w, unsigned int h) { _views.OnWindowResized(w, h); });
-		WindowResized.connect([this](unsigned int w, unsigned int h) { _device->OnWindowResized(w, h); });
+		_windowHandler.RegisterInputHandler(controllerHandler);
+		_windowHandler.WindowResized.connect([this](unsigned int w, unsigned int h) { _views.OnWindowResized(w, h); });
+		_windowHandler.WindowResized.connect([this](unsigned int w, unsigned int h) { _device->OnWindowResized(w, h); });
 	}
 
 	void Engine::Run()
 	{
-		Entity view = _views.GetActive();
-		PointLightComponent cameraLiht;
-		_lights.Store(view, cameraLiht);
-
 		while (_mainWindow.isOpen())
 		{
-			_stepTracker.OnFrameStart();
-			while (const std::optional event = _mainWindow.pollEvent())
-			{
-				if (!event)
-				{
-					continue;
-				}
+			_fixedStepTracker.MarkFrameStart();
 
-				if (event->is<sf::Event::Closed>())
-				{
-					_mainWindow.close();
-				}
+			_windowHandler.Handle();
+			_commandDispatcher.Dispatch();
 
-				else if (event->is<sf::Event::Resized>())
-				{
-					const auto* resizeEvent = event->getIf<sf::Event::Resized>();
-					WindowResized(resizeEvent->size.x, resizeEvent->size.y);
-				}
-			}
+			_scripting.Update();
+			_fixedStepTracker.Update();
+			_sceneGraph.Update();
+			_lighting.Update();
+			_views.Update();
 
 			_device->Clear(0, 0, 0, 1);
-			for (size_t i = 0; i < _inputHandlers.size(); i++)
-			{
-				_inputHandlers[i]->Handle();
-			}
-			_commandDispatcher.Dispatch();
-			_stepTracker.Update();
-			_graph.UpdateTransforms();
-			_lighting.Update();
-			_views.UpdateView();
 			_renderer.Render();
 			_device->Present();
 		}
@@ -100,7 +81,7 @@ namespace Potator
 
 	SceneGraph& Engine::GetSceneGraph()
 	{
-		return _graph;
+		return _sceneGraph;
 	}
 
 	ViewManager& Engine::GetViewManager()

@@ -4,7 +4,7 @@
 Potator::MovementInputHandler::MovementInputHandler(CommandDispatcher& commandDispatcher, ComponentStorage<MovementComponent>& movements, ComponentStorage<TransformComponent>& transforms) :
 	_entity { NONE_ENTITY },
 	_commandDispatcher { commandDispatcher },
-	_command { movements, transforms },
+	_command { std::make_shared<AttitudeMovementCommnand>(movements, transforms) },
 	_movements { movements }
 {
 }
@@ -26,25 +26,25 @@ void Potator::MovementInputHandler::Handle()
 		return;
 	}
 
-	_command.LinearVelocity.x() =
+	_command->LinearVelocity.x() =
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ? -_linerUnitsPerS : 0) +
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ? _linerUnitsPerS : 0);
-	_command.LinearVelocity.y() =
+	_command->LinearVelocity.y() =
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl) ? -_linerUnitsPerS : 0) +
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) ? _linerUnitsPerS : 0);
-	_command.LinearVelocity.z() =
+	_command->LinearVelocity.z() =
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) ? -_linerUnitsPerS : 0) +
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) ? _linerUnitsPerS : 0);
 
-	_command.AngularVelocity.x() =
+	_command->AngularVelocity.x() =
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) ? -_angilarRadiansPerS : 0) +
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::U) ? _angilarRadiansPerS : 0);
-	_command.AngularVelocity.y() =
+	_command->AngularVelocity.y() =
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Y) ? -_angilarRadiansPerS : 0) +
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::I) ? _angilarRadiansPerS : 0);
-	_command.AngularVelocity.z() =
+	_command->AngularVelocity.z() =
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K) ? -_angilarRadiansPerS : 0) +
 		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H) ? _angilarRadiansPerS : 0);
 
-	_commandDispatcher.Enqueue(_entity, &_command);
+	_commandDispatcher.Enqueue(_entity, _command);
 }

@@ -177,6 +177,7 @@
     <ClInclude Include="LaunchingParams.h" />
     <ClInclude Include="DirectlionalLightComponent.h" />
     <ClInclude Include="Lighting.h" />
+    <ClInclude Include="MovementApi.h" />
     <ClInclude Include="MaterialComponent.h" />
     <ClInclude Include="MaterialDescriptor.h" />
     <ClInclude Include="MeshComponent.h" />
@@ -193,6 +194,8 @@
     <ClInclude Include="SceneLoader.h" />
     <ClInclude Include="SceneNodeComponent.h" />
     <ClInclude Include="DxShaderCache.h" />
+    <ClInclude Include="ScriptComponent.h" />
+    <ClInclude Include="ScriptingSystem.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="TexturedVertex.h" />
     <ClInclude Include="TransformComponent.h" />
@@ -200,6 +203,7 @@
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexMemberDescriptor.h" />
     <ClInclude Include="ViewManager.h" />
+    <ClInclude Include="WindowHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AttitudeMovementCommand.cpp" />
@@ -226,7 +230,9 @@
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="SceneLoader.cpp" />
     <ClCompile Include="DxShaderCache.cpp" />
+    <ClCompile Include="ScriptingSystem.cpp" />
     <ClCompile Include="ViewManager.cpp" />
+    <ClCompile Include="WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="structs.hlsli" />

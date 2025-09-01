@@ -12,11 +12,11 @@ namespace Potator
 		SceneGraph(ComponentStorage<TransformComponent>& transforms, ComponentStorage<SceneNodeComponent>& tree);
 		void AddNode(Entity entity, TransformComponent& transform, Entity parent = NONE_ENTITY);
 		SceneNodeComponent& GetNode(Entity entity);
-		void UpdateTransforms();
+		void Update();
 	private:
 		void TopoSort();
 		ComponentStorage<TransformComponent>& _transforms;
-		ComponentStorage<SceneNodeComponent>& _tree;
+		ComponentStorage<SceneNodeComponent>& _nodes;
 		std::vector<Entity> _topologicalOrder;
 	};
 }

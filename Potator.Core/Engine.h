@@ -1,3 +1,4 @@
+
 #pragma once
 #include <memory>
 #include "ComponentStorage.h"
@@ -20,8 +21,9 @@
 #include "LaunchingParams.h"
 #include "SceneLoader.h"
 #include "ControllerMovementInputHandler.h"
-#include <boost/signals2.hpp>
 #include "Lighting.h"
+#include "WindowHandler.h"
+#include "ScriptingSystem.h"
 
 
 namespace Potator
@@ -52,19 +54,20 @@ namespace Potator
 		ComponentStorage<MaterialComponent> _materials;
 		ComponentStorage<TransformComponent> _transforms;
 		ComponentStorage<MovementComponent> _movements;
-		ComponentStorage<SceneNodeComponent> _tree;
+		ComponentStorage<SceneNodeComponent> _nodes;
 		ComponentStorage<CommandQueueComponent> _commands;
 		ComponentStorage<CameraComponent> _cameras;
 		ComponentStorage<PointLightComponent> _lights;
+		ComponentStorage<ScriptComponent> _scripts;
 		MeshRenderer _renderer;
-		SceneGraph _graph;
+		SceneGraph _sceneGraph;
 		ViewManager _views;
 		MovementSystem _movementSystem;
-		FixedStepTracker _stepTracker;
+		FixedStepTracker _fixedStepTracker;
 		CommandDispatcher _commandDispatcher;
 		Lighting _lighting;
-		std::vector<std::shared_ptr<IInputHandler>> _inputHandlers;
 		SceneLoader _loader;
-		boost::signals2::signal<void(unsigned int, unsigned int)> WindowResized;
+		WindowHandler _windowHandler;
+		ScriptingSystem _scripting;
 	};
 }

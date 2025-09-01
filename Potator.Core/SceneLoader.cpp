@@ -12,9 +12,51 @@
 #include "stb_image.h"
 #include <iostream>
 #include <boost/dll/runtime_symbol_info.hpp>
+#include <nlohmann/json.hpp>
+#include <fstream>
+
 
 namespace fs = std::filesystem;
 using namespace Potator;
+
+struct GLBHeader
+{
+	uint32_t magic;
+	uint32_t version;
+	uint32_t length;
+};
+
+struct GLBChunkHeader
+{
+	uint32_t chunkLength;
+	uint32_t chunkType;
+};
+
+static nlohmann::json LoadGLBJson(const std::string& path)
+{
+	static const int glbMagic = 0x46546C67;
+	static const int jsonChunk = 0x4E4F534A;
+
+	std::ifstream file(path, std::ios::binary);
+	GLBHeader header;
+	file.read(reinterpret_cast<char*>(&header), sizeof(header));
+	if (header.magic != glbMagic)
+	{
+		throw std::runtime_error("Not a GLB file");
+	}
+
+	GLBChunkHeader chunkHeader;
+	file.read(reinterpret_cast<char*>(&chunkHeader), sizeof(chunkHeader));
+	if (chunkHeader.chunkType != jsonChunk)
+	{
+		throw std::runtime_error("First chunk is not JSON");
+	}
+
+	std::vector<char> jsonData(chunkHeader.chunkLength);
+	file.read(jsonData.data(), chunkHeader.chunkLength);
+
+	return nlohmann::json::parse(jsonData.begin(), jsonData.end());
+}
 
 static Eigen::Matrix4f GetEigenMatrix(const aiMatrix4x4t<float>& matrix)
 {
@@ -192,20 +234,68 @@ static std::vector<MeshComponent> LoadMeshes(const aiScene* scene, IGraphicsDevi
 	return result;
 }
 
+static std::string ToString(const aiString& source)
+{
+	return std::string{ source.C_Str() };
+}
+
+static std::unordered_map<std::string, std::string> GetLuaScripts(fs::path path)
+{
+	std::unordered_map<std::string, std::string> result;
+
+	nlohmann::json js = LoadGLBJson(path.string());
+	for (size_t i = 0; i < js["nodes"].size(); i++)
+	{
+		auto& node = js["nodes"][i];
+		if (node.contains("extras"))
+		{
+			auto& extras = node["extras"];
+			if (extras.contains("lua"))
+			{
+				auto& script = extras["lua"];
+				result[node["name"]] = script;
+			}
+		}
+	}
+
+	return result;
+}
+
+static std::unordered_map<std::string, PointLightComponent> GetLights(aiLight** lights, unsigned int count)
+{
+	std::unordered_map<std::string, PointLightComponent> result;
+	for (size_t i = 0; i < count; i++)
+	{
+		aiLight* light = lights[i];
+		std::string name = { light->mName.C_Str() };
+		result[name] = PointLightComponent{};
+		result[name].Color = { light->mColorDiffuse.r, light->mColorDiffuse.g, light->mColorDiffuse.b, 0.0f };
+		result[name].Color.normalize(); // throw out intensity (for now (hue hue hue))
+	}
+
+	return result;
+}
+
 Potator::SceneLoader::SceneLoader(IGraphicsDevice* device,
 		IShaderCache* shaderCache,
 		SceneGraph& graph,
 		ViewManager& views,
 		ComponentStorage<MeshComponent>& meshes,
 		ComponentStorage<TransformComponent>& transforms,
-		ComponentStorage<MaterialComponent>& materials) :
+		ComponentStorage<MaterialComponent>& materials,
+		ComponentStorage<MovementComponent>& movements,
+		ComponentStorage<ScriptComponent>& scripts,
+	    ComponentStorage<PointLightComponent>& lights) :
 	_device { device },
 	_shaderCache { shaderCache },
-	_graph { graph },
+	_sceneGraph { graph },
 	_views { views },
 	_meshes { meshes },
 	_transforms { transforms },
-	_materials { materials }
+	_materials { materials },
+	_movements { movements },
+	_scripts { scripts },
+	_lights { lights }
 {
 }
 
@@ -215,6 +305,8 @@ void Potator::SceneLoader::Load(fs::path path)
 	{
 		path = boost::dll::program_location().parent_path().string() / fs::path("resources\\scenes") / path.string();
 	}
+
+	std::unordered_map<std::string, std::string> scripts = GetLuaScripts(path);
 
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path.string(),
@@ -228,9 +320,9 @@ void Potator::SceneLoader::Load(fs::path path)
 		return;
 	}
 
-
 	std::vector<MaterialComponent> materials = LoadMaterials(scene, _device, _shaderCache);
 	std::vector<MeshComponent> meshComponents = LoadMeshes(scene, _device);
+	std::unordered_map<std::string, PointLightComponent> lights = GetLights(scene->mLights, scene->mNumLights);
 
 	std::queue<aiNode*> queue;
 	std::map<aiNode*, Entity> parents;
@@ -244,8 +336,10 @@ void Potator::SceneLoader::Load(fs::path path)
 		queue.pop();
 		Entity nodeEntity = EntityRegistry::Instance().GetNew();
 		TransformComponent nodeTransform;
+		MovementComponent nodeMovement;
 		nodeTransform.Local = GetEigenMatrix(node->mTransformation);
-		_graph.AddNode(nodeEntity, nodeTransform, parents[node]);
+		_sceneGraph.AddNode(nodeEntity, nodeTransform, parents[node]);
+		_movements.Store(nodeEntity, nodeMovement);
 
 		for (size_t i = 0; i < node->mNumMeshes; i++)
 		{
@@ -256,9 +350,23 @@ void Potator::SceneLoader::Load(fs::path path)
 
 			Entity meshEntity = EntityRegistry::Instance().GetNew();
 			TransformComponent meshTransform;
-			_graph.AddNode(meshEntity, meshTransform, nodeEntity);
+			_sceneGraph.AddNode(meshEntity, meshTransform, nodeEntity);
 			_meshes.Store(meshEntity, meshComponent);
 			_materials.Store(meshEntity, materialComponent);
+		}
+
+		std::string name = ToString(node->mName);
+
+		if (scripts.contains(name))
+		{
+			ScriptComponent component = {};
+			component.Script = scripts[name];
+			_scripts.Store(nodeEntity, component);
+		}
+
+		if (lights.contains(name))
+		{
+			_lights.Store(nodeEntity, lights[name]);
 		}
 
 		for (size_t i = 0; i < node->mNumChildren; i++)

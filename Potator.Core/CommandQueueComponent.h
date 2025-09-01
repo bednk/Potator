@@ -2,6 +2,7 @@
 #include <queue>
 #include "ICommand.h"
 #include <optional>
+#include <memory>
 
 namespace Potator
 {
@@ -9,11 +10,11 @@ namespace Potator
 	{
 	public:
 		CommandQueueComponent(Entity owner);
-		void Enqueue(ICommand* command);
+		void Enqueue(std::shared_ptr<ICommand> command);
 		Entity GetOwner() { return _owner; }
-		std::optional<ICommand*> Dequeue();
+		std::optional<std::shared_ptr<ICommand>> Dequeue();
 	private:
 		Entity _owner;
-		std::queue<ICommand*> _queue;
+		std::queue<std::shared_ptr<ICommand>> _queue;
 	};
 }

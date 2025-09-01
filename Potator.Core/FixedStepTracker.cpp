@@ -12,7 +12,7 @@ Potator::FixedStepTracker::FixedStepTracker(int tickRate) :
 
 }
 
-void Potator::FixedStepTracker::OnFrameStart()
+void Potator::FixedStepTracker::MarkFrameStart()
 {
 	auto now = Clock::now();
 	if (!_lastTime)

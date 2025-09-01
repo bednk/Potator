@@ -48,7 +48,7 @@ Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transfor
 	_device->Bind(&_worldPosHandle, PipelineStage::PixelShader, (UINT)PsConstantBufferSlots::CameraWorld);
 }
 
-void Potator::ViewManager::UpdateView()
+void Potator::ViewManager::Update()
 {
 	if (_active == NONE_ENTITY)
 	{

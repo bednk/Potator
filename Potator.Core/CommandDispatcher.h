@@ -8,7 +8,7 @@ namespace Potator
 	{
 	public:
 		CommandDispatcher(ComponentStorage<CommandQueueComponent>& commandQueues);
-		void Enqueue(Entity entity, ICommand* command);
+		void Enqueue(Entity entity, std::shared_ptr<ICommand> command);
 		void Dispatch();
 	private:
 		ComponentStorage<CommandQueueComponent>& _commandQueues;

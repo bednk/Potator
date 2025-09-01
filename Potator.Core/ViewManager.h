@@ -13,7 +13,7 @@ namespace Potator
 	{
 	public:
 		ViewManager(ComponentStorage<TransformComponent>& transforms, ComponentStorage<CameraComponent>& cameras, SceneGraph& scene, IGraphicsDevice* device, float aspectRatio);
-		void UpdateView();
+		void Update();
 		void Add(Entity cameraEntity, CameraComponent camera, TransformComponent transform);
 		void SetActive(Entity camera);
 		Entity GetActive();

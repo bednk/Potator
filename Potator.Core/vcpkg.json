@@ -6,6 +6,9 @@
     "sfml",
     "eigen3",
     "assimp",
-    "stb"
+    "stb",
+    "nlohmann-json",
+    "lua",
+    "sol2"
   ]
 }

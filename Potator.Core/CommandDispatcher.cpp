@@ -5,7 +5,7 @@ Potator::CommandDispatcher::CommandDispatcher(ComponentStorage<CommandQueueCompo
 {
 }
 
-void Potator::CommandDispatcher::Enqueue(Entity entity, ICommand* command)
+void Potator::CommandDispatcher::Enqueue(Entity entity, std::shared_ptr<ICommand> command)
 {
 	if (!_commandQueues.HasComponent(entity))
 	{
@@ -25,7 +25,7 @@ void Potator::CommandDispatcher::Dispatch()
 	{
 		CommandQueueComponent& queue = queues[i];
 		Entity owner = queue.GetOwner();
-		std::optional<ICommand*> command;
+		std::optional<std::shared_ptr<ICommand>> command;
 
 		while ((command = queue.Dequeue()))
 		{

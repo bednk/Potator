@@ -20,7 +20,7 @@ int main()
 	Engine engine;
 
 	SceneLoader& loadear = engine.GetLoader();
-	loadear.Load("beagle.glb");
+	loadear.Load("teapot.glb");
 
 	engine.Run();
 }

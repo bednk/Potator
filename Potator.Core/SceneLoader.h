@@ -8,6 +8,9 @@
 #include "MeshComponent.h"
 #include "TransformComponent.h"
 #include "MaterialComponent.h"
+#include "MovementComponent.h"
+#include "ScriptComponent.h"
+#include "PointLightComponent.h"
 
 namespace Potator
 {
@@ -20,15 +23,21 @@ namespace Potator
 			ViewManager& views,
 			ComponentStorage<MeshComponent>& meshes,
 			ComponentStorage<TransformComponent>& transforms,
-			ComponentStorage<MaterialComponent>& materials);
+			ComponentStorage<MaterialComponent>& materials,
+			ComponentStorage<MovementComponent>& movements,
+			ComponentStorage<ScriptComponent>& scripts,
+			ComponentStorage<PointLightComponent>& lights);
 		void Load(std::filesystem::path path);
 	private:
 		IGraphicsDevice* _device;
 		IShaderCache* _shaderCache;
-		SceneGraph& _graph;
+		SceneGraph& _sceneGraph;
 		ViewManager& _views;
 		ComponentStorage<MeshComponent>& _meshes;
 		ComponentStorage<TransformComponent>& _transforms;
 		ComponentStorage<MaterialComponent>& _materials;
+		ComponentStorage<MovementComponent>& _movements;
+		ComponentStorage<ScriptComponent>& _scripts;
+		ComponentStorage<PointLightComponent>& _lights;
 	};
 }

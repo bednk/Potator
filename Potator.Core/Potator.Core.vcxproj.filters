@@ -79,6 +79,9 @@
     <Filter Include="Source Files\ResourceManagment">
       <UniqueIdentifier>{c7046b2c-0746-4d72-908a-955777f4d320}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Scripting">
+      <UniqueIdentifier>{c196f3b3-10dd-4da4-a03e-0c375f4a26f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -255,6 +258,18 @@
     <ClInclude Include="StructuredBuffer.h">
       <Filter>Header Files\Rendering\Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="WindowHandler.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementApi.h">
+      <Filter>Header Files\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptingSystem.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -316,6 +331,12 @@
     </ClCompile>
     <ClCompile Include="Lighting.cpp">
       <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptingSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowHandler.cpp">
+      <Filter>Source Files\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
