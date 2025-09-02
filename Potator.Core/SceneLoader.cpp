@@ -19,6 +19,8 @@
 namespace fs = std::filesystem;
 using namespace Potator;
 
+
+
 struct GLBHeader
 {
 	uint32_t magic;
@@ -261,6 +263,28 @@ static std::unordered_map<std::string, std::string> GetLuaScripts(fs::path path)
 	return result;
 }
 
+static std::unordered_map<std::string, std::string> GetCustomPixelShaderNames(fs::path path)
+{
+	std::unordered_map<std::string, std::string> result;
+
+	nlohmann::json js = LoadGLBJson(path.string());
+	for (size_t i = 0; i < js["nodes"].size(); i++)
+	{
+		auto& node = js["nodes"][i];
+		if (node.contains("extras"))
+		{
+			auto& extras = node["extras"];
+			if (extras.contains("ps"))
+			{
+				auto& script = extras["ps"];
+				result[node["name"]] = script;
+			}
+		}
+	}
+
+	return result;
+}
+
 static std::unordered_map<std::string, PointLightComponent> GetLights(aiLight** lights, unsigned int count)
 {
 	std::unordered_map<std::string, PointLightComponent> result;
@@ -306,8 +330,6 @@ void Potator::SceneLoader::Load(fs::path path)
 		path = boost::dll::program_location().parent_path().string() / fs::path("resources\\scenes") / path.string();
 	}
 
-	std::unordered_map<std::string, std::string> scripts = GetLuaScripts(path);
-
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path.string(),
 		aiProcess_Triangulate |
@@ -323,6 +345,8 @@ void Potator::SceneLoader::Load(fs::path path)
 	std::vector<MaterialComponent> materials = LoadMaterials(scene, _device, _shaderCache);
 	std::vector<MeshComponent> meshComponents = LoadMeshes(scene, _device);
 	std::unordered_map<std::string, PointLightComponent> lights = GetLights(scene->mLights, scene->mNumLights);
+	std::unordered_map<std::string, std::string> scripts = GetLuaScripts(path);
+	std::unordered_map<std::string, std::string> shaders = GetCustomPixelShaderNames(path);
 
 	std::queue<aiNode*> queue;
 	std::map<aiNode*, Entity> parents;
@@ -333,6 +357,7 @@ void Potator::SceneLoader::Load(fs::path path)
 	while (!queue.empty())
 	{
 		aiNode* node = queue.front();
+		std::string name = ToString(node->mName);
 		queue.pop();
 		Entity nodeEntity = EntityRegistry::Instance().GetNew();
 		TransformComponent nodeTransform;
@@ -348,14 +373,17 @@ void Potator::SceneLoader::Load(fs::path path)
 			MeshComponent meshComponent = meshComponents[meshIdx]; //intentional copy
 			MaterialComponent materialComponent = materials[materialIdx];
 
+			if (shaders.contains(name))
+			{
+				materialComponent.PixelShader = _shaderCache->GetPixelShaderHandle(shaders[name]);
+			}
+
 			Entity meshEntity = EntityRegistry::Instance().GetNew();
 			TransformComponent meshTransform;
 			_sceneGraph.AddNode(meshEntity, meshTransform, nodeEntity);
 			_meshes.Store(meshEntity, meshComponent);
 			_materials.Store(meshEntity, materialComponent);
 		}
-
-		std::string name = ToString(node->mName);
 
 		if (scripts.contains(name))
 		{
