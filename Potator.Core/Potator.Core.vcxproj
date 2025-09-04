@@ -157,6 +157,7 @@
     <ClInclude Include="DxDescriptorsConverter.h" />
     <ClInclude Include="DxVertexBuffer.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="EngineFactory.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityRegistry.h" />
     <ClInclude Include="FixedStepTracker.h" />
