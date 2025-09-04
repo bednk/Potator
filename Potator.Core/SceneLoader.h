@@ -17,8 +17,8 @@ namespace Potator
 	class SceneLoader
 	{
 	public:
-		SceneLoader(IGraphicsDevice* device,
-			IShaderCache* shaderCache,
+		SceneLoader(std::shared_ptr<IGraphicsDevice> device,
+			std::shared_ptr<IShaderCache> shaderCache,
 			SceneGraph& graph,
 			ViewManager& views,
 			ComponentStorage<MeshComponent>& meshes,
@@ -29,8 +29,8 @@ namespace Potator
 			ComponentStorage<PointLightComponent>& lights);
 		void Load(std::filesystem::path path);
 	private:
-		IGraphicsDevice* _device;
-		IShaderCache* _shaderCache;
+		std::shared_ptr<IGraphicsDevice> _device;
+		std::shared_ptr<IShaderCache> _shaderCache;
 		SceneGraph& _sceneGraph;
 		ViewManager& _views;
 		ComponentStorage<MeshComponent>& _meshes;

@@ -300,8 +300,8 @@ static std::unordered_map<std::string, PointLightComponent> GetLights(aiLight** 
 	return result;
 }
 
-Potator::SceneLoader::SceneLoader(IGraphicsDevice* device,
-		IShaderCache* shaderCache,
+Potator::SceneLoader::SceneLoader(std::shared_ptr<IGraphicsDevice> device,
+		std::shared_ptr<IShaderCache> shaderCache,
 		SceneGraph& graph,
 		ViewManager& views,
 		ComponentStorage<MeshComponent>& meshes,
@@ -342,8 +342,8 @@ void Potator::SceneLoader::Load(fs::path path)
 		return;
 	}
 
-	std::vector<MaterialComponent> materials = LoadMaterials(scene, _device, _shaderCache);
-	std::vector<MeshComponent> meshComponents = LoadMeshes(scene, _device);
+	std::vector<MaterialComponent> materials = LoadMaterials(scene, _device.get(), _shaderCache.get());
+	std::vector<MeshComponent> meshComponents = LoadMeshes(scene, _device.get());
 	std::unordered_map<std::string, PointLightComponent> lights = GetLights(scene->mLights, scene->mNumLights);
 	std::unordered_map<std::string, std::string> scripts = GetLuaScripts(path);
 	std::unordered_map<std::string, std::string> shaders = GetCustomPixelShaderNames(path);

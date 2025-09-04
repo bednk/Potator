@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 namespace Potator
 {
@@ -14,5 +15,6 @@ namespace Potator
 		unsigned int Width = 800;
 		unsigned int Height = 600;
 		GpuApi Api = GpuApi::Dx11;
+		unsigned int FixedStepRate = 100;
 	};
 }

@@ -4,7 +4,7 @@
 #include "MovementSystem.h"
 
 
-Potator::MeshRenderer::MeshRenderer(IGraphicsDevice* graphicsDevice, ComponentStorage<MeshComponent>& meshes, ComponentStorage<TransformComponent>& transforms, ComponentStorage<MaterialComponent>& materials) :
+Potator::MeshRenderer::MeshRenderer(std::shared_ptr<IGraphicsDevice> graphicsDevice, ComponentStorage<MeshComponent>& meshes, ComponentStorage<TransformComponent>& transforms, ComponentStorage<MaterialComponent>& materials) :
 	_graphicsDevice{ graphicsDevice },
 	_meshes{ meshes },
 	_transforms{ transforms },

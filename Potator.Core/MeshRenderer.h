@@ -13,14 +13,14 @@ namespace Potator
 	class MeshRenderer
 	{
 	public:
-		MeshRenderer(IGraphicsDevice* graphicsDevice, ComponentStorage<MeshComponent>& meshes, ComponentStorage<TransformComponent>& transforms, ComponentStorage<MaterialComponent>& _materials);
+		MeshRenderer(std::shared_ptr<IGraphicsDevice> graphicsDevice, ComponentStorage<MeshComponent>& meshes, ComponentStorage<TransformComponent>& transforms, ComponentStorage<MaterialComponent>& _materials);
 		void Render();
 	private:
 		void OnMeshAdded(Entity entity, const MeshComponent& component);
 		void OnTransformAdded(Entity entity, const TransformComponent& component);
 		void OnMaterialAdded(Entity entity, const MaterialComponent& component);
 		void RemoveDrawable(Entity entity);
-		IGraphicsDevice* _graphicsDevice;
+		std::shared_ptr<IGraphicsDevice> _graphicsDevice;
 		ComponentStorage<MeshComponent>& _meshes;
 		ComponentStorage<TransformComponent>& _transforms;
 		ComponentStorage<MaterialComponent>& _materials;

@@ -1,12 +1,12 @@
 #include "WindowHandler.h"
 
-Potator::WindowHandler::WindowHandler(sf::Window* window) : _window { window }
+Potator::WindowHandler::WindowHandler(WindowWrapper& window) : _window { window.Window }
 {
 }
 
 void Potator::WindowHandler::Handle()
 {
-	while (const std::optional event = _window->pollEvent())
+	while (const std::optional event = _window.pollEvent())
 	{
 		if (!event)
 		{
@@ -15,7 +15,7 @@ void Potator::WindowHandler::Handle()
 
 		if (event->is<sf::Event::Closed>())
 		{
-			_window->close();
+			_window.close();
 		}
 
 		else if (event->is<sf::Event::Resized>())

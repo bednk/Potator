@@ -7,9 +7,9 @@
 using namespace Microsoft::WRL;
 using namespace Potator;
 
-Potator::Dx11GraphicsDevice::Dx11GraphicsDevice(HWND windowHandle, LaunchingParams params)
+Potator::Dx11GraphicsDevice::Dx11GraphicsDevice(WindowHandle windowHandle, LaunchingParams params)
 {
-	InitializeDevice(windowHandle);
+	InitializeDevice(windowHandle.Handle);
 	RecreateRenderTargeView();
 	RecreateZBuffer(params.Width, params.Height);
 	SetViewport(params.Width, params.Height);

@@ -1,12 +1,9 @@
 #include "FixedStepTracker.h"
 
-Potator::FixedStepTracker::FixedStepTracker() : FixedStepTracker(100)
-{
-}
 
-Potator::FixedStepTracker::FixedStepTracker(int tickRate) :
-	_tickRate { tickRate },
-	_fixedStep{ std::chrono::duration_cast<Duration>(std::chrono::duration<double>(1.0 / tickRate)) },
+Potator::FixedStepTracker::FixedStepTracker(LaunchingParams params) :
+	_tickRate { params.FixedStepRate },
+	_fixedStep{ std::chrono::duration_cast<Duration>(std::chrono::duration<double>(1.0 / _tickRate)) },
 	_accumulator { Duration::zero() }
 {
 

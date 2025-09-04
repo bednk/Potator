@@ -183,9 +183,6 @@
     <ClInclude Include="MovementSystem.h">
       <Filter>Header Files\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="DeviceFactory.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="CommandQueueComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
@@ -268,6 +265,15 @@
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="ScriptingSystem.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowHandle.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowWrapper.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems.h">
       <Filter>Header Files\ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>

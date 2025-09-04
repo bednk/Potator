@@ -153,7 +153,6 @@
     <ClInclude Include="ColoredVertex.h" />
     <ClInclude Include="ComponentStorage.h" />
     <ClInclude Include="ControllerMovementInputHandler.h" />
-    <ClInclude Include="DeviceFactory.h" />
     <ClInclude Include="Dx11GraphicsDevice.h" />
     <ClInclude Include="DxDescriptorsConverter.h" />
     <ClInclude Include="DxVertexBuffer.h" />
@@ -197,13 +196,16 @@
     <ClInclude Include="ScriptComponent.h" />
     <ClInclude Include="ScriptingSystem.h" />
     <ClInclude Include="StructuredBuffer.h" />
+    <ClInclude Include="Systems.h" />
     <ClInclude Include="TexturedVertex.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexMemberDescriptor.h" />
     <ClInclude Include="ViewManager.h" />
+    <ClInclude Include="WindowHandle.h" />
     <ClInclude Include="WindowHandler.h" />
+    <ClInclude Include="WindowWrapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AttitudeMovementCommand.cpp" />

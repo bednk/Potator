@@ -13,7 +13,7 @@ Potator::CameraComponent GetDefault()
 	};
 }
 
-Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transforms, ComponentStorage<CameraComponent>& cameras, SceneGraph& scene, IGraphicsDevice* device, float aspectRatio) :
+Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transforms, ComponentStorage<CameraComponent>& cameras, SceneGraph& scene, std::shared_ptr<IGraphicsDevice> device, LaunchingParams launchingParams) :
 	_transforms { transforms },
 	_cameras { cameras },
 	_scene { scene },
@@ -21,7 +21,7 @@ Potator::ViewManager::ViewManager(ComponentStorage<TransformComponent>& transfor
 	_active { NONE_ENTITY },
 	_projViewBuffer{ Eigen::Matrix4f::Identity() },
 	_proj{ Eigen::Matrix4f::Identity() },
-	_aspectRatio { aspectRatio },
+	_aspectRatio { (float)launchingParams.Width / launchingParams.Height },
 	_worldPosBuffer { Eigen::Vector4f::Zero() }
 
 {

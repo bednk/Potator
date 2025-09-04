@@ -7,7 +7,7 @@
 using namespace Potator;
 namespace fs = std::filesystem;
 
-Potator::DxShaderCache::DxShaderCache(IGraphicsDevice* device) : _device { device }
+Potator::DxShaderCache::DxShaderCache(std::shared_ptr<IGraphicsDevice> device) : _device { device }
 {
     auto shadersDir = boost::dll::program_location().parent_path().string() / fs::path("resources\\shaders");
     for (const auto& entry : fs::directory_iterator(shadersDir))

@@ -24,6 +24,8 @@
 #include "Lighting.h"
 #include "WindowHandler.h"
 #include "ScriptingSystem.h"
+#include "WindowWrapper.h"
+#include "Systems.h"
 
 
 namespace Potator
@@ -31,43 +33,22 @@ namespace Potator
 	class Engine
 	{
 	public:
-		Engine();
-		Engine(LaunchingParams windowSettings);
-		ComponentStorage<MeshComponent>& GetMeshes();
-		ComponentStorage<TransformComponent>& GetTransforms();
-		ComponentStorage<MovementComponent>& GetMovements();
-		ComponentStorage<MaterialComponent>& GetMaterials();
-		SceneGraph& GetSceneGraph();
-		ViewManager& GetViewManager();
-		CommandDispatcher& GetCommandDispatcher();
-		MovementSystem& GetMovementSystem();
-		IGraphicsDevice* GetGraphicsDevice();
+		Engine(WindowWrapper& mainWindow,
+			std::shared_ptr<IGraphicsDevice> device,
+			std::shared_ptr<IShaderCache> shaderCache,
+			Systems& systems,
+			ComponentStorage<MovementComponent>& movements,
+			ComponentStorage<TransformComponent>& transforms);
 		SceneLoader& GetLoader();
 
 		void Run();
 		~Engine();
 	private:
-		sf::Window _mainWindow;
-		std::unique_ptr<IGraphicsDevice> _device;
-		std::unique_ptr<IShaderCache> _shaderCache;
-		ComponentStorage<MeshComponent> _meshes;
-		ComponentStorage<MaterialComponent> _materials;
-		ComponentStorage<TransformComponent> _transforms;
-		ComponentStorage<MovementComponent> _movements;
-		ComponentStorage<SceneNodeComponent> _nodes;
-		ComponentStorage<CommandQueueComponent> _commands;
-		ComponentStorage<CameraComponent> _cameras;
-		ComponentStorage<PointLightComponent> _lights;
-		ComponentStorage<ScriptComponent> _scripts;
-		MeshRenderer _renderer;
-		SceneGraph _sceneGraph;
-		ViewManager _views;
-		MovementSystem _movementSystem;
-		FixedStepTracker _fixedStepTracker;
-		CommandDispatcher _commandDispatcher;
-		Lighting _lighting;
-		SceneLoader _loader;
-		WindowHandler _windowHandler;
-		ScriptingSystem _scripting;
+		sf::Window& _mainWindow;
+		std::shared_ptr<IGraphicsDevice> _device;
+		std::shared_ptr<IShaderCache> _shaderCache;
+		Systems& _systems;
+		ComponentStorage<MovementComponent>& _movements;
+		ComponentStorage<TransformComponent>& _transforms;
 	};
 }

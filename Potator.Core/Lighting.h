@@ -22,7 +22,7 @@ namespace Potator
 	class Lighting
 	{
 	public:
-		Lighting(ComponentStorage<PointLightComponent>& lights, ComponentStorage<TransformComponent>& transforms, IGraphicsDevice* device);
+		Lighting(ComponentStorage<PointLightComponent>& lights, ComponentStorage<TransformComponent>& transforms, std::shared_ptr<IGraphicsDevice> device);
 		void Update();
 	private:
 		void OnTransformAdded(Entity entity, const TransformComponent& component);
@@ -34,7 +34,7 @@ namespace Potator
 		ComponentStorage<TransformComponent>& _transforms;
 		ConstantBufferHandle _lightsConfigHandle;
 		StructuredBufferHandle _pointLightsHandle;
-		IGraphicsDevice* _device;
+		std::shared_ptr<IGraphicsDevice> _device;
 		std::vector<Entity> _lightEntities;
 		static constexpr size_t _maxPointLights = 16;
 		PointLightComponent _pointLights[_maxPointLights];

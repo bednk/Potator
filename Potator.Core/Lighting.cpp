@@ -4,7 +4,7 @@
 #include <array>
 
 
-Potator::Lighting::Lighting(ComponentStorage<PointLightComponent>& lights, ComponentStorage<TransformComponent>& transforms, IGraphicsDevice* device) :
+Potator::Lighting::Lighting(ComponentStorage<PointLightComponent>& lights, ComponentStorage<TransformComponent>& transforms, std::shared_ptr<IGraphicsDevice> device) :
 	_lights { lights },
 	_transforms { transforms },
 	_device { device },

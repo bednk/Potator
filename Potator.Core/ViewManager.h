@@ -5,6 +5,7 @@
 #include "IGraphicsDevice.h"
 #include "ConstantBuffer.h"
 #include "SceneGraph.h"
+#include "LaunchingParams.h"
 #include <boost/signals2.hpp>
 
 namespace Potator
@@ -12,7 +13,7 @@ namespace Potator
 	class ViewManager
 	{
 	public:
-		ViewManager(ComponentStorage<TransformComponent>& transforms, ComponentStorage<CameraComponent>& cameras, SceneGraph& scene, IGraphicsDevice* device, float aspectRatio);
+		ViewManager(ComponentStorage<TransformComponent>& transforms, ComponentStorage<CameraComponent>& cameras, SceneGraph& scene, std::shared_ptr<IGraphicsDevice> device, LaunchingParams params);
 		void Update();
 		void Add(Entity cameraEntity, CameraComponent camera, TransformComponent transform);
 		void SetActive(Entity camera);
@@ -25,7 +26,7 @@ namespace Potator
 		ComponentStorage<TransformComponent>& _transforms;
 		ComponentStorage<CameraComponent>& _cameras;
 		SceneGraph& _scene;
-		IGraphicsDevice* _device;
+		std::shared_ptr<IGraphicsDevice> _device;
 		Entity _active;
 		ConstantBufferHandle _transformationHandle;
 		ConstantBuffer<Eigen::Matrix4f> _projViewBuffer;
