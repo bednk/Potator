@@ -11,7 +11,7 @@ namespace Potator
 	public:
 		ScriptingSystem(CommandDispatcher& commandDispatcher,
 			ComponentStorage<ScriptComponent>& scripts,
-			ComponentStorage<MovementComponent>& movements,
+			ComponentStorage<VelocityComponent>& movements,
 			ComponentStorage<TransformComponent>& transforms);
 		void Update();
 	private:

@@ -1,6 +1,6 @@
 #pragma once
 #include "CommandDispatcher.h"
-#include "AttitudeMovementCommand.h"
+#include "RelativeVelocityCommand.h"
 #include <sol/sol.hpp>
 
 #define NAMEOF(variable) #variable
@@ -17,7 +17,7 @@ namespace Potator
 	class MovementApi
 	{
 	public:
-		MovementApi(CommandDispatcher& commandDispatcher, ComponentStorage<MovementComponent>& movements, ComponentStorage<TransformComponent>& transforms, sol::state& lua) :
+		MovementApi(CommandDispatcher& commandDispatcher, ComponentStorage<VelocityComponent>& movements, ComponentStorage<TransformComponent>& transforms, sol::state& lua) :
 			_commandDispatcher { commandDispatcher },
 			_movements { movements },
 			_transforms { transforms }
@@ -41,7 +41,7 @@ namespace Potator
 
 		void SetAngularVelocity(Entity entity, float radiansPerSecond, Axis arround)
 		{
-			std::shared_ptr<AttitudeMovementCommnand> command = std::make_shared<AttitudeMovementCommnand>(_movements, _transforms);
+			std::shared_ptr<RelativeVelocityCommand> command = std::make_shared<RelativeVelocityCommand>(_movements, _transforms);
 			switch (arround)
 			{
 			case Axis::X:
@@ -60,7 +60,7 @@ namespace Potator
 
 		void SetLinearVelocity(Entity entity, float unitsPerSecond, Axis arround)
 		{
-			std::shared_ptr<AttitudeMovementCommnand> command = std::make_shared<AttitudeMovementCommnand>(_movements, _transforms);
+			std::shared_ptr<RelativeVelocityCommand> command = std::make_shared<RelativeVelocityCommand>(_movements, _transforms);
 			switch (arround)
 			{
 			case Axis::X:
@@ -79,7 +79,7 @@ namespace Potator
 
 	private:
 		CommandDispatcher& _commandDispatcher;
-		ComponentStorage<MovementComponent>& _movements;
+		ComponentStorage<VelocityComponent>& _movements;
 		ComponentStorage<TransformComponent>& _transforms;
 	};
 }

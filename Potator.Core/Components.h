@@ -3,7 +3,7 @@
 #include "MeshComponent.h"
 #include "MaterialComponent.h"
 #include "TransformComponent.h"
-#include "MovementComponent.h"
+#include "VelocityComponent.h"
 #include "SceneNodeComponent.h"
 #include "CommandQueueComponent.h"
 #include "CameraComponent.h"
@@ -17,7 +17,7 @@ namespace Potator
         Components(ComponentStorage<MeshComponent>& meshes,
             ComponentStorage<MaterialComponent>& materials,
             ComponentStorage<TransformComponent>& transforms,
-            ComponentStorage<MovementComponent>& movements,
+            ComponentStorage<VelocityComponent>& movements,
             ComponentStorage<SceneNodeComponent>& nodes,
             ComponentStorage<CommandQueueComponent>& commandQueues,
             ComponentStorage<CameraComponent>& cameras,
@@ -38,7 +38,7 @@ namespace Potator
         ComponentStorage<MeshComponent>& Meshes;
         ComponentStorage<MaterialComponent>& Materials;
         ComponentStorage<TransformComponent>& Transforms;
-        ComponentStorage<MovementComponent>& Movements;
+        ComponentStorage<VelocityComponent>& Movements;
         ComponentStorage<SceneNodeComponent>& Nodes;
         ComponentStorage<CommandQueueComponent>& CommandQueues;
         ComponentStorage<CameraComponent>& Cameras;

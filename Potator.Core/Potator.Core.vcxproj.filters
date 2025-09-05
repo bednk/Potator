@@ -180,7 +180,7 @@
     <ClInclude Include="FixedStepTracker.h">
       <Filter>Header Files\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="MovementComponent.h">
+    <ClInclude Include="VelocityComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="MovementSystem.h">
@@ -195,7 +195,7 @@
     <ClInclude Include="ICommand.h">
       <Filter>Header Files\ECS\Commands</Filter>
     </ClInclude>
-    <ClInclude Include="MoveCommand.h">
+    <ClInclude Include="AxisBoundVelocityCommand.h">
       <Filter>Header Files\ECS\Commands</Filter>
     </ClInclude>
     <ClInclude Include="MaterialComponent.h">
@@ -213,7 +213,7 @@
     <ClInclude Include="IShaderCache.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="AttitudeMovementCommand.h">
+    <ClInclude Include="RelativeVelocityCommand.h">
       <Filter>Header Files\ECS\Commands</Filter>
     </ClInclude>
     <ClInclude Include="RgbaTextureContainer.h">
@@ -288,6 +288,9 @@
     <ClInclude Include="Components.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="RelativeTransformationCommand.h">
+      <Filter>Header Files\ECS\Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -326,7 +329,7 @@
     <ClCompile Include="CommandQueueComponent.cpp">
       <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
-    <ClCompile Include="MoveCommand.cpp">
+    <ClCompile Include="AxisBoundVelocityCommand.cpp">
       <Filter>Source Files\ECS\Commands</Filter>
     </ClCompile>
     <ClCompile Include="DxShaderCache.cpp">
@@ -338,7 +341,7 @@
     <ClCompile Include="ControllerMovementInputHandler.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
-    <ClCompile Include="AttitudeMovementCommand.cpp">
+    <ClCompile Include="RelativeVelocityCommand.cpp">
       <Filter>Source Files\ECS\Commands</Filter>
     </ClCompile>
     <ClCompile Include="SceneLoader.cpp">
@@ -352,6 +355,9 @@
     </ClCompile>
     <ClCompile Include="WindowHandler.cpp">
       <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="RelativeTransformationCommand.cpp">
+      <Filter>Source Files\ECS\Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

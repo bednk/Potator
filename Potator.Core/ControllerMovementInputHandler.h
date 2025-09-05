@@ -2,7 +2,7 @@
 #include "CommandDispatcher.h"
 #include "IInputHandler.h"
 #include <Eigen/Dense>
-#include "AttitudeMovementCommand.h"
+#include "RelativeVelocityCommand.h"
 #include <SFML/Window/Joystick.hpp>
 
 namespace Potator
@@ -11,7 +11,7 @@ namespace Potator
 	{
 	public:
 		ControllerMovementInputHandler(CommandDispatcher& commandDispatcher,
-			ComponentStorage<MovementComponent>& movements,
+			ComponentStorage<VelocityComponent>& movements,
 			ComponentStorage<TransformComponent>& transforms,
 			unsigned int joystickId = 0);
 
@@ -21,8 +21,8 @@ namespace Potator
 	private:
 		Entity _entity;
 		CommandDispatcher& _commandDispatcher;
-		std::shared_ptr<AttitudeMovementCommnand> _command;
-		ComponentStorage<MovementComponent>& _movements;
+		std::shared_ptr<RelativeVelocityCommand> _command;
+		ComponentStorage<VelocityComponent>& _movements;
 		unsigned int _joystickId;
 
 		float _linearUnitsPerS = 0.5f;

@@ -15,7 +15,7 @@ namespace Potator
 		void OnBeforeSceneRendered() override;
 		void Cleanup() override;
 	private:
-		void BindCameraController();
+		void SetupCamera();
 		Systems& _systems;
 		Components& _components;
 	};

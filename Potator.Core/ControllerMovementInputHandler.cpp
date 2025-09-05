@@ -2,11 +2,11 @@
 
 Potator::ControllerMovementInputHandler::ControllerMovementInputHandler(
 	CommandDispatcher& commandDispatcher,
-	ComponentStorage<MovementComponent>& movements,
+	ComponentStorage<VelocityComponent>& movements,
 	ComponentStorage<TransformComponent>& transforms,
 	unsigned int joystickId) : _entity(NONE_ENTITY),
 	_commandDispatcher{ commandDispatcher },
-	_command{ std::make_shared<AttitudeMovementCommnand>(movements, transforms) },
+	_command{ std::make_shared<RelativeVelocityCommand>(movements, transforms) },
 	_movements{ movements },
 	_joystickId{ joystickId }
 {
@@ -17,8 +17,8 @@ void Potator::ControllerMovementInputHandler::SetEntity(Entity entity)
 	_entity = entity;
 	if (!_movements.HasComponent(entity))
 	{
-		MovementComponent mov;
-		_movements.Store(entity, mov);
+		VelocityComponent vel;
+		_movements.Store(entity, vel);
 	}
 }
 

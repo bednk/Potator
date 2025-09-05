@@ -21,7 +21,7 @@ namespace Potator
 		void Update();
 		void Add(Entity cameraEntity, CameraComponent camera, TransformComponent transform);
 		void SetActive(Entity camera);
-		Entity GetActive();
+		Entity GetActive() const;
 		void OnWindowResized(unsigned int width, unsigned int height);
 		boost::signals2::signal<void(Entity)> ViewChanged;
 	private:

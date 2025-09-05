@@ -351,10 +351,10 @@ void Potator::SceneLoader::Load(fs::path path)
 		queue.pop();
 		Entity nodeEntity = EntityRegistry::Instance().GetNew();
 		TransformComponent nodeTransform;
-		MovementComponent nodeMovement;
+		VelocityComponent nodeVelocity;
 		nodeTransform.Local = GetEigenMatrix(node->mTransformation);
 		_sceneGraph.AddNode(nodeEntity, nodeTransform, parents[node]);
-		_components.Movements.Store(nodeEntity, nodeMovement);
+		_components.Movements.Store(nodeEntity, nodeVelocity);
 
 		for (size_t i = 0; i < node->mNumMeshes; i++)
 		{

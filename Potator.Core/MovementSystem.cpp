@@ -1,11 +1,11 @@
 #include "MovementSystem.h"
 #include <iostream>
 
-Potator::MovementSystem::MovementSystem(ComponentStorage<TransformComponent>& transforms, ComponentStorage<MovementComponent>& movements) :
+Potator::MovementSystem::MovementSystem(ComponentStorage<TransformComponent>& transforms, ComponentStorage<VelocityComponent>& movements) :
 	_movements { movements },
 	_transforms { transforms }
 {
-	_movements.ComponentAdded.connect([this](Entity e, const MovementComponent& c) { OnMovementAdded(e, c); });
+	_movements.ComponentAdded.connect([this](Entity e, const VelocityComponent& c) { OnVelocityAdded(e, c); });
 	_movements.ComponentRemoved.connect([this](Entity e) { RemoveMovable(e); });
 	_transforms.ComponentAdded.connect([this](Entity e, const TransformComponent& c) { OnTransformAdded(e, c); });
 	_transforms.ComponentRemoved.connect([this](Entity e) { RemoveMovable(e); });
@@ -22,15 +22,15 @@ void Potator::MovementSystem::Update()
 	{
 		Entity entity = _movableEntities[i];
 		TransformComponent& transform = _transforms[entity];
-		MovementComponent& movement = _movements[entity];
+		VelocityComponent& velocity = _movements[entity];
 
 		Eigen::Vector3f position = transform.Local.block<3, 1>(0, 3);
 		Eigen::Matrix3f rotation = transform.Local.block<3, 3>(0, 0);
 
-		position += movement.LinearVelocity;
-		Eigen::AngleAxisf rotX(movement.AngularVelocity.x() * _tickPeriod, Eigen::Vector3f::UnitX());
-		Eigen::AngleAxisf rotY(movement.AngularVelocity.y() * _tickPeriod, Eigen::Vector3f::UnitY());
-		Eigen::AngleAxisf rotZ(movement.AngularVelocity.z() * _tickPeriod, Eigen::Vector3f::UnitZ());
+		position += velocity.Linear;
+		Eigen::AngleAxisf rotX(velocity.Angular.x() * _tickPeriod, Eigen::Vector3f::UnitX());
+		Eigen::AngleAxisf rotY(velocity.Angular.y() * _tickPeriod, Eigen::Vector3f::UnitY());
+		Eigen::AngleAxisf rotZ(velocity.Angular.z() * _tickPeriod, Eigen::Vector3f::UnitZ());
 
 		rotation = (rotZ * rotY * rotX).toRotationMatrix() * rotation;
 
@@ -40,7 +40,7 @@ void Potator::MovementSystem::Update()
 	}
 }
 
-void Potator::MovementSystem::OnMovementAdded(Entity entity, const MovementComponent& component)
+void Potator::MovementSystem::OnVelocityAdded(Entity entity, const VelocityComponent& component)
 {
 	if (!_transforms.HasComponent(entity))
 	{

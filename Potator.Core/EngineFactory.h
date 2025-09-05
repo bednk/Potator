@@ -25,7 +25,7 @@ namespace Potator
                     boost::di::bind<ComponentStorage<MeshComponent>>().in(boost::di::singleton),
                     boost::di::bind<ComponentStorage<MaterialComponent>>().in(boost::di::singleton),
                     boost::di::bind<ComponentStorage<TransformComponent>>().in(boost::di::singleton),
-                    boost::di::bind<ComponentStorage<MovementComponent>>().in(boost::di::singleton),
+                    boost::di::bind<ComponentStorage<VelocityComponent>>().in(boost::di::singleton),
                     boost::di::bind<ComponentStorage<SceneNodeComponent>>().in(boost::di::singleton),
                     boost::di::bind<ComponentStorage<CommandQueueComponent>>().in(boost::di::singleton),
                     boost::di::bind<ComponentStorage<CameraComponent>>().in(boost::di::singleton),

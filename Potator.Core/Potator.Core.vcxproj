@@ -143,7 +143,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AmbientLightComponent.h" />
-    <ClInclude Include="AttitudeMovementCommand.h" />
+    <ClInclude Include="RelativeTransformationCommand.h" />
+    <ClInclude Include="RelativeVelocityCommand.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CommandDispatcher.h" />
     <ClInclude Include="CommandQueueComponent.h" />
@@ -184,8 +185,8 @@
     <ClInclude Include="MaterialDescriptor.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="MeshRenderer.h" />
-    <ClInclude Include="MoveCommand.h" />
-    <ClInclude Include="MovementComponent.h" />
+    <ClInclude Include="AxisBoundVelocityCommand.h" />
+    <ClInclude Include="VelocityComponent.h" />
     <ClInclude Include="MovementInputHandler.h" />
     <ClInclude Include="MovementSystem.h" />
     <ClInclude Include="pch.h" />
@@ -211,7 +212,7 @@
     <ClInclude Include="WindowWrapper.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AttitudeMovementCommand.cpp" />
+    <ClCompile Include="RelativeVelocityCommand.cpp" />
     <ClCompile Include="CommandDispatcher.cpp" />
     <ClCompile Include="CommandQueueComponent.cpp" />
     <ClCompile Include="ControllerMovementInputHandler.cpp" />
@@ -222,7 +223,7 @@
     <ClCompile Include="HrCheck.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
-    <ClCompile Include="MoveCommand.cpp" />
+    <ClCompile Include="AxisBoundVelocityCommand.cpp" />
     <ClCompile Include="MovementInputHandler.cpp" />
     <ClCompile Include="MovementSystem.cpp" />
     <ClCompile Include="pch.cpp">
@@ -231,6 +232,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RelativeTransformationCommand.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="SceneLoader.cpp" />
     <ClCompile Include="DxShaderCache.cpp" />

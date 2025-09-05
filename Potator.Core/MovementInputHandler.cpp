@@ -1,10 +1,10 @@
 #include "MovementInputHandler.h"
 #include <SFML/Window/Keyboard.hpp>
 
-Potator::MovementInputHandler::MovementInputHandler(CommandDispatcher& commandDispatcher, ComponentStorage<MovementComponent>& movements, ComponentStorage<TransformComponent>& transforms) :
+Potator::MovementInputHandler::MovementInputHandler(CommandDispatcher& commandDispatcher, ComponentStorage<VelocityComponent>& movements, ComponentStorage<TransformComponent>& transforms) :
 	_entity { NONE_ENTITY },
 	_commandDispatcher { commandDispatcher },
-	_command { std::make_shared<AttitudeMovementCommnand>(movements, transforms) },
+	_command { std::make_shared<RelativeVelocityCommand>(movements, transforms) },
 	_movements { movements }
 {
 }
@@ -14,8 +14,8 @@ void Potator::MovementInputHandler::SetEntity(Entity entity)
 	_entity = entity;
 	if (!_movements.HasComponent(entity))
 	{
-		MovementComponent mov;
-		_movements.Store(entity, mov);
+		VelocityComponent vel;
+		_movements.Store(entity, vel);
 	}
 }
 

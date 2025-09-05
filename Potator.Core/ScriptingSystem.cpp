@@ -2,7 +2,7 @@
 
 using namespace Potator;
 
-Potator::ScriptingSystem::ScriptingSystem(CommandDispatcher& commandDispatcher, ComponentStorage<ScriptComponent>& scripts, ComponentStorage<MovementComponent>& movements, ComponentStorage<TransformComponent>& transforms)
+Potator::ScriptingSystem::ScriptingSystem(CommandDispatcher& commandDispatcher, ComponentStorage<ScriptComponent>& scripts, ComponentStorage<VelocityComponent>& movements, ComponentStorage<TransformComponent>& transforms)
 	: _scripts { scripts },
 	_lua {},
 	_movementApi { commandDispatcher, movements, transforms, _lua }
