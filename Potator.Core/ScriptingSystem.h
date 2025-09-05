@@ -9,7 +9,10 @@ namespace Potator
 	class ScriptingSystem
 	{
 	public:
-		ScriptingSystem(CommandDispatcher& commandDispatcher, ComponentStorage<ScriptComponent>& scripts, ComponentStorage<MovementComponent>& movements, ComponentStorage<TransformComponent>& transforms);
+		ScriptingSystem(CommandDispatcher& commandDispatcher,
+			ComponentStorage<ScriptComponent>& scripts,
+			ComponentStorage<MovementComponent>& movements,
+			ComponentStorage<TransformComponent>& transforms);
 		void Update();
 	private:
 		void OnScriptAdded(Entity entity, const ScriptComponent& component);

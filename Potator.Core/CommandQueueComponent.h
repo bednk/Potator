@@ -11,7 +11,7 @@ namespace Potator
 	public:
 		CommandQueueComponent(Entity owner);
 		void Enqueue(std::shared_ptr<ICommand> command);
-		Entity GetOwner() { return _owner; }
+		Entity GetOwner() const { return _owner; }
 		std::optional<std::shared_ptr<ICommand>> Dequeue();
 	private:
 		Entity _owner;

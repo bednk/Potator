@@ -22,7 +22,9 @@ namespace Potator
 	class Lighting
 	{
 	public:
-		Lighting(ComponentStorage<PointLightComponent>& lights, ComponentStorage<TransformComponent>& transforms, std::shared_ptr<IGraphicsDevice> device);
+		Lighting(ComponentStorage<PointLightComponent>& lights,
+			ComponentStorage<TransformComponent>& transforms,
+			std::shared_ptr<IGraphicsDevice> device);
 		void Update();
 	private:
 		void OnTransformAdded(Entity entity, const TransformComponent& component);

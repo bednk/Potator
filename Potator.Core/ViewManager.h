@@ -13,7 +13,11 @@ namespace Potator
 	class ViewManager
 	{
 	public:
-		ViewManager(ComponentStorage<TransformComponent>& transforms, ComponentStorage<CameraComponent>& cameras, SceneGraph& scene, std::shared_ptr<IGraphicsDevice> device, LaunchingParams params);
+		ViewManager(ComponentStorage<TransformComponent>& transforms,
+			ComponentStorage<CameraComponent>& cameras,
+			SceneGraph& scene,
+			std::shared_ptr<IGraphicsDevice> device,
+			LaunchingParams params);
 		void Update();
 		void Add(Entity cameraEntity, CameraComponent camera, TransformComponent transform);
 		void SetActive(Entity camera);
