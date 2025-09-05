@@ -1,5 +1,5 @@
 #pragma once
-#include "framework.h"
+#include "leanWin.h"
 #include <d3d11.h>
 #include "IShaderBinary.h"
 #include <wrl/client.h>

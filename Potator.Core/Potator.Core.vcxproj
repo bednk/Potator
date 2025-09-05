@@ -147,6 +147,7 @@
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CommandDispatcher.h" />
     <ClInclude Include="CommandQueueComponent.h" />
+    <ClInclude Include="Components.h" />
     <ClInclude Include="CompositeVertex.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="BufferHandle.h" />
@@ -161,7 +162,8 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityRegistry.h" />
     <ClInclude Include="FixedStepTracker.h" />
-    <ClInclude Include="framework.h" />
+    <ClInclude Include="IEngineExtension.h" />
+    <ClInclude Include="winLean.h" />
     <ClInclude Include="HlslShader.h" />
     <ClInclude Include="HrCheck.h" />
     <ClInclude Include="IBuffer.h" />
@@ -213,7 +215,6 @@
     <ClCompile Include="CommandDispatcher.cpp" />
     <ClCompile Include="CommandQueueComponent.cpp" />
     <ClCompile Include="ControllerMovementInputHandler.cpp" />
-    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Dx11GraphicsDevice.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="FixedStepTracker.cpp" />
@@ -238,6 +239,9 @@
     <ClCompile Include="WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ps_camera_cbuff.hlsli" />
+    <None Include="ps_lights_settings_cbuff.hlsli" />
+    <None Include="ps_material_cbuff.hlsli" />
     <None Include="structs.hlsli" />
     <None Include="vcpkg.json" />
   </ItemGroup>

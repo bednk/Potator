@@ -82,6 +82,9 @@
     <Filter Include="Header Files\Scripting">
       <UniqueIdentifier>{c196f3b3-10dd-4da4-a03e-0c375f4a26f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders\Headers">
+      <UniqueIdentifier>{7b6b2753-96f6-4356-9ed3-be16beda0659}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -90,7 +93,7 @@
     <ClInclude Include="IGraphicsDevice.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="framework.h">
+    <ClInclude Include="winLean.h">
       <Filter>Header Files\Framework</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
@@ -279,6 +282,12 @@
     <ClInclude Include="EngineFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IEngineExtension.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -286,9 +295,6 @@
     </ClCompile>
     <ClCompile Include="Dx11GraphicsDevice.cpp">
       <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="dllmain.cpp">
-      <Filter>Source Files\Framework</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files\Framework</Filter>
@@ -350,8 +356,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
+    <None Include="ps_camera_cbuff.hlsli">
+      <Filter>Resource Files\Shaders\Headers</Filter>
+    </None>
+    <None Include="ps_lights_settings_cbuff.hlsli">
+      <Filter>Resource Files\Shaders\Headers</Filter>
+    </None>
+    <None Include="ps_material_cbuff.hlsli">
+      <Filter>Resource Files\Shaders\Headers</Filter>
+    </None>
     <None Include="structs.hlsli">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource Files\Shaders\Headers</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

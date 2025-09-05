@@ -1,6 +1,7 @@
 #pragma once
+#include "leanWin.h"
 #include "IVertexBuffer.h"
-#include "framework.h"
+
 
 namespace Potator
 {

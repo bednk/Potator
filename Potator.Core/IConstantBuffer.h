@@ -3,5 +3,9 @@
 
 namespace Potator
 {
-	class IConstantBuffer : public IBuffer { };
+	class IConstantBuffer : public IBuffer
+	{
+	public:
+		~IConstantBuffer() = default;
+	};
 }

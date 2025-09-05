@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "Dx11GraphicsDevice.h"
 #include "HRCheck.h"
 #include "DxDescriptorsConverter.h"

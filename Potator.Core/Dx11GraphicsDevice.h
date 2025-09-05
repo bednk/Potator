@@ -1,5 +1,5 @@
 #pragma once
-#include "framework.h"
+#include "leanWin.h"
 #include "IGraphicsDevice.h"
 #include "DxVertexBuffer.h"
 #include "WindowHandle.h"

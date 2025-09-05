@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CustomExtension.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,11 +157,11 @@
   <ItemGroup>
     <SceneFiles Include="$(ProjectDir)resources\scenes\**\*.*" />
   </ItemGroup>
-
+  <ItemGroup>
+    <ClInclude Include="CustomExtension.h" />
+  </ItemGroup>
   <Target Name="CopyScenes" AfterTargets="Build">
     <MakeDir Directories="@(SceneFiles->'$(TargetDir)resources\scenes\%(RecursiveDir)')" />
-    <Copy
-      SourceFiles="@(SceneFiles)"
-      DestinationFiles="@(SceneFiles->'$(TargetDir)resources\scenes\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(SceneFiles)" DestinationFiles="@(SceneFiles->'$(TargetDir)resources\scenes\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 </Project>

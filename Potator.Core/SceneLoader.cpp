@@ -304,22 +304,12 @@ Potator::SceneLoader::SceneLoader(std::shared_ptr<IGraphicsDevice> device,
 		std::shared_ptr<IShaderCache> shaderCache,
 		SceneGraph& graph,
 		ViewManager& views,
-		ComponentStorage<MeshComponent>& meshes,
-		ComponentStorage<TransformComponent>& transforms,
-		ComponentStorage<MaterialComponent>& materials,
-		ComponentStorage<MovementComponent>& movements,
-		ComponentStorage<ScriptComponent>& scripts,
-	    ComponentStorage<PointLightComponent>& lights) :
+		Components& components) :
 	_device { device },
 	_shaderCache { shaderCache },
 	_sceneGraph { graph },
 	_views { views },
-	_meshes { meshes },
-	_transforms { transforms },
-	_materials { materials },
-	_movements { movements },
-	_scripts { scripts },
-	_lights { lights }
+	_components{ components }
 {
 }
 
@@ -364,7 +354,7 @@ void Potator::SceneLoader::Load(fs::path path)
 		MovementComponent nodeMovement;
 		nodeTransform.Local = GetEigenMatrix(node->mTransformation);
 		_sceneGraph.AddNode(nodeEntity, nodeTransform, parents[node]);
-		_movements.Store(nodeEntity, nodeMovement);
+		_components.Movements.Store(nodeEntity, nodeMovement);
 
 		for (size_t i = 0; i < node->mNumMeshes; i++)
 		{
@@ -381,20 +371,20 @@ void Potator::SceneLoader::Load(fs::path path)
 			Entity meshEntity = EntityRegistry::Instance().GetNew();
 			TransformComponent meshTransform;
 			_sceneGraph.AddNode(meshEntity, meshTransform, nodeEntity);
-			_meshes.Store(meshEntity, meshComponent);
-			_materials.Store(meshEntity, materialComponent);
+			_components.Meshes.Store(meshEntity, meshComponent);
+			_components.Materials.Store(meshEntity, materialComponent);
 		}
 
 		if (scripts.contains(name))
 		{
 			ScriptComponent component = {};
 			component.Script = scripts[name];
-			_scripts.Store(nodeEntity, component);
+			_components.Scripts.Store(nodeEntity, component);
 		}
 
 		if (lights.contains(name))
 		{
-			_lights.Store(nodeEntity, lights[name]);
+			_components.PointLights.Store(nodeEntity, lights[name]);
 		}
 
 		for (size_t i = 0; i < node->mNumChildren; i++)

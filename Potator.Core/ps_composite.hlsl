@@ -1,27 +1,8 @@
 #include "structs.hlsli"
+#include "ps_material_cbuff.hlsli"
+#include "ps_lights_settings_cbuff.hlsli"
+#include "ps_camera_cbuff.hlsli"
 
-cbuffer Material : register(b0)
-{
-    float4 MaterialColor;
-    float SpecularExponent;
-    float SpecularIntensity;
-    int HasTexture;
-    int HasColor;
-};
-
-cbuffer LightsGlobalSettings : register(b1)
-{
-    float4 AmbientColor;
-    float4 DirectedColor;
-    float3 Direction;
-    float _pad;
-    uint PointLightsCount;
-};
-
-cbuffer Camera : register(b2)
-{
-    float4 CameraWorldPos;
-}
 
 Texture2D Tex : register(t0);
 StructuredBuffer<PointLight> Lights : register(t1);

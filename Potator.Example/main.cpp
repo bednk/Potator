@@ -1,5 +1,5 @@
-#include "framework.h"
 #include "EngineFactory.h"
+#include "CustomExtension.h"
 
 using namespace Potator;
 
@@ -7,9 +7,9 @@ int main()
 {
     LaunchingParams params;
 
-    auto& engine = EngineFactory::GetEngine(params);
-    SceneLoader& loader = engine.GetLoader();
-    loader.Load("teapot.glb");
-
+    EngineFactory factory(params);
+    auto& engine = factory.GetEngine();
+    CustomExtension ext(factory.GetSystems(), factory.GetComponents());
+    engine.SetExtension(&ext);
     engine.Run();
 }

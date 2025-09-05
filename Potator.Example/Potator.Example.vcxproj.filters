@@ -18,9 +18,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="CustomExtension.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json" />
@@ -39,5 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="attributions.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CustomExtension.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

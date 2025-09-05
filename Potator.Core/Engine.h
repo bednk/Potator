@@ -3,6 +3,7 @@
 #include "IGraphicsDevice.h"
 #include "IShaderCache.h"
 #include "Systems.h"
+#include "IEngineExtension.h"
 
 
 
@@ -14,11 +15,9 @@ namespace Potator
 		Engine(WindowWrapper& mainWindow,
 			std::shared_ptr<IGraphicsDevice> device,
 			std::shared_ptr<IShaderCache> shaderCache,
-			Systems& systems,
-			ComponentStorage<MovementComponent>& movements,
-			ComponentStorage<TransformComponent>& transforms);
-		SceneLoader& GetLoader();
+			Systems& systems);
 
+		void SetExtension(IEngineExtension* extension);
 		void Run();
 		~Engine();
 	private:
@@ -26,7 +25,6 @@ namespace Potator
 		std::shared_ptr<IGraphicsDevice> _device;
 		std::shared_ptr<IShaderCache> _shaderCache;
 		Systems& _systems;
-		ComponentStorage<MovementComponent>& _movements;
-		ComponentStorage<TransformComponent>& _transforms;
+		std::optional<IEngineExtension*> _extension;
 	};
 }

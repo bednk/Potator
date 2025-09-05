@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "HlslShader.h"
 #include "D3dcompiler.h"
 #include "HrCheck.h"
