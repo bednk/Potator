@@ -16,7 +16,7 @@ namespace Potator
 		Potator::AmbientLightComponent Ambient;
 		Potator::DirectlionalLightComponent Directional;
 		unsigned int PointLightsCount = 0;
-		unsigned int pad[3];
+		unsigned int pad[3] = {};
 	};
 
 	class Lighting

@@ -28,7 +28,7 @@ Potator::Lighting::Lighting(ComponentStorage<PointLightComponent>& lights, Compo
 
 void Potator::Lighting::Update()
 {
-	_lightsConfig.PointLightsCount = min(_lightEntities.size(), _maxPointLights);
+	_lightsConfig.PointLightsCount = min((unsigned int)_lightEntities.size(), _maxPointLights);
 	_lcBuffer.Update(_lightsConfig);
 	_device->Update(&_lcBuffer, &_lightsConfigHandle);
 

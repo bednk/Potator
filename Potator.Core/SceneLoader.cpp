@@ -40,14 +40,14 @@ static nlohmann::json LoadGLBJson(const std::string& path)
 	static const int jsonChunk = 0x4E4F534A;
 
 	std::ifstream file(path, std::ios::binary);
-	GLBHeader header;
+	GLBHeader header = {};
 	file.read(reinterpret_cast<char*>(&header), sizeof(header));
 	if (header.magic != glbMagic)
 	{
 		throw std::runtime_error("Not a GLB file");
 	}
 
-	GLBChunkHeader chunkHeader;
+	GLBChunkHeader chunkHeader = {};
 	file.read(reinterpret_cast<char*>(&chunkHeader), sizeof(chunkHeader));
 	if (chunkHeader.chunkType != jsonChunk)
 	{
@@ -80,7 +80,7 @@ static RgbaTextureContainer GetTexture(aiTexture* tex)
 	{
 		img.Width = tex->mWidth;
 		img.Height = tex->mHeight;
-		size_t nbytes = tex->mWidth * tex->mHeight * 4;
+		size_t nbytes = static_cast<size_t>(tex->mWidth) * tex->mHeight * 4;
 		img.Pixels.resize(nbytes);
 		memcpy(img.Pixels.data(), tex->pcData, nbytes);
 	}

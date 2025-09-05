@@ -10,6 +10,6 @@ namespace Potator
 		float QuadraticAtt = 0.0007f;
 		float LinearAtt = 0.014f;
 		float ConstAtt = 1.0f;
-		char pad[8];
+		char pad[8] = {};
 	};
 }
