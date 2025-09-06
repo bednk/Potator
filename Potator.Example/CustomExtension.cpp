@@ -14,6 +14,21 @@ void Potator::CustomExtension::Initialize()
 {
 	SetupCamera();
 	_systems.Loader.Load("teapot.glb");
+
+	Entity controllEntity = EntityRegistry::Instance().GetNew();
+	ImGuiComponent controll;
+	LightsConfig& lights = _systems.Lighting.GetConfig();
+	
+	controll.Draw = [&lights]()
+		{
+			ImGui::SetNextWindowSize({ 300, 100 }, ImGuiCond_FirstUseEver);
+			ImGui::Begin("Enviroment lights");
+			ImGui::Text("Colors");
+			ImGui::ColorEdit4("Directional", lights.Directional.Color.data());
+			ImGui::ColorEdit4("Ambient", lights.Ambient.Color.data());
+			ImGui::End();
+		};
+	_components.ImGuiElements.Store(controllEntity, controll);
 }
 
 void Potator::CustomExtension::SetupCamera()
@@ -32,19 +47,6 @@ void Potator::CustomExtension::SetupCamera()
 	transform->Rotate.x() = 3.14f / 4;
 	transform->Translate = { 0.0f, 120.0f, -120.0f };
 	_systems.CommandDispatcher.Enqueue(camera, transform);
-
-	Entity controllEntity = EntityRegistry::Instance().GetNew();
-	ImGuiComponent controll;
-	LightsConfig& lights = _systems.Lighting.GetConfig();
-	controll.Draw = [&lights]()
-		{
-			ImGui::Begin("Enviroment lights");
-			ImGui::Text("Colors");
-			ImGui::ColorEdit4("Directional", lights.Directional.Color.data());
-			ImGui::ColorEdit4("Ambient", lights.Ambient.Color.data());
-			ImGui::End();
-		};
-	_components.ImGuiElements.Store(controllEntity, controll);
 }
 
 void Potator::CustomExtension::OnFrameStarted()
