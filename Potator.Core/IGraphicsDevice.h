@@ -36,6 +36,7 @@ namespace Potator
 		virtual void Draw(const MeshComponent* mesh, const MaterialComponent* material) = 0;
 		virtual void Present() = 0;
 		virtual void OnWindowResized(unsigned int width, unsigned int height) = 0;
+		virtual void InitImGuiContext() = 0;
 		~IGraphicsDevice() = default;
 	};
 }

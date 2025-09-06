@@ -1,6 +1,8 @@
 #include "CustomExtension.h"
 #include <ControllerMovementInputHandler.h>
 #include <RelativeTransformationCommand.h>
+#include "EntityRegistry.h"
+#include "imgui.h"
 
 Potator::CustomExtension::CustomExtension(Systems& systems, Components& components) :
 	_systems { systems },
@@ -22,7 +24,6 @@ void Potator::CustomExtension::SetupCamera()
 	_systems.Views.ViewChanged.connect([this, controllerHandler](Entity e) { controllerHandler->SetEntity(e); });
 	_systems.WindowHandler.RegisterInputHandler(controllerHandler);
 
-
 	std::shared_ptr<RelativeTransformationCommand> aroundY = std::make_shared<RelativeTransformationCommand>(_components.Transforms);
 	aroundY->Rotate.y() = -3.14f / 4;
 	_systems.CommandDispatcher.Enqueue(camera, aroundY);
@@ -31,6 +32,19 @@ void Potator::CustomExtension::SetupCamera()
 	transform->Rotate.x() = 3.14f / 4;
 	transform->Translate = { 0.0f, 120.0f, -120.0f };
 	_systems.CommandDispatcher.Enqueue(camera, transform);
+
+	Entity controllEntity = EntityRegistry::Instance().GetNew();
+	ImGuiComponent controll;
+	LightsConfig& lights = _systems.Lighting.GetConfig();
+	controll.Draw = [&lights]()
+		{
+			ImGui::Begin("Enviroment lights");
+			ImGui::Text("Colors");
+			ImGui::ColorEdit4("Directional", lights.Directional.Color.data());
+			ImGui::ColorEdit4("Ambient", lights.Ambient.Color.data());
+			ImGui::End();
+		};
+	_components.ImGuiElements.Store(controllEntity, controll);
 }
 
 void Potator::CustomExtension::OnFrameStarted()

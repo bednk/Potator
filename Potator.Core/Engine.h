@@ -21,7 +21,7 @@ namespace Potator
 		void Run();
 		~Engine();
 	private:
-		sf::Window& _mainWindow;
+		WindowWrapper& _mainWindow;
 		std::shared_ptr<IGraphicsDevice> _device;
 		std::shared_ptr<IShaderCache> _shaderCache;
 		Systems& _systems;

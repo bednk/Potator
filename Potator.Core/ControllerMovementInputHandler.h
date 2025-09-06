@@ -3,7 +3,6 @@
 #include "IInputHandler.h"
 #include <Eigen/Dense>
 #include "RelativeVelocityCommand.h"
-#include <SFML/Window/Joystick.hpp>
 
 namespace Potator
 {

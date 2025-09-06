@@ -3,6 +3,7 @@
 #include "EntityRegistry.h"
 #include <array>
 
+using namespace Potator;
 
 Potator::Lighting::Lighting(ComponentStorage<PointLightComponent>& lights, ComponentStorage<TransformComponent>& transforms, std::shared_ptr<IGraphicsDevice> device) :
 	_lights { lights },
@@ -24,6 +25,11 @@ Potator::Lighting::Lighting(ComponentStorage<PointLightComponent>& lights, Compo
 	_device->Bind(&_pointLightsHandle.View, PipelineStage::PixelShader, (UINT)PSStructuredBufferSlots::PointLights);
 	LightsConfig lc;
 	Potator::ConstantBuffer<LightsConfig> lcBuffer(lc);
+}
+
+LightsConfig& Potator::Lighting::GetConfig()
+{
+	return _lightsConfig;
 }
 
 void Potator::Lighting::Update()

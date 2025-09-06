@@ -9,6 +9,7 @@
 #include "CameraComponent.h"
 #include "PointLightComponent.h"
 #include "ScriptComponent.h"
+#include "ImGuiComponent.h"
 
 namespace Potator
 {
@@ -22,7 +23,8 @@ namespace Potator
             ComponentStorage<CommandQueueComponent>& commandQueues,
             ComponentStorage<CameraComponent>& cameras,
             ComponentStorage<PointLightComponent>& pointLights,
-            ComponentStorage<ScriptComponent>& scripts) :
+            ComponentStorage<ScriptComponent>& scripts,
+            ComponentStorage<ImGuiComponent>& imGuiElements) :
                 Meshes{ meshes },
                 Materials{ materials },
                 Transforms{ transforms },
@@ -31,7 +33,8 @@ namespace Potator
                 CommandQueues{ commandQueues },
                 Cameras{ cameras },
                 PointLights{ pointLights },
-                Scripts{ scripts }
+                Scripts{ scripts },
+                ImGuiElements { imGuiElements }
         {
 
         }
@@ -44,5 +47,6 @@ namespace Potator
         ComponentStorage<CameraComponent>& Cameras;
         ComponentStorage<PointLightComponent>& PointLights;
         ComponentStorage<ScriptComponent>& Scripts;
+        ComponentStorage<ImGuiComponent>& ImGuiElements;
 	};
 }

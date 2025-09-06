@@ -25,6 +25,7 @@ namespace Potator
 		Lighting(ComponentStorage<PointLightComponent>& lights,
 			ComponentStorage<TransformComponent>& transforms,
 			std::shared_ptr<IGraphicsDevice> device);
+		LightsConfig& GetConfig();
 		void Update();
 	private:
 		void OnTransformAdded(Entity entity, const TransformComponent& component);

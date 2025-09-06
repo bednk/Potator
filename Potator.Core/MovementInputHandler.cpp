@@ -1,11 +1,12 @@
 #include "MovementInputHandler.h"
-#include <SFML/Window/Keyboard.hpp>
+#include <GLFW/glfw3.h>
 
-Potator::MovementInputHandler::MovementInputHandler(CommandDispatcher& commandDispatcher, ComponentStorage<VelocityComponent>& movements, ComponentStorage<TransformComponent>& transforms) :
+Potator::MovementInputHandler::MovementInputHandler(CommandDispatcher& commandDispatcher, ComponentStorage<VelocityComponent>& movements, ComponentStorage<TransformComponent>& transforms, WindowWrapper& window) :
 	_entity { NONE_ENTITY },
 	_commandDispatcher { commandDispatcher },
 	_command { std::make_shared<RelativeVelocityCommand>(movements, transforms) },
-	_movements { movements }
+	_movements { movements },
+    _window { window }
 {
 }
 
@@ -21,30 +22,33 @@ void Potator::MovementInputHandler::SetEntity(Entity entity)
 
 void Potator::MovementInputHandler::Handle()
 {
-	if (_entity == NONE_ENTITY)
-	{
-		return;
-	}
+    if (_entity == NONE_ENTITY)
+        return;
 
-	_command->LinearVelocity.x() =
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) ? -_linerUnitsPerS : 0) +
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) ? _linerUnitsPerS : 0);
-	_command->LinearVelocity.y() =
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl) ? -_linerUnitsPerS : 0) +
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) ? _linerUnitsPerS : 0);
-	_command->LinearVelocity.z() =
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) ? -_linerUnitsPerS : 0) +
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) ? _linerUnitsPerS : 0);
 
-	_command->AngularVelocity.x() =
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) ? -_angilarRadiansPerS : 0) +
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::U) ? _angilarRadiansPerS : 0);
-	_command->AngularVelocity.y() =
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Y) ? -_angilarRadiansPerS : 0) +
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::I) ? _angilarRadiansPerS : 0);
-	_command->AngularVelocity.z() =
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K) ? -_angilarRadiansPerS : 0) +
-		(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::H) ? _angilarRadiansPerS : 0);
+    _command->LinearVelocity.x() =
+        (glfwGetKey(_window.Window, GLFW_KEY_A) == GLFW_PRESS ? -_linerUnitsPerS : 0.f) +
+        (glfwGetKey(_window.Window, GLFW_KEY_D) == GLFW_PRESS ? _linerUnitsPerS : 0.f);
 
-	_commandDispatcher.Enqueue(_entity, _command);
+    _command->LinearVelocity.y() =
+        (glfwGetKey(_window.Window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS ? -_linerUnitsPerS : 0.f) +
+        (glfwGetKey(_window.Window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? _linerUnitsPerS : 0.f);
+
+    _command->LinearVelocity.z() =
+        (glfwGetKey(_window.Window, GLFW_KEY_S) == GLFW_PRESS ? -_linerUnitsPerS : 0.f) +
+        (glfwGetKey(_window.Window, GLFW_KEY_W) == GLFW_PRESS ? _linerUnitsPerS : 0.f);
+
+    _command->AngularVelocity.x() =
+        (glfwGetKey(_window.Window, GLFW_KEY_J) == GLFW_PRESS ? -_angilarRadiansPerS : 0.f) +
+        (glfwGetKey(_window.Window, GLFW_KEY_U) == GLFW_PRESS ? _angilarRadiansPerS : 0.f);
+
+    _command->AngularVelocity.y() =
+        (glfwGetKey(_window.Window, GLFW_KEY_Y) == GLFW_PRESS ? -_angilarRadiansPerS : 0.f) +
+        (glfwGetKey(_window.Window, GLFW_KEY_I) == GLFW_PRESS ? _angilarRadiansPerS : 0.f);
+
+    _command->AngularVelocity.z() =
+        (glfwGetKey(_window.Window, GLFW_KEY_K) == GLFW_PRESS ? -_angilarRadiansPerS : 0.f) +
+        (glfwGetKey(_window.Window, GLFW_KEY_H) == GLFW_PRESS ? _angilarRadiansPerS : 0.f);
+
+    _commandDispatcher.Enqueue(_entity, _command);
 }

@@ -9,6 +9,7 @@
 #include "SceneLoader.h"
 #include "WindowHandler.h"
 #include "ScriptingSystem.h"
+#include "ImGuiSystem.h"
 
 namespace Potator
 {
@@ -23,7 +24,8 @@ namespace Potator
 			Lighting& lighting,
 			SceneLoader& loader,
 			WindowHandler& windowHandler,
-			ScriptingSystem& scripting) : 
+			ScriptingSystem& scripting,
+			ImGuiSystem& imGui) :
 				Renderer{ renderer },
 				SceneGraph{sceneGraph},
 				Views{views},
@@ -33,7 +35,8 @@ namespace Potator
 				Lighting{lighting},
 				Loader{loader},
 				WindowHandler{windowHandler},
-				Scripting{scripting}
+				Scripting{scripting},
+				ImGui{imGui}
 		{
 
 		}
@@ -47,5 +50,6 @@ namespace Potator
 		SceneLoader& Loader;
 		WindowHandler& WindowHandler;
 		ScriptingSystem& Scripting;
+		ImGuiSystem& ImGui;
 	};
 }

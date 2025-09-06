@@ -1,4 +1,5 @@
 #include "ControllerMovementInputHandler.h"
+#include <GLFW/glfw3.h>
 
 Potator::ControllerMovementInputHandler::ControllerMovementInputHandler(
 	CommandDispatcher& commandDispatcher,
@@ -31,22 +32,35 @@ float Potator::ControllerMovementInputHandler::ApplyDeadzone(float value, float 
 
 void Potator::ControllerMovementInputHandler::Handle()
 {
-	if (_entity == NONE_ENTITY || !sf::Joystick::isConnected(_joystickId))
-		return;
+    if (_entity == NONE_ENTITY || !glfwJoystickPresent(_joystickId))
+    {
+        return;
+    }
 
-	_command->LinearVelocity.x() = ApplyDeadzone(sf::Joystick::getAxisPosition(_joystickId, sf::Joystick::Axis::X) / 100.0f) * _linearUnitsPerS;
-	_command->LinearVelocity.y() = ApplyDeadzone(sf::Joystick::getAxisPosition(_joystickId, sf::Joystick::Axis::Y) / 100.0f) * _linearUnitsPerS * -1;
+    int axisCount = 0;
+    const float* axes = glfwGetJoystickAxes(_joystickId, &axisCount);
 
-	float leftTrigger = ApplyDeadzone(sf::Joystick::getAxisPosition(_joystickId, sf::Joystick::Axis::Z) / 100.0f);
-	float rightTrigger = ApplyDeadzone(sf::Joystick::getAxisPosition(_joystickId, sf::Joystick::Axis::R) / 100.0f);
-	_command->LinearVelocity.z() = (rightTrigger - leftTrigger) * _linearUnitsPerS;
+    int buttonCount = 0;
+    const unsigned char* buttons = glfwGetJoystickButtons(_joystickId, &buttonCount);
 
-	_command->AngularVelocity.x() = ApplyDeadzone(sf::Joystick::getAxisPosition(_joystickId, sf::Joystick::Axis::V) / 100.0f) * _angularRadiansPerS;
-	_command->AngularVelocity.y() = ApplyDeadzone(sf::Joystick::getAxisPosition(_joystickId, sf::Joystick::Axis::U) / 100.0f) * _angularRadiansPerS;
+    if (!axes || !buttons)
+    {
+        return;
+    }
 
-	bool leftBumper = sf::Joystick::isButtonPressed(_joystickId, 5);
-	bool rightBumper = sf::Joystick::isButtonPressed(_joystickId, 4);
-	_command->AngularVelocity.z() = (rightBumper ? 1.f : 0.f - (leftBumper ? 1.f : 0.f)) * _angularRadiansPerS;
+    _command->LinearVelocity.x() = ApplyDeadzone(axes[0]) * _linearUnitsPerS;
+    _command->LinearVelocity.y() = ApplyDeadzone(-axes[1]) * _linearUnitsPerS;
 
-	_commandDispatcher.Enqueue(_entity, _command);
+    float leftTrigger = (axisCount > 4) ? ApplyDeadzone((axes[4] + 1.f) / 2.f) : 0.f;
+    float rightTrigger = (axisCount > 5) ? ApplyDeadzone((axes[5] + 1.f) / 2.f) : 0.f;
+    _command->LinearVelocity.z() = (rightTrigger - leftTrigger) * _linearUnitsPerS;
+
+    _command->AngularVelocity.y() = (axisCount > 2) ? ApplyDeadzone(axes[2]) * _angularRadiansPerS : 0.f;
+    _command->AngularVelocity.x() = (axisCount > 3) ? ApplyDeadzone(axes[3]) * _angularRadiansPerS : 0.f;
+
+    bool leftBumper = (buttonCount > 5) && buttons[5];
+    bool rightBumper = (buttonCount > 4) && buttons[4];
+    _command->AngularVelocity.z() = (rightBumper ? 1.f : 0.f - (leftBumper ? 1.f : 0.f)) * _angularRadiansPerS;
+
+    _commandDispatcher.Enqueue(_entity, _command);
 }

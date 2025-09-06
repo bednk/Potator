@@ -3,13 +3,17 @@
     "boost-signals2",
     "boost-stacktrace",
     "boost-dll",
-    "sfml",
+    "glfw3",
     "eigen3",
     "assimp",
     "stb",
     "nlohmann-json",
     "lua",
     "sol2",
-    "bext-di"
+    "bext-di",
+    {
+      "name": "imgui",
+      "features": [ "dx11-binding", "glfw-binding" ]
+    }
   ]
 }

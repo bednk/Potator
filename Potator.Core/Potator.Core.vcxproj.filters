@@ -85,6 +85,12 @@
     <Filter Include="Resource Files\Shaders\Headers">
       <UniqueIdentifier>{7b6b2753-96f6-4356-9ed3-be16beda0659}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ECS\Systems\Dx">
+      <UniqueIdentifier>{a65d9571-3650-40f4-b891-d2530aa06a8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS\Systems\Dx">
+      <UniqueIdentifier>{431be6c6-1961-4142-9b93-378deec0c98d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -291,6 +297,12 @@
     <ClInclude Include="RelativeTransformationCommand.h">
       <Filter>Header Files\ECS\Commands</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuiSystem.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx11ImGuiSystem.h">
+      <Filter>Header Files\ECS\Systems\Dx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -358,6 +370,15 @@
     </ClCompile>
     <ClCompile Include="RelativeTransformationCommand.cpp">
       <Filter>Source Files\ECS\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Dx11ImGuiSystem.cpp">
+      <Filter>Source Files\ECS\Systems\Dx</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

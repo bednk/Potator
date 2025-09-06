@@ -31,6 +31,7 @@ namespace Potator
 		void Draw(const MeshComponent* mesh, const MaterialComponent* material) override;
 		void Present() override;
 		void OnWindowResized(unsigned int width, unsigned int height) override;
+		void InitImGuiContext() override;
 	private:
 		void SetDefaultSampler();
 		void InitializeDevice(HWND windowHandle);

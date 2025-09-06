@@ -1,6 +1,9 @@
 #include "Dx11GraphicsDevice.h"
 #include "HRCheck.h"
 #include "DxDescriptorsConverter.h"
+#include "imgui.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_glfw.h"
 
 
 using namespace Microsoft::WRL;
@@ -48,6 +51,14 @@ void Potator::Dx11GraphicsDevice::RecreateZBuffer(unsigned int w, unsigned int h
 	zBufferViewDesc.Texture2D.MipSlice = 0;
 
 	_device->CreateDepthStencilView(zBufferTex.Get(), &zBufferViewDesc, _depthStencilView.GetAddressOf()) >> HrCheck::Instance();
+}
+
+void Potator::Dx11GraphicsDevice::InitImGuiContext()
+{
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	ImGui_ImplDX11_Init(_device.Get(), _context.Get());
 }
 
 

@@ -7,7 +7,7 @@ namespace Potator
 			std::shared_ptr<IGraphicsDevice> device,
 			std::shared_ptr<IShaderCache> shaderCache,
 			Systems& systems) :
-		_mainWindow{ mainWindow.Window },
+		_mainWindow{ mainWindow },
 		_device{ device },
 		_shaderCache{ shaderCache },
 		_systems{ systems }
@@ -27,13 +27,18 @@ namespace Potator
 		bool executeExt = _extension.has_value();
 		if (executeExt) _extension.value()->Initialize();
 
-		while (_mainWindow.isOpen())
+		while (!glfwWindowShouldClose(_mainWindow.Window))
 		{
 			_systems.FixedStepTracker.MarkFrameStart();
 
 			if (executeExt) _extension.value()->OnFrameStarted();
 
-			_systems.WindowHandler.Handle();
+			_systems.ImGui.NewFrame();
+			if (!_systems.WindowHandler.Handle())
+			{
+				break;
+			}
+
 			_systems.CommandDispatcher.Dispatch();
 
 			if (executeExt) _extension.value()->OnBeforeStateUpdated();
@@ -46,8 +51,10 @@ namespace Potator
 
 			if (executeExt) _extension.value()->OnBeforeSceneRendered();
 
-			_device->Clear(0, 0, 0, 1);
+			_systems.ImGui.Update();
+			_device->Clear(0.0f, 0.0f, 0.0f, 1.0f);
 			_systems.Renderer.Render();
+			_systems.ImGui.Render();
 			_device->Present();
 		}
 
