@@ -367,3 +367,4 @@ FodyWeavers.xsd
 vcpkg*/
 /PixelShader.cso
 /VertexShader.cso
+/Potator.Example/imgui.ini
