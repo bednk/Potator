@@ -1,6 +1,5 @@
 #include "SceneLoader.h"
 #include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <queue>
 #include "EntityRegistry.h"
@@ -112,59 +111,6 @@ static RgbaTextureContainer GetTexture(aiTexture* tex)
 	return img;
 }
 
-static std::vector<ShaderResourceHandle> LoadTextures(const aiScene* scene, IGraphicsDevice& device)
-{
-	std::vector<ShaderResourceHandle> result;
-	for (size_t i = 0; i < scene->mNumTextures; i++)
-	{
-		aiTexture* source = scene->mTextures[i];
-		RgbaTextureContainer data = GetTexture(source);
-		result.push_back(device.Create2dTexture(&data));
-	}
-
-	return result;
-}
-
-static std::vector<MaterialComponent> LoadMaterials(const aiScene* scene, IGraphicsDevice& device, IShaderCache& shaderCache)
-{
-	auto vsBinary = shaderCache.GetShaderBinary("vs_composite");
-	static std::vector<MaterialComponent> result;
-	std::vector<ShaderResourceHandle> textures = LoadTextures(scene, device);
-	for (size_t i = 0; i < scene->mNumMaterials; i++)
-	{
-		MaterialComponent& materialComponent = result.emplace_back();
-		MaterialDescriptor descriptor = {};
-		aiMaterial* material = scene->mMaterials[i];
-
-		aiColor4D diffuse;
-		if (aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse) == AI_SUCCESS
-			|| aiGetMaterialColor(material, AI_MATKEY_BASE_COLOR, &diffuse) == AI_SUCCESS)
-		{
-			descriptor.HasColor = true;
-			descriptor.Color = { diffuse.r, diffuse.g, diffuse.b, diffuse.a };
-		}
-
-		aiString texPath;
-		if (material->GetTexture(aiTextureType_BASE_COLOR, 0, &texPath) == AI_SUCCESS
-			|| material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS)
-		{
-			descriptor.HasTexture = true;
-			int texIndex = std::atoi(texPath.C_Str() + 1);
-			materialComponent.Texture = textures[texIndex];
-		}
-		
-		ConstantBuffer<MaterialDescriptor> descriptorBuffer(descriptor);
-
-		materialComponent.DescriptorHandle = device.Create(&descriptorBuffer);
-		materialComponent.VertexShader = shaderCache.GetVertexShaderHandle("vs_composite");
-		materialComponent.VsBinary = vsBinary;
-		materialComponent.PixelShader = shaderCache.GetPixelShaderHandle("ps_composite");
-		materialComponent.InputLayout = device.CreateInputLayout(CompositeVertex::GetLayout(), vsBinary.get());
-		
-	}
-	return result;
-}
-
 static unsigned int GetUvChannelIndex(const aiScene* scene, aiMesh* mesh)
 {
 	aiString _;
@@ -175,65 +121,6 @@ static unsigned int GetUvChannelIndex(const aiScene* scene, aiMesh* mesh)
 		material->GetTexture(aiTextureType_DIFFUSE, 0, &_, nullptr, &uvIndex);
 	}
 	return uvIndex;
-}
-
-static std::vector<MeshComponent> LoadMeshes(const aiScene* scene, IGraphicsDevice& device)
-{
-	std::vector<MeshComponent> result;
-	for (size_t i = 0; i < scene->mNumMeshes; i++)
-	{
-		aiMesh* mesh = scene->mMeshes[i];
-		bool isColored = mesh->HasVertexColors(0);
-		bool hasNormals = mesh->HasNormals();
-		MeshComponent& meshComponent = result.emplace_back();
-		meshComponent.StartIndexLocation = 0;
-		std::vector<CompositeVertex> vertices;
-		std::vector<unsigned short> indices;
-
-		for (size_t f = 0; f < mesh->mNumFaces; f++)
-		{
-			aiFace face = mesh->mFaces[f];
-
-			for (size_t i = 0; i < face.mNumIndices; i++)
-			{
-				auto indice = face.mIndices[i];
-				indices.push_back(indice);
-			}
-		}
-
-		unsigned int uvChannel = GetUvChannelIndex(scene, mesh);
-		for (size_t v = 0; v < mesh->mNumVertices; v++)
-		{
-			CompositeVertex& vertex = vertices.emplace_back();
-
-			aiVector3D pos = mesh->mVertices[v];
-			vertex.Position = { pos.x, pos.y, pos.z, 1.0f };
-
-			aiVector3D uv = mesh->mTextureCoords[uvChannel][v];	
-			vertex.Uv = { uv.x, uv.y };
-
-			if (isColored)
-			{
-				aiColor4D vertexColor = mesh->mColors[0][v];
-				vertex.Color = { vertexColor.r, vertexColor.g, vertexColor.b, vertexColor.a };
-			}
-
-			if (hasNormals)
-			{
-				aiVector3D normal = mesh->mNormals[v];
-				vertex.Normal = { normal.x, normal.y, normal.z };
-			}
-		}
-
-		VertexBuffer<CompositeVertex> cpuVBuf(vertices);
-		IndexBuffer cpuIBuf(indices);
-
-		meshComponent.IndexCount = (UINT)indices.size();
-		meshComponent.VertexBuffer = device.Create(&cpuVBuf);
-		meshComponent.IndexBuffer = device.Create(&cpuIBuf);
-	}
-
-	return result;
 }
 
 static std::string ToString(const aiString& source)
@@ -332,8 +219,8 @@ void Potator::SceneLoader::Load(fs::path path)
 		return;
 	}
 
-	std::vector<MaterialComponent> materials = LoadMaterials(scene, _device, _shaderCache);
-	std::vector<MeshComponent> meshComponents = LoadMeshes(scene, _device);
+	std::vector<MaterialComponent> materials = LoadMaterials(scene);
+	std::vector<MeshComponent> meshComponents = LoadMeshes(scene);
 	std::unordered_map<std::string, PointLightComponent> lights = GetLights(scene->mLights, scene->mNumLights);
 	std::unordered_map<std::string, std::string> scripts = GetLuaScripts(path);
 	std::unordered_map<std::string, std::string> shaders = GetCustomPixelShaderNames(path);
@@ -393,4 +280,116 @@ void Potator::SceneLoader::Load(fs::path path)
 			parents[node->mChildren[i]] = nodeEntity;
 		}
 	}
+}
+
+std::vector<ShaderResourceHandle> Potator::SceneLoader::LoadTextures(const aiScene* scene)
+{
+	std::vector<ShaderResourceHandle> result;
+	for (size_t i = 0; i < scene->mNumTextures; i++)
+	{
+		aiTexture* source = scene->mTextures[i];
+		RgbaTextureContainer data = GetTexture(source);
+		result.push_back(_device.Create2dTexture(&data));
+	}
+
+	return result;
+}
+
+std::vector<MaterialComponent> Potator::SceneLoader::LoadMaterials(const aiScene* scene)
+{
+	auto vsBinary = _shaderCache.GetShaderBinary("vs_composite");
+	static std::vector<MaterialComponent> result;
+	std::vector<ShaderResourceHandle> textures = LoadTextures(scene);
+	for (size_t i = 0; i < scene->mNumMaterials; i++)
+	{
+		MaterialComponent& materialComponent = result.emplace_back();
+		MaterialDescriptor descriptor = {};
+		aiMaterial* material = scene->mMaterials[i];
+
+		aiColor4D diffuse;
+		if (aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse) == AI_SUCCESS
+			|| aiGetMaterialColor(material, AI_MATKEY_BASE_COLOR, &diffuse) == AI_SUCCESS)
+		{
+			descriptor.HasColor = true;
+			descriptor.Color = { diffuse.r, diffuse.g, diffuse.b, diffuse.a };
+		}
+
+		aiString texPath;
+		if (material->GetTexture(aiTextureType_BASE_COLOR, 0, &texPath) == AI_SUCCESS
+			|| material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS)
+		{
+			descriptor.HasTexture = true;
+			int texIndex = std::atoi(texPath.C_Str() + 1);
+			materialComponent.Texture = textures[texIndex];
+		}
+
+		ConstantBuffer<MaterialDescriptor> descriptorBuffer(descriptor);
+
+		materialComponent.DescriptorHandle = _device.Create(&descriptorBuffer);
+		materialComponent.VertexShader = _shaderCache.GetVertexShaderHandle("vs_composite");
+		materialComponent.VsBinary = vsBinary;
+		materialComponent.PixelShader = _shaderCache.GetPixelShaderHandle("ps_composite");
+		materialComponent.InputLayout = _device.CreateInputLayout(CompositeVertex::GetLayout(), vsBinary.get());
+
+	}
+	return result;
+}
+
+std::vector<MeshComponent> Potator::SceneLoader::LoadMeshes(const aiScene* scene)
+{
+	std::vector<MeshComponent> result;
+	for (size_t i = 0; i < scene->mNumMeshes; i++)
+	{
+		aiMesh* mesh = scene->mMeshes[i];
+		bool isColored = mesh->HasVertexColors(0);
+		bool hasNormals = mesh->HasNormals();
+		MeshComponent& meshComponent = result.emplace_back();
+		meshComponent.StartIndexLocation = 0;
+		std::vector<CompositeVertex> vertices;
+		std::vector<unsigned short> indices;
+
+		for (size_t f = 0; f < mesh->mNumFaces; f++)
+		{
+			aiFace face = mesh->mFaces[f];
+
+			for (size_t i = 0; i < face.mNumIndices; i++)
+			{
+				auto indice = face.mIndices[i];
+				indices.push_back(indice);
+			}
+		}
+
+		unsigned int uvChannel = GetUvChannelIndex(scene, mesh);
+		for (size_t v = 0; v < mesh->mNumVertices; v++)
+		{
+			CompositeVertex& vertex = vertices.emplace_back();
+
+			aiVector3D pos = mesh->mVertices[v];
+			vertex.Position = { pos.x, pos.y, pos.z, 1.0f };
+
+			aiVector3D uv = mesh->mTextureCoords[uvChannel][v];
+			vertex.Uv = { uv.x, uv.y };
+
+			if (isColored)
+			{
+				aiColor4D vertexColor = mesh->mColors[0][v];
+				vertex.Color = { vertexColor.r, vertexColor.g, vertexColor.b, vertexColor.a };
+			}
+
+			if (hasNormals)
+			{
+				aiVector3D normal = mesh->mNormals[v];
+				vertex.Normal = { normal.x, normal.y, normal.z };
+			}
+		}
+
+		VertexBuffer<CompositeVertex> cpuVBuf(vertices);
+		IndexBuffer cpuIBuf(indices);
+
+		meshComponent.IndexCount = (UINT)indices.size();
+		meshComponent.VertexBuffer = _device.Create(&cpuVBuf);
+		meshComponent.IndexBuffer = _device.Create(&cpuIBuf);
+	}
+
+	return result;
 }
