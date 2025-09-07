@@ -3,14 +3,14 @@
 #include "IInputHandler.h"
 #include <Eigen/Dense>
 #include "RelativeVelocityCommand.h"
-#include "WindowWrapper.h"
+#include "Window.h"
 
 namespace Potator
 {
 	class MovementInputHandler : public IInputHandler
 	{
 	public:
-		MovementInputHandler(CommandDispatcher& commandDispatcher, ComponentStorage<VelocityComponent>& movements, ComponentStorage<TransformComponent>& transforms, WindowWrapper& window);
+		MovementInputHandler(CommandDispatcher& commandDispatcher, ComponentStorage<VelocityComponent>& movements, ComponentStorage<TransformComponent>& transforms, Window& window);
 		void SetEntity(Entity entity);
 		void Handle() override;
 	private:
@@ -18,7 +18,7 @@ namespace Potator
 		CommandDispatcher& _commandDispatcher;
 		std::shared_ptr<RelativeVelocityCommand> _command;
 		ComponentStorage<VelocityComponent>& _movements;
-		WindowWrapper& _window;
+		GLFWwindow* _window;
 		float _linerUnitsPerS = 0.05f;
 		float _angilarRadiansPerS = 1;
 	};

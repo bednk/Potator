@@ -276,10 +276,7 @@
     <ClInclude Include="ScriptingSystem.h">
       <Filter>Header Files\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="WindowHandle.h">
-      <Filter>Header Files\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowWrapper.h">
+    <ClInclude Include="Window.h">
       <Filter>Header Files\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Systems.h">
@@ -302,6 +299,9 @@
     </ClInclude>
     <ClInclude Include="Dx11ImGuiSystem.h">
       <Filter>Header Files\ECS\Systems\Dx</Filter>
+    </ClInclude>
+    <ClInclude Include="IHwndProvider.h">
+      <Filter>Header Files\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="ImGuiSystem.cpp">
       <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

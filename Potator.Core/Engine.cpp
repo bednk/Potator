@@ -1,12 +1,9 @@
 #include "Engine.h"
-#include "ControllerMovementInputHandler.h"
+
 
 namespace Potator
 {
-	Engine::Engine(WindowWrapper& mainWindow,
-			IGraphicsDevice& device,
-			Systems& systems) :
-		_mainWindow{ mainWindow },
+	Engine::Engine(IGraphicsDevice& device, Systems& systems) :
 		_device{ device },
 		_systems{ systems }
 	{
@@ -25,17 +22,13 @@ namespace Potator
 		bool executeExt = _extension.has_value();
 		if (executeExt) _extension.value()->Initialize();
 
-		while (!glfwWindowShouldClose(_mainWindow.Window))
+		while (_systems.WindowHandler.Handle())
 		{
 			_systems.FixedStepTracker.MarkFrameStart();
 
 			if (executeExt) _extension.value()->OnFrameStarted();
 
 			_systems.ImGui.NewFrame();
-			if (!_systems.WindowHandler.Handle())
-			{
-				break;
-			}
 
 			_systems.CommandDispatcher.Dispatch();
 

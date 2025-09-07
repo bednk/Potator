@@ -2,7 +2,7 @@
 #include "leanWin.h"
 #include "IGraphicsDevice.h"
 #include "DxVertexBuffer.h"
-#include "WindowHandle.h"
+#include "IHwndProvider.h"
 
 
 namespace Potator
@@ -10,7 +10,7 @@ namespace Potator
 	class Dx11GraphicsDevice : public IGraphicsDevice
 	{
 	public:
-		Dx11GraphicsDevice(WindowHandle windowHandle, LaunchingParams params);
+		Dx11GraphicsDevice(IHwndProvider& windowHandle, LaunchingParams params);
 		void Clear(float r, float g, float b, float a) override;
 		VertexBufferHandle Create(const IVertexBuffer* buffer) override;
 		IndexBufferHandle Create(const IndexBuffer* buffer) override;

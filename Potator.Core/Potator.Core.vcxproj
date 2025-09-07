@@ -145,6 +145,7 @@
     <ClInclude Include="AmbientLightComponent.h" />
     <ClInclude Include="Dx11ImGuiSystem.h" />
     <ClInclude Include="ImGuiSystem.h" />
+    <ClInclude Include="IHwndProvider.h" />
     <ClInclude Include="RelativeTransformationCommand.h" />
     <ClInclude Include="RelativeVelocityCommand.h" />
     <ClInclude Include="CameraComponent.h" />
@@ -209,9 +210,8 @@
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexMemberDescriptor.h" />
     <ClInclude Include="ViewManager.h" />
-    <ClInclude Include="WindowHandle.h" />
     <ClInclude Include="WindowHandler.h" />
-    <ClInclude Include="WindowWrapper.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dx11ImGuiSystem.cpp" />
@@ -243,6 +243,7 @@
     <ClCompile Include="DxShaderCache.cpp" />
     <ClCompile Include="ScriptingSystem.cpp" />
     <ClCompile Include="ViewManager.cpp" />
+    <ClCompile Include="Window.cpp" />
     <ClCompile Include="WindowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>

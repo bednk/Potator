@@ -2,14 +2,12 @@
 #include "Engine.h"
 #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 11 // for Systems struct. In case of significant systems number grow I'll think about splitting it into groups
 #include <boost/di.hpp>
-#include "WindowHandle.h"
+#include "IHwndProvider.h"
 #include "Dx11GraphicsDevice.h"
 #include "DxShaderCache.h"
 #include "Components.h"
 #include "Dx11ImGuiSystem.h"
-#include <GLFW/glfw3.h>
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h> 
+
 
 namespace Potator
 {
@@ -18,18 +16,18 @@ namespace Potator
     public:
         EngineFactory(const LaunchingParams& params)
         {
-            glfwInit();
-            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-            GLFWwindow* window = glfwCreateWindow(params.Width, params.Height, params.Title.c_str(), nullptr, nullptr);
-
-            static WindowWrapper winWrapper = { window };
-            static WindowHandle handle = { glfwGetWin32Window(window) };
-
             switch (params.Api)
             {
             case GpuApi::Dx11:
             {
                 auto injector = boost::di::make_injector(
+                    // windowing stuff
+                    boost::di::bind<LaunchingParams>().to(params),
+                    boost::di::bind<IHwndProvider>().in(boost::di::singleton).to<Window>(),
+                    // gpu api specifics
+                    boost::di::bind<IGraphicsDevice>().in(boost::di::singleton).to<Dx11GraphicsDevice>(),
+                    boost::di::bind<IShaderCache>().in(boost::di::singleton).to<DxShaderCache>(),
+                    boost::di::bind<ImGuiSystem>().in(boost::di::singleton).to<Dx11ImGuiSystem>(),
                     // components
                     boost::di::bind<ComponentStorage<MeshComponent>>().in(boost::di::singleton),
                     boost::di::bind<ComponentStorage<MaterialComponent>>().in(boost::di::singleton),
@@ -42,14 +40,6 @@ namespace Potator
                     boost::di::bind<ComponentStorage<ScriptComponent>>().in(boost::di::singleton),
                     boost::di::bind<ComponentStorage<ImGuiComponent>>().in(boost::di::singleton),
                     boost::di::bind<ComponentStorage<Components>>().in(boost::di::singleton),
-                    // windowing stuff
-                    boost::di::bind<WindowWrapper>().to(winWrapper),
-                    boost::di::bind<WindowHandle>().to(handle),
-                    boost::di::bind<LaunchingParams>().to(params),
-                    // gpu api specifics
-                    boost::di::bind<IGraphicsDevice>().in(boost::di::singleton).to<Dx11GraphicsDevice>(),
-                    boost::di::bind<IShaderCache>().in(boost::di::singleton).to<DxShaderCache>(),
-                    boost::di::bind<ImGuiSystem>().in(boost::di::singleton).to<Dx11ImGuiSystem>(),
                     // systems
                     boost::di::bind<SceneGraph>().in(boost::di::singleton),
                     boost::di::bind<MeshRenderer>().in(boost::di::singleton),

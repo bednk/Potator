@@ -18,8 +18,7 @@
 namespace fs = std::filesystem;
 using namespace Potator;
 
-
-
+#pragma region static_helpers
 struct GLBHeader
 {
 	uint32_t magic;
@@ -123,11 +122,6 @@ static unsigned int GetUvChannelIndex(const aiScene* scene, aiMesh* mesh)
 	return uvIndex;
 }
 
-static std::string ToString(const aiString& source)
-{
-	return std::string{ source.C_Str() };
-}
-
 static std::unordered_map<std::string, std::string> GetLuaScripts(fs::path path)
 {
 	std::unordered_map<std::string, std::string> result;
@@ -186,6 +180,8 @@ static std::unordered_map<std::string, PointLightComponent> GetLights(aiLight** 
 
 	return result;
 }
+#pragma endregion
+
 
 Potator::SceneLoader::SceneLoader(IGraphicsDevice& device,
 		IShaderCache& shaderCache,
@@ -234,7 +230,7 @@ void Potator::SceneLoader::Load(fs::path path)
 	while (!queue.empty())
 	{
 		aiNode* node = queue.front();
-		std::string name = ToString(node->mName);
+		std::string name = { node->mName.C_Str() };
 		queue.pop();
 		Entity nodeEntity = EntityRegistry::Instance().GetNew();
 		TransformComponent nodeTransform;

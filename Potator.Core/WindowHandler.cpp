@@ -1,21 +1,21 @@
 #include "WindowHandler.h"
 #include "imgui_impl_glfw.h"
 
-Potator::WindowHandler::WindowHandler(WindowWrapper& window) : _window { window }
+Potator::WindowHandler::WindowHandler(Window& window) : _window { window.GetGlfwWindow() }
 {
-    ImGui_ImplGlfw_InitForOther(_window.Window, true);
+    ImGui_ImplGlfw_InitForOther(_window, true);
 }
 
 bool Potator::WindowHandler::Handle()
 {
 	glfwPollEvents();
-    if (glfwWindowShouldClose(_window.Window))
+    if (glfwWindowShouldClose(_window))
     {
         return false;
     }
 
     int width, height;
-    glfwGetFramebufferSize(_window.Window, &width, &height);
+    glfwGetFramebufferSize(_window, &width, &height);
     if (width != _width || height != _height)
     {
         _width = width;
