@@ -13,8 +13,7 @@ namespace Potator
 	{
 	public:
 		Engine(WindowWrapper& mainWindow,
-			std::shared_ptr<IGraphicsDevice> device,
-			std::shared_ptr<IShaderCache> shaderCache,
+			IGraphicsDevice& device,
 			Systems& systems);
 
 		void SetExtension(IEngineExtension* extension);
@@ -22,8 +21,7 @@ namespace Potator
 		~Engine();
 	private:
 		WindowWrapper& _mainWindow;
-		std::shared_ptr<IGraphicsDevice> _device;
-		std::shared_ptr<IShaderCache> _shaderCache;
+		IGraphicsDevice& _device;
 		Systems& _systems;
 		std::optional<IEngineExtension*> _extension;
 	};

@@ -5,7 +5,7 @@
 
 using namespace Potator;
 
-Potator::Lighting::Lighting(ComponentStorage<PointLightComponent>& lights, ComponentStorage<TransformComponent>& transforms, std::shared_ptr<IGraphicsDevice> device) :
+Potator::Lighting::Lighting(ComponentStorage<PointLightComponent>& lights, ComponentStorage<TransformComponent>& transforms, IGraphicsDevice& device) :
 	_lights { lights },
 	_transforms { transforms },
 	_device { device },
@@ -18,11 +18,11 @@ Potator::Lighting::Lighting(ComponentStorage<PointLightComponent>& lights, Compo
 	_transforms.ComponentRemoved.connect([this](Entity e) { RemoveLight(e); });
 
 
-	_lightsConfigHandle = _device->Create(&_lcBuffer);
-	_device->Bind(&_lightsConfigHandle, PipelineStage::PixelShader, (UINT)PsConstantBufferSlots::LightsConfig);
+	_lightsConfigHandle = _device.Create(&_lcBuffer);
+	_device.Bind(&_lightsConfigHandle, PipelineStage::PixelShader, (UINT)PsConstantBufferSlots::LightsConfig);
 
-	_pointLightsHandle = _device->CreateStructuredBuffer(&_cpuPointLightsBuffer);
-	_device->Bind(&_pointLightsHandle.View, PipelineStage::PixelShader, (UINT)PSStructuredBufferSlots::PointLights);
+	_pointLightsHandle = _device.CreateStructuredBuffer(&_cpuPointLightsBuffer);
+	_device.Bind(&_pointLightsHandle.View, PipelineStage::PixelShader, (UINT)PSStructuredBufferSlots::PointLights);
 	LightsConfig lc;
 	Potator::ConstantBuffer<LightsConfig> lcBuffer(lc);
 }
@@ -36,7 +36,7 @@ void Potator::Lighting::Update()
 {
 	_lightsConfig.PointLightsCount = min((unsigned int)_lightEntities.size(), _maxPointLights);
 	_lcBuffer.Update(_lightsConfig);
-	_device->Update(&_lcBuffer, &_lightsConfigHandle);
+	_device.Update(&_lcBuffer, &_lightsConfigHandle);
 
 	for (size_t i = 0; i < _lightsConfig.PointLightsCount; i++)
 	{
@@ -48,7 +48,7 @@ void Potator::Lighting::Update()
 	}
 
 	_cpuPointLightsBuffer.Update(_pointLights);
-	_device->Update(&_cpuPointLightsBuffer, &_pointLightsHandle.Buffer);
+	_device.Update(&_cpuPointLightsBuffer, &_pointLightsHandle.Buffer);
 }
 
 void Potator::Lighting::OnLightAdded(Entity entity, const PointLightComponent& component)

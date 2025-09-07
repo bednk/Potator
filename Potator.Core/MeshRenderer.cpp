@@ -4,7 +4,7 @@
 #include "MovementSystem.h"
 
 
-Potator::MeshRenderer::MeshRenderer(std::shared_ptr<IGraphicsDevice> graphicsDevice, ComponentStorage<MeshComponent>& meshes, ComponentStorage<TransformComponent>& transforms, ComponentStorage<MaterialComponent>& materials) :
+Potator::MeshRenderer::MeshRenderer(IGraphicsDevice& graphicsDevice, ComponentStorage<MeshComponent>& meshes, ComponentStorage<TransformComponent>& transforms, ComponentStorage<MaterialComponent>& materials) :
 	_graphicsDevice{ graphicsDevice },
 	_meshes{ meshes },
 	_transforms{ transforms },
@@ -17,8 +17,8 @@ Potator::MeshRenderer::MeshRenderer(std::shared_ptr<IGraphicsDevice> graphicsDev
 	_transforms.ComponentRemoved.connect([this](Entity e) { RemoveDrawable(e); });
 	_materials.ComponentAdded.connect([this](Entity e, const MaterialComponent& c) { OnMaterialAdded(e, c); });
 	_materials.ComponentRemoved.connect([this](Entity e) { RemoveDrawable(e); });
-	_transformationHandle = _graphicsDevice->Create(&_transformationBuffer);
-	_graphicsDevice->Bind(&_transformationHandle, PipelineStage::VertexShader, (UINT)VsConstantBufferSlots::ModelTransform);
+	_transformationHandle = _graphicsDevice.Create(&_transformationBuffer);
+	_graphicsDevice.Bind(&_transformationHandle, PipelineStage::VertexShader, (UINT)VsConstantBufferSlots::ModelTransform);
 }
 
 void Potator::MeshRenderer::Render()
@@ -28,8 +28,8 @@ void Potator::MeshRenderer::Render()
 		Entity entity = _drawableEntities[i];
 		Eigen::Matrix4f trans = _transforms[entity].World.transpose();
 		_transformationBuffer.Update(trans);
-		_graphicsDevice->Update(&_transformationBuffer, &_transformationHandle);
-		_graphicsDevice->Draw(&_meshes[entity], &_materials[entity]);
+		_graphicsDevice.Update(&_transformationBuffer, &_transformationHandle);
+		_graphicsDevice.Draw(&_meshes[entity], &_materials[entity]);
 	}
 }
 

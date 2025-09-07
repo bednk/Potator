@@ -4,17 +4,15 @@
 namespace Potator
 {
 	Engine::Engine(WindowWrapper& mainWindow,
-			std::shared_ptr<IGraphicsDevice> device,
-			std::shared_ptr<IShaderCache> shaderCache,
+			IGraphicsDevice& device,
 			Systems& systems) :
 		_mainWindow{ mainWindow },
 		_device{ device },
-		_shaderCache{ shaderCache },
 		_systems{ systems }
 	{
 		_systems.FixedStepTracker.Subscribe(&_systems.MovementSystem);
 		_systems.WindowHandler.WindowResized.connect([this](unsigned int w, unsigned int h) { _systems.Views.OnWindowResized(w, h); });
-		_systems.WindowHandler.WindowResized.connect([this](unsigned int w, unsigned int h) { _device->OnWindowResized(w, h); });
+		_systems.WindowHandler.WindowResized.connect([this](unsigned int w, unsigned int h) { _device.OnWindowResized(w, h); });
 	}
 
 	void Engine::SetExtension(IEngineExtension* extension)
@@ -52,10 +50,10 @@ namespace Potator
 			if (executeExt) _extension.value()->OnBeforeSceneRendered();
 
 			_systems.ImGui.Update();
-			_device->Clear(0.0f, 0.0f, 0.0f, 1.0f);
+			_device.Clear(0.0f, 0.0f, 0.0f, 1.0f);
 			_systems.Renderer.Render();
 			_systems.ImGui.Render();
-			_device->Present();
+			_device.Present();
 		}
 
 		if (executeExt) _extension.value()->Cleanup();

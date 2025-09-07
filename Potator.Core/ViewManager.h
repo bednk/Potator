@@ -16,7 +16,7 @@ namespace Potator
 		ViewManager(ComponentStorage<TransformComponent>& transforms,
 			ComponentStorage<CameraComponent>& cameras,
 			SceneGraph& scene,
-			std::shared_ptr<IGraphicsDevice> device,
+			IGraphicsDevice& device,
 			LaunchingParams params);
 		void Update();
 		void Add(Entity cameraEntity, CameraComponent camera, TransformComponent transform);
@@ -30,7 +30,7 @@ namespace Potator
 		ComponentStorage<TransformComponent>& _transforms;
 		ComponentStorage<CameraComponent>& _cameras;
 		SceneGraph& _scene;
-		std::shared_ptr<IGraphicsDevice> _device;
+		IGraphicsDevice& _device;
 		Entity _active;
 		ConstantBufferHandle _transformationHandle;
 		ConstantBuffer<Eigen::Matrix4f> _projViewBuffer;

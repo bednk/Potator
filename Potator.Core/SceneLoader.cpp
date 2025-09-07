@@ -112,22 +112,22 @@ static RgbaTextureContainer GetTexture(aiTexture* tex)
 	return img;
 }
 
-static std::vector<ShaderResourceHandle> LoadTextures(const aiScene* scene, IGraphicsDevice* device)
+static std::vector<ShaderResourceHandle> LoadTextures(const aiScene* scene, IGraphicsDevice& device)
 {
 	std::vector<ShaderResourceHandle> result;
 	for (size_t i = 0; i < scene->mNumTextures; i++)
 	{
 		aiTexture* source = scene->mTextures[i];
 		RgbaTextureContainer data = GetTexture(source);
-		result.push_back(device->Create2dTexture(&data));
+		result.push_back(device.Create2dTexture(&data));
 	}
 
 	return result;
 }
 
-static std::vector<MaterialComponent> LoadMaterials(const aiScene* scene, IGraphicsDevice* device, IShaderCache* shaderCache)
+static std::vector<MaterialComponent> LoadMaterials(const aiScene* scene, IGraphicsDevice& device, IShaderCache& shaderCache)
 {
-	auto vsBinary = shaderCache->GetShaderBinary("vs_composite");
+	auto vsBinary = shaderCache.GetShaderBinary("vs_composite");
 	static std::vector<MaterialComponent> result;
 	std::vector<ShaderResourceHandle> textures = LoadTextures(scene, device);
 	for (size_t i = 0; i < scene->mNumMaterials; i++)
@@ -155,11 +155,11 @@ static std::vector<MaterialComponent> LoadMaterials(const aiScene* scene, IGraph
 		
 		ConstantBuffer<MaterialDescriptor> descriptorBuffer(descriptor);
 
-		materialComponent.DescriptorHandle = device->Create(&descriptorBuffer);
-		materialComponent.VertexShader = shaderCache->GetVertexShaderHandle("vs_composite");
+		materialComponent.DescriptorHandle = device.Create(&descriptorBuffer);
+		materialComponent.VertexShader = shaderCache.GetVertexShaderHandle("vs_composite");
 		materialComponent.VsBinary = vsBinary;
-		materialComponent.PixelShader = shaderCache->GetPixelShaderHandle("ps_composite");
-		materialComponent.InputLayout = device->CreateInputLayout(CompositeVertex::GetLayout(), vsBinary.get());
+		materialComponent.PixelShader = shaderCache.GetPixelShaderHandle("ps_composite");
+		materialComponent.InputLayout = device.CreateInputLayout(CompositeVertex::GetLayout(), vsBinary.get());
 		
 	}
 	return result;
@@ -177,7 +177,7 @@ static unsigned int GetUvChannelIndex(const aiScene* scene, aiMesh* mesh)
 	return uvIndex;
 }
 
-static std::vector<MeshComponent> LoadMeshes(const aiScene* scene, IGraphicsDevice* device)
+static std::vector<MeshComponent> LoadMeshes(const aiScene* scene, IGraphicsDevice& device)
 {
 	std::vector<MeshComponent> result;
 	for (size_t i = 0; i < scene->mNumMeshes; i++)
@@ -229,8 +229,8 @@ static std::vector<MeshComponent> LoadMeshes(const aiScene* scene, IGraphicsDevi
 		IndexBuffer cpuIBuf(indices);
 
 		meshComponent.IndexCount = (UINT)indices.size();
-		meshComponent.VertexBuffer = device->Create(&cpuVBuf);
-		meshComponent.IndexBuffer = device->Create(&cpuIBuf);
+		meshComponent.VertexBuffer = device.Create(&cpuVBuf);
+		meshComponent.IndexBuffer = device.Create(&cpuIBuf);
 	}
 
 	return result;
@@ -300,8 +300,8 @@ static std::unordered_map<std::string, PointLightComponent> GetLights(aiLight** 
 	return result;
 }
 
-Potator::SceneLoader::SceneLoader(std::shared_ptr<IGraphicsDevice> device,
-		std::shared_ptr<IShaderCache> shaderCache,
+Potator::SceneLoader::SceneLoader(IGraphicsDevice& device,
+		IShaderCache& shaderCache,
 		SceneGraph& graph,
 		ViewManager& views,
 		Components& components) :
@@ -332,8 +332,8 @@ void Potator::SceneLoader::Load(fs::path path)
 		return;
 	}
 
-	std::vector<MaterialComponent> materials = LoadMaterials(scene, _device.get(), _shaderCache.get());
-	std::vector<MeshComponent> meshComponents = LoadMeshes(scene, _device.get());
+	std::vector<MaterialComponent> materials = LoadMaterials(scene, _device, _shaderCache);
+	std::vector<MeshComponent> meshComponents = LoadMeshes(scene, _device);
 	std::unordered_map<std::string, PointLightComponent> lights = GetLights(scene->mLights, scene->mNumLights);
 	std::unordered_map<std::string, std::string> scripts = GetLuaScripts(path);
 	std::unordered_map<std::string, std::string> shaders = GetCustomPixelShaderNames(path);
@@ -365,7 +365,7 @@ void Potator::SceneLoader::Load(fs::path path)
 
 			if (shaders.contains(name))
 			{
-				materialComponent.PixelShader = _shaderCache->GetPixelShaderHandle(shaders[name]);
+				materialComponent.PixelShader = _shaderCache.GetPixelShaderHandle(shaders[name]);
 			}
 
 			Entity meshEntity = EntityRegistry::Instance().GetNew();

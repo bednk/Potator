@@ -31,6 +31,11 @@ void ScriptingSystem::Update()
 	}
 }
 
+sol::state& Potator::ScriptingSystem::GetLuaState()
+{
+	return _lua;
+}
+
 void Potator::ScriptingSystem::OnScriptAdded(Entity entity, const ScriptComponent& component)
 {
 	_scripted.push_back(entity);

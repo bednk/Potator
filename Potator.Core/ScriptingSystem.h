@@ -14,6 +14,7 @@ namespace Potator
 			ComponentStorage<VelocityComponent>& movements,
 			ComponentStorage<TransformComponent>& transforms);
 		void Update();
+		sol::state& GetLuaState();
 	private:
 		void OnScriptAdded(Entity entity, const ScriptComponent& component);
 		void RemoveScripted(Entity entity);
