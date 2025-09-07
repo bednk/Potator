@@ -1,7 +1,7 @@
 #include "WindowHandler.h"
 #include "imgui_impl_glfw.h"
 
-Potator::WindowHandler::WindowHandler(Window& window) : _window { window.GetGlfwWindow() }
+Potator::WindowHandler::WindowHandler(IGlfwWindowProvider& window) : _window { window.GetGlfwWindow() }
 {
     ImGui_ImplGlfw_InitForOther(_window, true);
 }

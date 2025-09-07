@@ -1,7 +1,10 @@
 #include "MovementInputHandler.h"
 
 
-Potator::MovementInputHandler::MovementInputHandler(CommandDispatcher& commandDispatcher, ComponentStorage<VelocityComponent>& movements, ComponentStorage<TransformComponent>& transforms, Window& window) :
+Potator::MovementInputHandler::MovementInputHandler(CommandDispatcher& commandDispatcher,
+        ComponentStorage<VelocityComponent>& movements,
+        ComponentStorage<TransformComponent>& transforms,
+        IGlfwWindowProvider& window) :
 	_entity { NONE_ENTITY },
 	_commandDispatcher { commandDispatcher },
 	_command { std::make_shared<RelativeVelocityCommand>(movements, transforms) },

@@ -6,6 +6,7 @@ namespace Potator
 	class IHwndProvider
 	{
 	public:
+		~IHwndProvider() = default;
 		virtual HWND GetHWND() const = 0;
 	};
 }

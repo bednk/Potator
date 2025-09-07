@@ -1,17 +1,17 @@
 #pragma once
 #include "IHwndProvider.h"
-#include <GLFW/glfw3.h>
+#include "IGlfwWindowProvider.h"
 #include "LaunchingParams.h"
 
 
 namespace Potator
 {
-	class Window : public IHwndProvider
+	class Window : public IHwndProvider, public IGlfwWindowProvider
 	{
 	public:
 		Window(const LaunchingParams& params);
 		HWND GetHWND() const override;
-		GLFWwindow* GetGlfwWindow() const;
+		GLFWwindow* GetGlfwWindow() const override;
 		bool IsRunning();
 		~Window();
 	private:

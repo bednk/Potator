@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="AmbientLightComponent.h" />
     <ClInclude Include="Dx11ImGuiSystem.h" />
+    <ClInclude Include="IGlfwWindowProvider.h" />
     <ClInclude Include="ImGuiSystem.h" />
     <ClInclude Include="IHwndProvider.h" />
     <ClInclude Include="RelativeTransformationCommand.h" />
@@ -215,6 +216,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dx11ImGuiSystem.cpp" />
+    <ClCompile Include="EngineFactory.cpp" />
     <ClCompile Include="ImGuiComponent.h" />
     <ClCompile Include="ImGuiSystem.cpp" />
     <ClCompile Include="RelativeVelocityCommand.cpp" />

@@ -10,7 +10,10 @@ namespace Potator
 	class MovementInputHandler : public IInputHandler
 	{
 	public:
-		MovementInputHandler(CommandDispatcher& commandDispatcher, ComponentStorage<VelocityComponent>& movements, ComponentStorage<TransformComponent>& transforms, Window& window);
+		MovementInputHandler(CommandDispatcher& commandDispatcher,
+			ComponentStorage<VelocityComponent>& movements,
+			ComponentStorage<TransformComponent>& transforms,
+			IGlfwWindowProvider& window);
 		void SetEntity(Entity entity);
 		void Handle() override;
 	private:
