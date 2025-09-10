@@ -7,8 +7,8 @@ Potator::MovementInputHandler::MovementInputHandler(CommandDispatcher& commandDi
         IGlfwWindowProvider& window) :
 	_entity { NONE_ENTITY },
 	_commandDispatcher { commandDispatcher },
-	_command { std::make_shared<RelativeVelocityCommand>(movements, transforms) },
 	_movements { movements },
+    _transforms { transforms },
     _window { window.GetGlfwWindow() }
 {
 }
@@ -29,29 +29,30 @@ void Potator::MovementInputHandler::Handle()
         return;
 
 
-    _command->LinearVelocity.x() =
+    RelativeVelocityCommand* command = RelativeVelocityCommand::Get(_movements, _transforms);
+    command->LinearVelocity.x() =
         (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS ? -_linerUnitsPerS : 0.f) +
         (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS ? _linerUnitsPerS : 0.f);
 
-    _command->LinearVelocity.y() =
+    command->LinearVelocity.y() =
         (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS ? -_linerUnitsPerS : 0.f) +
         (glfwGetKey(_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS ? _linerUnitsPerS : 0.f);
 
-    _command->LinearVelocity.z() =
+    command->LinearVelocity.z() =
         (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS ? -_linerUnitsPerS : 0.f) +
         (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS ? _linerUnitsPerS : 0.f);
 
-    _command->AngularVelocity.x() =
+    command->AngularVelocity.x() =
         (glfwGetKey(_window, GLFW_KEY_J) == GLFW_PRESS ? -_angilarRadiansPerS : 0.f) +
         (glfwGetKey(_window, GLFW_KEY_U) == GLFW_PRESS ? _angilarRadiansPerS : 0.f);
 
-    _command->AngularVelocity.y() =
+    command->AngularVelocity.y() =
         (glfwGetKey(_window, GLFW_KEY_Y) == GLFW_PRESS ? -_angilarRadiansPerS : 0.f) +
         (glfwGetKey(_window, GLFW_KEY_I) == GLFW_PRESS ? _angilarRadiansPerS : 0.f);
 
-    _command->AngularVelocity.z() =
+    command->AngularVelocity.z() =
         (glfwGetKey(_window, GLFW_KEY_K) == GLFW_PRESS ? -_angilarRadiansPerS : 0.f) +
         (glfwGetKey(_window, GLFW_KEY_H) == GLFW_PRESS ? _angilarRadiansPerS : 0.f);
 
-    _commandDispatcher.Enqueue(_entity, _command);
+    _commandDispatcher.Enqueue(_entity, command);
 }

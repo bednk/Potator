@@ -147,6 +147,7 @@
     <ClInclude Include="IGlfwWindowProvider.h" />
     <ClInclude Include="ImGuiSystem.h" />
     <ClInclude Include="IHwndProvider.h" />
+    <ClInclude Include="PooledObject.h" />
     <ClInclude Include="RelativeTransformationCommand.h" />
     <ClInclude Include="RelativeVelocityCommand.h" />
     <ClInclude Include="CameraComponent.h" />

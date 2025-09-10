@@ -39,11 +39,11 @@ void Potator::CustomExtension::SetupCamera()
 	_systems.Views.ViewChanged.connect([this, controllerHandler](Entity e) { controllerHandler->SetEntity(e); });
 	_systems.WindowHandler.RegisterInputHandler(controllerHandler);
 
-	std::shared_ptr<RelativeTransformationCommand> aroundY = std::make_shared<RelativeTransformationCommand>(_components.Transforms);
+	RelativeTransformationCommand* aroundY = RelativeTransformationCommand::Get(_components.Transforms);
 	aroundY->Rotate.y() = -3.14f / 4;
 	_systems.CommandDispatcher.Enqueue(camera, aroundY);
 
-	std::shared_ptr<RelativeTransformationCommand> transform = std::make_shared<RelativeTransformationCommand>(_components.Transforms);
+	RelativeTransformationCommand* transform = RelativeTransformationCommand::Get(_components.Transforms);
 	transform->Rotate.x() = 3.14f / 4;
 	transform->Translate = { 0.0f, 120.0f, -120.0f };
 	_systems.CommandDispatcher.Enqueue(camera, transform);

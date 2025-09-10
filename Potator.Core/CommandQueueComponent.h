@@ -10,11 +10,11 @@ namespace Potator
 	{
 	public:
 		CommandQueueComponent(Entity owner);
-		void Enqueue(std::shared_ptr<ICommand> command);
+		void Enqueue(ICommand* command);
 		Entity GetOwner() const { return _owner; }
-		std::optional<std::shared_ptr<ICommand>> Dequeue();
+		std::optional<ICommand*> Dequeue();
 	private:
 		Entity _owner;
-		std::queue<std::shared_ptr<ICommand>> _queue;
+		std::queue<ICommand*> _queue;
 	};
 }

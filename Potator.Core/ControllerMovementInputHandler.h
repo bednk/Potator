@@ -20,8 +20,8 @@ namespace Potator
 	private:
 		Entity _entity;
 		CommandDispatcher& _commandDispatcher;
-		std::shared_ptr<RelativeVelocityCommand> _command;
 		ComponentStorage<VelocityComponent>& _movements;
+		ComponentStorage<TransformComponent>& _transforms;
 		unsigned int _joystickId;
 
 		float _linearUnitsPerS = 0.5f;

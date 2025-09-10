@@ -7,9 +7,9 @@ Potator::ControllerMovementInputHandler::ControllerMovementInputHandler(
 	ComponentStorage<TransformComponent>& transforms,
 	unsigned int joystickId) : _entity(NONE_ENTITY),
 	_commandDispatcher{ commandDispatcher },
-	_command{ std::make_shared<RelativeVelocityCommand>(movements, transforms) },
-	_movements{ movements },
-	_joystickId{ joystickId }
+	_movements { movements },
+	_joystickId { joystickId },
+    _transforms { transforms }
 {
 }
 
@@ -48,19 +48,20 @@ void Potator::ControllerMovementInputHandler::Handle()
         return;
     }
 
-    _command->LinearVelocity.x() = ApplyDeadzone(axes[0]) * _linearUnitsPerS;
-    _command->LinearVelocity.y() = ApplyDeadzone(-axes[1]) * _linearUnitsPerS;
+    auto command = RelativeVelocityCommand::Get(_movements, _transforms);
+    command->LinearVelocity.x() = ApplyDeadzone(axes[0]) * _linearUnitsPerS;
+    command->LinearVelocity.y() = ApplyDeadzone(-axes[1]) * _linearUnitsPerS;
 
     float leftTrigger = (axisCount > 4) ? ApplyDeadzone((axes[4] + 1.f) / 2.f) : 0.f;
     float rightTrigger = (axisCount > 5) ? ApplyDeadzone((axes[5] + 1.f) / 2.f) : 0.f;
-    _command->LinearVelocity.z() = (rightTrigger - leftTrigger) * _linearUnitsPerS;
+    command->LinearVelocity.z() = (rightTrigger - leftTrigger) * _linearUnitsPerS;
 
-    _command->AngularVelocity.y() = (axisCount > 2) ? ApplyDeadzone(axes[2]) * _angularRadiansPerS : 0.f;
-    _command->AngularVelocity.x() = (axisCount > 3) ? ApplyDeadzone(axes[3]) * _angularRadiansPerS : 0.f;
+    command->AngularVelocity.y() = (axisCount > 2) ? ApplyDeadzone(axes[2]) * _angularRadiansPerS : 0.f;
+    command->AngularVelocity.x() = (axisCount > 3) ? ApplyDeadzone(axes[3]) * _angularRadiansPerS : 0.f;
 
     bool leftBumper = (buttonCount > 5) && buttons[5];
     bool rightBumper = (buttonCount > 4) && buttons[4];
-    _command->AngularVelocity.z() = (rightBumper ? 1.f : 0.f - (leftBumper ? 1.f : 0.f)) * _angularRadiansPerS;
+    command->AngularVelocity.z() = (rightBumper ? 1.f : 0.f - (leftBumper ? 1.f : 0.f)) * _angularRadiansPerS;
 
-    _commandDispatcher.Enqueue(_entity, _command);
+    _commandDispatcher.Enqueue(_entity, command);
 }

@@ -41,7 +41,7 @@ namespace Potator
 
 		void SetAngularVelocity(Entity entity, float radiansPerSecond, Axis arround)
 		{
-			std::shared_ptr<RelativeVelocityCommand> command = std::make_shared<RelativeVelocityCommand>(_movements, _transforms);
+			RelativeVelocityCommand* command = RelativeVelocityCommand::Get(_movements, _transforms);
 			switch (arround)
 			{
 			case Axis::X:
@@ -60,7 +60,7 @@ namespace Potator
 
 		void SetLinearVelocity(Entity entity, float unitsPerSecond, Axis arround)
 		{
-			std::shared_ptr<RelativeVelocityCommand> command = std::make_shared<RelativeVelocityCommand>(_movements, _transforms);
+			RelativeVelocityCommand* command = RelativeVelocityCommand::Get(_movements, _transforms);
 			switch (arround)
 			{
 			case Axis::X:

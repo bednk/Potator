@@ -11,6 +11,7 @@
     "lua",
     "sol2",
     "bext-di",
+    "boost-pool",
     {
       "name": "imgui",
       "features": [ "dx11-binding", "glfw-binding" ]

@@ -1,8 +1,17 @@
 #include "RelativeTransformationCommand.h"
 
+using namespace Potator;
+
 Potator::RelativeTransformationCommand::RelativeTransformationCommand(ComponentStorage<TransformComponent>& transforms) :
 	_transforms { transforms }
 {
+}
+
+RelativeTransformationCommand* Potator::RelativeTransformationCommand::Get(ComponentStorage<TransformComponent>& transforms)
+{
+    RelativeTransformationCommand* result = _pool.malloc();
+    result = new RelativeTransformationCommand(transforms); // pointer managed by pool
+    return result;
 }
 
 void Potator::RelativeTransformationCommand::Execute(Entity entity)
@@ -35,4 +44,6 @@ void Potator::RelativeTransformationCommand::Execute(Entity entity)
     }
 
     transform.Local *= affine.matrix();
+
+    _pool.destroy(this);
 }

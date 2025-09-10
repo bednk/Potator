@@ -19,8 +19,8 @@ namespace Potator
 	private:
 		Entity _entity;
 		CommandDispatcher& _commandDispatcher;
-		std::shared_ptr<RelativeVelocityCommand> _command;
 		ComponentStorage<VelocityComponent>& _movements;
+		ComponentStorage<TransformComponent>& _transforms;
 		GLFWwindow* _window;
 		float _linerUnitsPerS = 0.05f;
 		float _angilarRadiansPerS = 1;
