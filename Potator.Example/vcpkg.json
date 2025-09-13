@@ -12,6 +12,7 @@
     "sol2",
     "bext-di",
     "boost-pool",
+    "boost-circular-buffer",
     {
       "name": "imgui",
       "features": [ "dx11-binding", "glfw-binding" ]

@@ -1,25 +1,10 @@
 #include "FixedStepTracker.h"
 
-
-Potator::FixedStepTracker::FixedStepTracker(LaunchingParams params) :
-	_tickRate { params.FixedStepRate },
+Potator::FixedStepTracker::FixedStepTracker(LaunchingParams params, FrameClock& clock) :
+	_tickRate{ params.FixedStepRate },
 	_fixedStep{ std::chrono::duration_cast<Duration>(std::chrono::duration<double>(1.0 / _tickRate)) },
-	_accumulator { Duration::zero() }
+	_clock { clock }
 {
-
-}
-
-void Potator::FixedStepTracker::MarkFrameStart()
-{
-	auto now = Clock::now();
-	if (!_lastTime)
-	{
-		_lastTime = now;
-		return;
-	}
-
-	_accumulator += now - _lastTime.value();
-	_lastTime = now;
 }
 
 void Potator::FixedStepTracker::Subscribe(IFixedStep* subscriber)
@@ -30,6 +15,8 @@ void Potator::FixedStepTracker::Subscribe(IFixedStep* subscriber)
 
 void Potator::FixedStepTracker::Update()
 {
+	_accumulator += _clock.GetFrameTime();
+
 	while (_accumulator >= _fixedStep)
 	{
 		for (size_t i = 0; i < _subscribers.size(); i++)

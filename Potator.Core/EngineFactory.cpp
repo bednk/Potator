@@ -1,5 +1,5 @@
 #include "EngineFactory.h"
-#define BOOST_DI_CFG_CTOR_LIMIT_SIZE 11 // for Systems struct. In case of significant systems number grow I'll think about splitting it into groups
+#define BOOST_DI_CFG_CTOR_LIMIT_SIZE 12 // for Systems struct. In case of significant systems number grow I'll think about splitting it into groups
 #include <boost/di.hpp>
 #include "Window.h"
 #include "Dx11GraphicsDevice.h"
@@ -43,6 +43,7 @@ Potator::EngineFactory::EngineFactory(const LaunchingParams& params)
             boost::di::bind<SceneLoader>().in(boost::di::singleton),
             boost::di::bind<Lighting>().in(boost::di::singleton),
             boost::di::bind<WindowHandler>().in(boost::di::singleton),
+            boost::di::bind<FrameClock>().in(boost::di::singleton),
             boost::di::bind<Systems>().in(boost::di::singleton),
             boost::di::bind<Engine>().in(boost::di::singleton)
         );

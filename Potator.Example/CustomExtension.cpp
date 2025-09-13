@@ -22,6 +22,7 @@ void Potator::CustomExtension::Initialize()
 	controll.Draw = [&lights]()
 		{
 			ImGui::SetNextWindowSize({ 300, 100 }, ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowPos({ 50, 200 }, ImGuiCond_FirstUseEver);
 			ImGui::Begin("Enviroment lights");
 			ImGui::Text("Colors");
 			ImGui::ColorEdit4("Directional", lights.Directional.Color.data());
